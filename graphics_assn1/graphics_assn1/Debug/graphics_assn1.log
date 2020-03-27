@@ -1,0 +1,4 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output 디렉터리가 슬래시로 끝나지 않습니다. Output 디렉터리의 적절한 평가를 허용하는 데 필요하므로 이 빌드 인스턴스에서 슬래시를 추가합니다.
+  source.cpp
+c:\users\leedajin\source\repos\graphics_assn1\graphics_assn1\source.cpp(21): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
+  graphics_assn1.vcxproj -> C:\Users\leedajin\source\repos\graphics_assn1\graphics_assn1\bin\x86\graphics_assn1.exe
