@@ -1,24 +1,20 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(453,5): warning MSB8004: Output 디렉터리가 슬래시로 끝나지 않습니다. Output 디렉터리의 적절한 평가를 허용하는 데 필요하므로 이 빌드 인스턴스에서 슬래시를 추가합니다.
   source.cpp
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(32,23): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(33,25): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(65,60): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(66,61): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(74,26): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(77,26): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(80,26): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(103,17): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(103,14): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(104,19): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(104,14): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(105,27): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(105,16): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(106,25): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(106,16): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(115,39): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(115,17): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(137,23): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(140,23): warning C4305: '-=': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(143,23): warning C4305: '-=': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(146,23): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(31,12): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(59,24): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(82,26): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(85,26): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(88,26): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(91,26): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(97,26): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(114,17): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(114,14): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(115,19): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(115,14): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(116,27): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(116,16): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(117,25): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(117,16): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(125,51): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\source.cpp(125,23): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   graphics_assn1.vcxproj -> C:\Users\mmj\source\repos\CSED451\graphics_assn1\graphics_assn1\bin\x64\graphics_assn1.exe
