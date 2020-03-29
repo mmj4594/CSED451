@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+//All pass/fail 치트 활성화 여부
 bool allPass = false;
 bool allFail = false;
 
@@ -33,20 +34,21 @@ void init() {
 	glShadeModel(GL_FLAT);
 }
 
+//화면을 그려준다.
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
-	drawSquare(0.0, 0.0, WORLD_X, 20, BLACK);														//floor
-	drawSquare(wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight(), wall.getColor());		//wall
-	drawCircle(player.getX(), player.getY(), player.getRad(), player.getColor());					//player
-	drawCircle(thief.getX(), thief.getY(), thief.getRad(), thief.getColor());						//thief
+	drawSquare(world_floor.getX(), world_floor.getY(), world_floor.getWidth(), world_floor.getHeight(), BLACK);	//floor
+	drawSquare(wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight(), wall.getColor());					//wall
+	drawCircle(player.getX(), player.getY(), player.getRad(), player.getColor());								//player
+	drawCircle(thief.getX(), thief.getY(), thief.getRad(), thief.getColor());									//thief
 
 	glutSwapBuffers();			//백버퍼에 그림을 다 그렸으면, 전면버퍼와 통째로 교체한다.
 								//더블 버퍼에서는 프런트 버퍼 내용이 나오는 동안 새로운 내용이 백버퍼에 쓰이고,
 								//glutSwapBuffers()로 프런트 버퍼와 백 버퍼가 바뀐다.
 }
 
+//게임 창 크기 조절시 행동
 void reshape(int w, int h) {
-	cout << w << " " << h << endl;
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -55,27 +57,38 @@ void reshape(int w, int h) {
 	glLoadIdentity();
 }
 
+/*
+	벽을 wallSpeed에 맞게 움직여준 후
+	벽과 다른 오브젝트의 충돌을 판정하여
+	충돌이 발생할 경우 충돌 발생 오브젝트의 종류에 따라 행동.
+*/
 void moveWall() {
 	wall.setX(wall.getX() - 0.3 * wallSpeed);
+
+	//벽과 플레이어의 충돌
 	if (collisionCheck(&wall, &player)) {
-		if (allFail || wall.getColor() != player.getColor()) { cout << "Fail\n"; }
-		else if (allPass || wall.getColor() == player.getColor()) { cout << "Clear\n"; }
+		if (allFail || wall.getColor() != player.getColor()) { cout << "Fail\n"; }			//Fail 시 행동
+		else if (allPass || wall.getColor() == player.getColor()) { cout << "Pass\n"; }		//Pass 시 행동
 	}
+	//벽과 도둑의 충돌
 	else if (collisionCheck(&wall, &thief)) {
 		wall.setColor(thief.getColor());
 	}
+	//플레이어와 도둑의 충돌
 	else if (collisionCheck(&player, &thief)) {
 		cout << "Win\n";
 	}
 
-	thief.setColor(rand() % 4);
-
-
-	if (wall.getX() < 0) wall = rect(WORLD_X, 20);
+	thief.setColor(rand() % 4);	//도둑 색 랜덤 설정
+	if (wall.getX() < 0) wall = rect(WORLD_X, 20, 10, 50);	//wall이 화면을 벗어날 시 위치 재조정
 
 	glutPostRedisplay();
 }
 
+/*
+	color의 색으로 화면을 칠할 수 있도록
+	팔레트를 color의 색으로 설정한다.
+*/
 void setColor(int color) {
 	switch (color) {
 	case RED:
@@ -99,6 +112,7 @@ void setColor(int color) {
 	}
 }
 
+//화면상에 사각형을 그려준다.
 void drawSquare(double x, double y, double width, double height, const int color) {
 	setColor(color);
 	glBegin(GL_POLYGON);
@@ -109,6 +123,7 @@ void drawSquare(double x, double y, double width, double height, const int color
 	glEnd();
 }
 
+//화면상에 원을 그려준다.
 void drawCircle(double centerx, double centery, double rad, int color) {
 	setColor(color);
 	glBegin(GL_POLYGON);
@@ -118,6 +133,7 @@ void drawCircle(double centerx, double centery, double rad, int color) {
 	glEnd();
 }
 
+//키보드 입력에 따른 치트를 정의한다.
 void keyboard(unsigned char key, int x, int y) {
 	switch (key) {
 	case 'c':
@@ -132,6 +148,7 @@ void keyboard(unsigned char key, int x, int y) {
 
 	glutPostRedisplay();
 }
+//키보드 입력에 따라 플레이어의 색을 설정한다.
 void specialkeyboard(int key, int x, int y) {
 	switch (key) {
 	case GLUT_KEY_UP:
@@ -150,6 +167,7 @@ void specialkeyboard(int key, int x, int y) {
 	glutPostRedisplay();
 }
 
+//두 오브젝트 a, b가 충돌하는지 여부를 반환한다.
 bool collisionCheck(object* a, object* b) {
 	//wall - player/thief collision check
 	if (a->getType() == 0) {
@@ -166,7 +184,6 @@ bool collisionCheck(object* a, object* b) {
 
 		return (player->getX() + player->getRad()) > (thief->getX() - thief->getRad());
 	}
-
 }
 
 //void glutTimerFunc(unsigned int millis, void (*func)(int value), int value); --> millis 후에 func를 호출하며 인수로 value를 전달.
