@@ -37,8 +37,8 @@ void init() {
 //화면을 그려준다.
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
-	drawSquare(world_floor.getX(), world_floor.getY(), world_floor.getWidth(), world_floor.getHeight(), BLACK);	//floor
-	drawSquare(wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight(), wall.getColor());					//wall
+	drawRect(world_floor.getX(), world_floor.getY(), world_floor.getWidth(), world_floor.getHeight(), BLACK);	//floor
+	drawRect(wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight(), wall.getColor());					//wall
 	drawCircle(player.getX(), player.getY(), player.getRad(), player.getColor());								//player
 	drawCircle(thief.getX(), thief.getY(), thief.getRad(), thief.getColor());									//thief
 
@@ -67,8 +67,8 @@ void moveWall() {
 
 	//벽과 플레이어의 충돌
 	if (collisionCheck(&wall, &player)) {
-		if (allFail || wall.getColor() != player.getColor()) { cout << "Fail\n"; }			//Fail 시 행동
-		else if (allPass || wall.getColor() == player.getColor()) { cout << "Pass\n"; }		//Pass 시 행동
+		if (!allPass && (allFail || wall.getColor() != player.getColor())) { cout << "Fail\n"; }			//Fail 시 행동
+		else if (!allFail && (allPass || wall.getColor() == player.getColor())) { cout << "Pass\n"; }		//Pass 시 행동
 	}
 	//벽과 도둑의 충돌
 	else if (collisionCheck(&wall, &thief)) {
@@ -113,7 +113,7 @@ void setColor(int color) {
 }
 
 //화면상에 사각형을 그려준다.
-void drawSquare(double x, double y, double width, double height, const int color) {
+void drawRect(double x, double y, double width, double height, const int color) {
 	setColor(color);
 	glBegin(GL_POLYGON);
 		glVertex2f(x, y);
@@ -139,10 +139,12 @@ void keyboard(unsigned char key, int x, int y) {
 	case 'c':
 		allFail = false;
 		allPass = true;
+		cout << "All pass\n";
 		break;
 	case 'f':
 		allPass = false;
 		allFail = true;
+		cout << "All fail\n";
 		break;
 	}
 

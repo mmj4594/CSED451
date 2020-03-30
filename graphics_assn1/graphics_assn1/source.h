@@ -118,7 +118,7 @@ void reshape(int w, int h);
 void moveWall();
 
 void setColor(int color);
-void drawSquare(double x, double y, double width, double height, const int color);
+void drawRect(double x, double y, double width, double height, const int color);
 void drawCircle(double centerx, double centery, double rad, const int color);
 
 void keyboard(unsigned char key, int x, int y);
