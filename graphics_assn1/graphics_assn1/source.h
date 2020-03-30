@@ -4,6 +4,7 @@
 #include <GL/freeglut.h>
 #include <glm/vec3.hpp>
 #include <vector>
+#include <string>
 
 //Color codes
 const int RED = 0;
@@ -17,9 +18,31 @@ const int GRAY = 5;
 const int WORLD_X = 150;
 const int WORLD_Y = 100;
 
-//Wall moving speed
-int wallSpeed = 1;
+//Position of Player
+const int PLAYER_X = 25;
+const int PLAYER_Y = 25;
 
+//Position of Thief
+const int THIEF_X = 75;
+const int THIEF_Y = 25;
+
+//Wall moving speed
+float wallSpeed = 1;
+float wallSpeedIncrement = 0.5f;
+
+//Thief color changing period
+int colorPeriod = 50;
+
+//Collision Check
+bool wallThiefCollision = false;
+bool wallPlayerCollsion = false;
+
+//Moving distance when player pass
+float playerFutureX = PLAYER_X;
+float movingDistance = 5;
+float distancePerFrame = 0.1f;
+
+std::string lifeText = "Life: ";
 
 
 
@@ -91,6 +114,7 @@ private:
 	float x: 원의 중심의 x좌표
 	float y: 원의 중심의 y좌표
 	double rad: 원의 반지름 길이
+	int periodFrame: 도둑의 색을 바꾸기 위한 시간 계산
 */
 class character: public object {
 public:
@@ -100,8 +124,29 @@ public:
 
 	void setRad(double newRad) { rad = newRad; }
 
+	int getPeriodFrame() { return periodFrame; }
+
+	void resetPeriodFrame() { periodFrame = 0; }
+
+	void addPeriodFrame() { periodFrame++; }
+
+	bool getCollided() { return collided; }
+
+	void isCollided() { collided = true; }
+
+	void resetCollided() { collided = false; }
+
+	void moveRight() { x += distancePerFrame; }
+
+	int getLife() { return life; }
+
+	void decreaseLife() { life--; };
+
 private:
 	double rad = 5.0;
+	int periodFrame = 0;
+	bool collided = false;;
+	int life = 4;
 };
 
 
@@ -109,8 +154,8 @@ private:
 
 rect world_floor(0, 0, 150, 20);
 rect wall(WORLD_X, 20, 10, 50);
-character player(25, 25);
-character thief(75, 25);
+character player(PLAYER_X, PLAYER_Y);
+character thief(THIEF_X, THIEF_Y);
 
 void init();
 void display();
@@ -120,8 +165,12 @@ void moveWall();
 void setColor(int color);
 void drawRect(double x, double y, double width, double height, const int color);
 void drawCircle(double centerx, double centery, double rad, const int color);
+void writeLife();
 
 void keyboard(unsigned char key, int x, int y);
 void specialkeyboard(int key, int x, int y);
 
 bool collisionCheck(object* a, object* b);
+
+void increaseWallSpeed();
+

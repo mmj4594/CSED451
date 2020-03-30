@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+
 //All pass/fail 치트 활성화 여부
 bool allPass = false;
 bool allFail = false;
@@ -32,16 +33,17 @@ void init() {
 	srand(time(NULL));
 	glClearColor(1.0, 1.0, 1.0, 0.0);
 	glShadeModel(GL_FLAT);
+
 }
 
 //화면을 그려준다.
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
-	drawRect(world_floor.getX(), world_floor.getY(), world_floor.getWidth(), world_floor.getHeight(), BLACK);	//floor
-	drawRect(wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight(), wall.getColor());					//wall
+	drawRect(world_floor.getX(), world_floor.getY(), world_floor.getWidth(), world_floor.getHeight(), BLACK);	//floor	
 	drawCircle(player.getX(), player.getY(), player.getRad(), player.getColor());								//player
 	drawCircle(thief.getX(), thief.getY(), thief.getRad(), thief.getColor());									//thief
-
+	drawRect(wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight(), wall.getColor());					//wall
+	writeLife();
 	glutSwapBuffers();			//백버퍼에 그림을 다 그렸으면, 전면버퍼와 통째로 교체한다.
 								//더블 버퍼에서는 프런트 버퍼 내용이 나오는 동안 새로운 내용이 백버퍼에 쓰이고,
 								//glutSwapBuffers()로 프런트 버퍼와 백 버퍼가 바뀐다.
@@ -65,10 +67,30 @@ void reshape(int w, int h) {
 void moveWall() {
 	wall.setX(wall.getX() - 0.3 * wallSpeed);
 
+	//Move player to right if won
+	if (player.getX() < playerFutureX) {
+		player.moveRight();
+	}
+
 	//벽과 플레이어의 충돌
 	if (collisionCheck(&wall, &player)) {
-		if (!allPass && (allFail || wall.getColor() != player.getColor())) { cout << "Fail\n"; }			//Fail 시 행동
-		else if (!allFail && (allPass || wall.getColor() == player.getColor())) { cout << "Pass\n"; }		//Pass 시 행동
+		//Fail
+		if (!allPass && (allFail || wall.getColor() != player.getColor())) { 
+			cout << "Fail\n";
+			player.decreaseLife();
+			writeLife();
+			//Lose
+			if (player.getLife() == 0) {
+				cout << "Lose\n";
+				glutIdleFunc(NULL);
+			}
+		}
+		//Pass
+		else if (!allFail && (allPass || wall.getColor() == player.getColor())) { 
+			cout << "Pass\n";
+			increaseWallSpeed();
+			playerFutureX = player.getX() + movingDistance;
+		}		
 	}
 	//벽과 도둑의 충돌
 	else if (collisionCheck(&wall, &thief)) {
@@ -77,10 +99,23 @@ void moveWall() {
 	//플레이어와 도둑의 충돌
 	else if (collisionCheck(&player, &thief)) {
 		cout << "Win\n";
+		glutIdleFunc(NULL);
 	}
 
-	thief.setColor(rand() % 4);	//도둑 색 랜덤 설정
-	if (wall.getX() < 0) wall = rect(WORLD_X, 20, 10, 50);	//wall이 화면을 벗어날 시 위치 재조정
+	//도둑의 색을 주기에 따라 변경
+	if (thief.getPeriodFrame() == colorPeriod) {
+		thief.setColor(rand() % 4);
+		thief.resetPeriodFrame();
+	}
+	else {
+		thief.addPeriodFrame();
+	}
+
+	if (wall.getX() < 0) {
+		wall = rect(WORLD_X, 20, 10, 50);	//wall이 화면을 벗어날 시 위치 재조정
+		thief.resetCollided();
+		player.resetCollided();
+	}
 
 	glutPostRedisplay();
 }
@@ -176,7 +211,14 @@ bool collisionCheck(object* a, object* b) {
 		rect* wall = (rect*)a;
 		character* ch = (character*)b;
 
-		return ((wall->getX() < (ch->getX() + ch->getRad())) && (wall->getX() + wall->getWidth() > ch->getX()));
+		//Check if collision already occured
+		if ((wall->getX() < ch->getX()) && !ch->getCollided()) {
+			ch->isCollided();
+			return true;			
+		}
+		else {
+			return false;
+		}
 	}
 
 	//player - thief collision check
@@ -190,3 +232,18 @@ bool collisionCheck(object* a, object* b) {
 
 //void glutTimerFunc(unsigned int millis, void (*func)(int value), int value); --> millis 후에 func를 호출하며 인수로 value를 전달.
 //매번 호출되는 게 아니라 딱 한번만 호출되지만, 호출될때마다 다음 주기를 가변적으로 설정 가능.
+
+void increaseWallSpeed() {
+	wallSpeed += wallSpeedIncrement;
+}
+
+void writeLife() {
+	//life
+	glColor3f(0, 0, 0);
+	glRasterPos2f(10, 90);
+	string s = lifeText + to_string(player.getLife());
+	for (string::iterator i = s.begin(); i != s.end(); ++i) {
+		char c = *i;
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
+	}
+}
