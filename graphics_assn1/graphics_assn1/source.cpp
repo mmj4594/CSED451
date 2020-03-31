@@ -33,7 +33,6 @@ void init() {
 	srand(time(NULL));
 	glClearColor(1.0, 1.0, 1.0, 0.0);
 	glShadeModel(GL_FLAT);
-
 }
 
 //화면을 그려준다.
@@ -43,7 +42,7 @@ void display() {
 	drawCircle(player.getX(), player.getY(), player.getRad(), player.getColor());								//player
 	drawCircle(thief.getX(), thief.getY(), thief.getRad(), thief.getColor());									//thief
 	drawRect(wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight(), wall.getColor());					//wall
-	writeLife();
+	writeLife(lifeX, lifeY);
 	glutSwapBuffers();			//백버퍼에 그림을 다 그렸으면, 전면버퍼와 통째로 교체한다.
 								//더블 버퍼에서는 프런트 버퍼 내용이 나오는 동안 새로운 내용이 백버퍼에 쓰이고,
 								//glutSwapBuffers()로 프런트 버퍼와 백 버퍼가 바뀐다.
@@ -54,8 +53,8 @@ void reshape(int w, int h) {
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(0, WORLD_X, 0, WORLD_Y);
-	glMatrixMode(GL_MODELVIEW);
+	gluOrtho2D(world.getLeft(), world.getRight(), world.getBottom(), world.getTop());
+	glMatrixMode(GL_MODELVIEW);	
 	glLoadIdentity();
 }
 
@@ -67,9 +66,23 @@ void reshape(int w, int h) {
 void moveWall() {
 	wall.setX(wall.getX() - 0.3 * wallSpeed);
 
-	//Move player to right if won
-	if (player.getX() < playerFutureX) {
+	//Move player to right if passes
+	if (player.getX() < playerNewX) {
 		player.moveRight();
+	}
+
+	//Zoom camera if passes
+	if (world.getLeft() < newWorld.getLeft()) 
+	{
+		world = world + incrementPerFrame;
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluOrtho2D(world.getLeft(), world.getRight(), world.getBottom(), world.getTop());
+
+		//Move position of lifeText
+		frameMoved++;
+		lifeX = frameMoved * incrementPerFrame.getLeft() + LIFE_X * (world.getRight() - world.getLeft()) / WORLD_X;
+		lifeY = frameMoved * incrementPerFrame.getBottom() + LIFE_Y * (world.getTop() - world.getBottom()) / WORLD_Y;
 	}
 
 	//벽과 플레이어의 충돌
@@ -78,18 +91,18 @@ void moveWall() {
 		if (!allPass && (allFail || wall.getColor() != player.getColor())) { 
 			cout << "Fail\n";
 			player.decreaseLife();
-			writeLife();
 			//Lose
 			if (player.getLife() == 0) {
 				cout << "Lose\n";
-				glutIdleFunc(NULL);
+				finishGame();
 			}
 		}
 		//Pass
 		else if (!allFail && (allPass || wall.getColor() == player.getColor())) { 
 			cout << "Pass\n";
 			increaseWallSpeed();
-			playerFutureX = player.getX() + movingDistance;
+			playerNewX += movingDistance;
+			newWorld = world + coordinatesIncrement;
 		}		
 	}
 	//벽과 도둑의 충돌
@@ -99,7 +112,7 @@ void moveWall() {
 	//플레이어와 도둑의 충돌
 	else if (collisionCheck(&player, &thief)) {
 		cout << "Win\n";
-		glutIdleFunc(NULL);
+		finishGame();
 	}
 
 	//도둑의 색을 주기에 따라 변경
@@ -237,13 +250,23 @@ void increaseWallSpeed() {
 	wallSpeed += wallSpeedIncrement;
 }
 
-void writeLife() {
+//Display remaining life on window
+void writeLife(float x, float y) {
 	//life
 	glColor3f(0, 0, 0);
-	glRasterPos2f(10, 90);
+	glRasterPos2f(x, y);
 	string s = lifeText + to_string(player.getLife());
-	for (string::iterator i = s.begin(); i != s.end(); ++i) {
+	for (string::iterator i = s.begin(); i != s.end(); ++i) 
+	{
 		char c = *i;
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
 	}
+}
+
+//Fnish game
+void finishGame() {
+	glutReshapeFunc(NULL);
+	glutIdleFunc(NULL);
+	glutKeyboardFunc(NULL);
+	glutSpecialFunc(NULL);
 }
