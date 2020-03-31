@@ -14,14 +14,30 @@ const int YELLOW = 3;
 const int BLACK = 4;
 const int GRAY = 5;
 
-//Position of World
+//Size of displayed world
 float WORLD_X = 150;
 float WORLD_Y = 100;
 
+//Wall moving speed
+float wallSpeed = 1;
+float wallSpeedIncrement = 0.5f;
+
+//Position of Player
+const int PLAYER_X = 25;
+const int PLAYER_Y = 25;
+float playerNewX = PLAYER_X;
+//Position of Thief
+const int THIEF_X = 75;
+const int THIEF_Y = 25;
+//Thief color changing period
+int colorPeriod = 75;
+
+//Collision Check
+bool wallThiefCollision = false;
+bool wallPlayerCollsion = false;
 //Player moving distance if passes
 float movingDistance = 5;
 float distancePerFrame = 0.1f;
-
 //Camera zoom size if passes
 const float LEFT_INCREMENT = 4;
 const float RIGHT_INCREMENT = -5;
@@ -29,11 +45,20 @@ const float BOTTOM_INCREMENT = 1.5;
 const float TOP_INCREMENT = -4.5;
 const float zoomFrame = 50;
 
-//Wall moving speed
-float wallSpeed = 1;
-float wallSpeedIncrement = 0.5f;
+//Displacement of life on window
+std::string lifeText = "Life: ";
+const float LIFE_X = 10;
+const float LIFE_Y = 90;
+float lifeX = LIFE_X;
+float lifeY = LIFE_Y;
+int frameMoved = 0;
 
-//Coordinates for gluOrtho2D
+/*
+	\class	corrdinates
+
+	\brief
+	gluOrtho2D를 위한 world 좌표계 정의
+*/
 class coordinates {
 public:
 	coordinates(float left, float right, float bottom, float top) {
@@ -58,38 +83,10 @@ protected:
 	float bottom;
 	float top;
 };
-
 coordinates world(0,WORLD_X,0,WORLD_Y);
 coordinates newWorld(0,WORLD_X,0,WORLD_Y);
 coordinates coordinatesIncrement(LEFT_INCREMENT, RIGHT_INCREMENT, BOTTOM_INCREMENT, TOP_INCREMENT);
 coordinates incrementPerFrame(LEFT_INCREMENT/zoomFrame, RIGHT_INCREMENT / zoomFrame, BOTTOM_INCREMENT / zoomFrame, TOP_INCREMENT / zoomFrame);
-
-
-//Position of Player
-const int PLAYER_X = 25;
-const int PLAYER_Y = 25;
-float playerNewX = PLAYER_X;
-
-//Position of Thief
-const int THIEF_X = 75;
-const int THIEF_Y = 25;
-
-//Thief color changing period
-int colorPeriod = 75;
-
-//Collision Check
-bool wallThiefCollision = false;
-bool wallPlayerCollsion = false;
-
-//Displacement of life on window
-std::string lifeText = "Life: ";
-const float LIFE_X = 10;
-const float LIFE_Y = 90;
-float lifeX = LIFE_X;
-float lifeY = LIFE_Y;
-int frameMoved = 0;
-
-
 
 
 /*
@@ -118,9 +115,6 @@ protected:
 	int type;	//0 = rect, 1 = character
 };
 
-
-
-
 /*
 	\class	 rect
 
@@ -147,9 +141,6 @@ private:
 	float width, height;
 };
 
-
-
-
 /*
 	\class	character
 
@@ -167,25 +158,19 @@ public:
 	character(float a, float b) { type = 1; x = a; y = b; }
 
 	double getRad() { return rad; }
-
 	void setRad(double newRad) { rad = newRad; }
 
 	int getPeriodFrame() { return periodFrame; }
-
 	void resetPeriodFrame() { periodFrame = 0; }
-
 	void addPeriodFrame() { periodFrame++; }
 
 	bool getCollided() { return collided; }
-
 	void isCollided() { collided = true; }
-
 	void resetCollided() { collided = false; }
 
 	void moveRight() { x += distancePerFrame; }
 
 	int getLife() { return life; }
-
 	void decreaseLife() { life--; };
 
 private:
@@ -194,15 +179,13 @@ private:
 	bool collided = false;;
 	int life = 4;
 };
-
-
-
-
 rect world_floor(0, 0, 150, 20);
 rect wall(WORLD_X, 20, 10, 50);
 character player(PLAYER_X, PLAYER_Y);
 character thief(THIEF_X, THIEF_Y);
 
+
+//Function definition
 void init();
 void display();
 void reshape(int w, int h);
@@ -218,5 +201,5 @@ void specialkeyboard(int key, int x, int y);
 
 bool collisionCheck(object* a, object* b);
 
-void increaseWallSpeed();
+inline void increaseWallSpeed() { wallSpeed += wallSpeedIncrement; }
 void finishGame();
