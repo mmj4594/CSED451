@@ -67,9 +67,9 @@ void moveWall() {
 		//Fail
 		if (!allPass && (allFail || wall.getColor() != player.getColor())) { 
 			cout << "Fail\n";
-			player.decreaseLife();
+			life--;
 			//Lose
-			if (player.getLife() == 0) {
+			if (life == 0) {
 				cout << "Lose\n";
 				finishGame();
 			}
@@ -77,10 +77,11 @@ void moveWall() {
 		//Pass
 		else if (!allFail && (allPass || wall.getColor() == player.getColor())) { 
 			cout << "Pass\n";
-			increaseWallSpeed();
+			wallSpeed += wallSpeedIncrement;
+			colorPeriod -= 5;
 			playerNewX += movingDistance;
 			newWorld = world + coordinatesIncrement;
-		}		
+		}
 	}
 	//벽과 도둑의 충돌
 	else if (collisionCheck(&wall, &thief)) {
@@ -111,13 +112,14 @@ void moveWall() {
 	}
 
 	//도둑의 색을 주기에 따라 변경
-	if (thief.getPeriodFrame() == colorPeriod) {
+	cout << thiefFrame << " " << colorPeriod << "\n";
+	if (thiefFrame >= colorPeriod) {
 		thief.setColor(rand() % 4);
-		thief.resetPeriodFrame();
+		thiefFrame = 0;
 	}
-	else thief.addPeriodFrame();
+	else thiefFrame++;
 
-	//wall이 화면을 벗어날 시 위치 재조정
+	//wall이 화면을 벗어날 시 위치 재조정(벽 재생성)
 	if (wall.getX() < 0) {
 		wall = rect(WORLD_X, 20, 10, 50);
 		thief.resetCollided();
@@ -127,10 +129,7 @@ void moveWall() {
 	glutPostRedisplay();
 }
 
-/*
-	color의 색으로 화면을 칠할 수 있도록
-	팔레트를 color의 색으로 설정한다.
-*/
+//color의 색으로 화면을 칠할 수 있도록 팔레트를 color의 색으로 설정한다.
 void setColor(int color) {
 	switch (color) {
 	case RED:
@@ -208,7 +207,6 @@ void specialkeyboard(int key, int x, int y) {
 		player.setColor(YELLOW);
 		break;
 	}
-	glutPostRedisplay();
 }
 
 //두 오브젝트 a, b가 충돌하는지 여부를 반환한다.
@@ -220,7 +218,7 @@ bool collisionCheck(object* a, object* b) {
 
 		//Check if collision already occured
 		if ((wall->getX() < ch->getX()) && !ch->getCollided()) {
-			ch->isCollided();
+			ch->setCollided();
 			return true;			
 		}
 		return false;
@@ -240,7 +238,7 @@ void writeLife(float x, float y) {
 	//life
 	glColor3f(0, 0, 0);
 	glRasterPos2f(x, y);
-	string s = lifeText + to_string(player.getLife());
+	string s = lifeText + to_string(life);
 	for (string::iterator i = s.begin(); i != s.end(); ++i) 
 	{
 		char c = *i;

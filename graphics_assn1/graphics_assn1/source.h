@@ -20,7 +20,7 @@ float WORLD_Y = 100;
 
 //Wall moving speed
 float wallSpeed = 1;
-float wallSpeedIncrement = 0.5f;
+const float wallSpeedIncrement = 0.5;
 
 //Position of Player
 const int PLAYER_X = 25;
@@ -30,6 +30,7 @@ float playerNewX = PLAYER_X;
 const int THIEF_X = 75;
 const int THIEF_Y = 25;
 //Thief color changing period
+int thiefFrame = 0;
 int colorPeriod = 75;
 
 //Collision Check
@@ -46,6 +47,7 @@ const float TOP_INCREMENT = -4.5;
 const float zoomFrame = 50;
 
 //Displacement of life on window
+int life = 4;
 std::string lifeText = "Life: ";
 const float LIFE_X = 10;
 const float LIFE_Y = 90;
@@ -69,7 +71,7 @@ public:
 	}
 
 	coordinates operator+ (coordinates& other) {
-		return coordinates(this->getLeft() + other.getLeft(), this->getRight() + other.getRight(), this->getBottom() + other.getBottom(), this->getTop() + other.getTop());
+		return coordinates(left + other.getLeft(), right + other.getRight(), bottom + other.getBottom(), top + other.getTop());
 	}
 
 	float getLeft(){ return left; }
@@ -125,7 +127,7 @@ protected:
 	float x: 사각형의 왼쪽 아래 점의 x좌표
 	float y: 사각형의 왼쪽 아래 점의 y좌표
 	float width:  사각형의 폭(가로 길이)
-	float height: 사각형의 높으(세로 길이)
+	float height: 사각형의 높이(세로 길이)
 */
 class rect: public object {
 public:
@@ -151,7 +153,7 @@ private:
 	float x: 원의 중심의 x좌표
 	float y: 원의 중심의 y좌표
 	double rad: 원의 반지름 길이
-	int periodFrame: 도둑의 색을 바꾸기 위한 시간 계산
+	bool isCollided: 벽과의 충돌 여부 판단
 */
 class character: public object {
 public:
@@ -160,24 +162,15 @@ public:
 	double getRad() { return rad; }
 	void setRad(double newRad) { rad = newRad; }
 
-	int getPeriodFrame() { return periodFrame; }
-	void resetPeriodFrame() { periodFrame = 0; }
-	void addPeriodFrame() { periodFrame++; }
-
-	bool getCollided() { return collided; }
-	void isCollided() { collided = true; }
-	void resetCollided() { collided = false; }
+	bool getCollided() { return isCollided; }
+	void setCollided() { isCollided = true; }
+	void resetCollided() { isCollided = false; }
 
 	void moveRight() { x += distancePerFrame; }
 
-	int getLife() { return life; }
-	void decreaseLife() { life--; };
-
 private:
 	double rad = 5.0;
-	int periodFrame = 0;
-	bool collided = false;;
-	int life = 4;
+	bool isCollided = false;
 };
 rect world_floor(0, 0, 150, 20);
 rect wall(WORLD_X, 20, 10, 50);
@@ -201,5 +194,4 @@ void specialkeyboard(int key, int x, int y);
 
 bool collisionCheck(object* a, object* b);
 
-inline void increaseWallSpeed() { wallSpeed += wallSpeedIncrement; }
 void finishGame();
