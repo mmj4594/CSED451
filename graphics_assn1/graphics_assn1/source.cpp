@@ -13,8 +13,8 @@ int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(750, 500);
-	glutInitWindowPosition(100, 100);
-	glutCreateWindow(argv[0]);
+	glutInitWindowPosition(500, 100);
+	glutCreateWindow("assn1");
 
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
@@ -69,7 +69,7 @@ void moveWall() {
 			cout << "Fail\n";
 			life--;
 			//Lose
-			if (life == 0) {
+			if (life <= 0) {
 				cout << "Lose\n";
 				finishGame();
 			}
@@ -112,7 +112,6 @@ void moveWall() {
 	}
 
 	//도둑의 색을 주기에 따라 변경
-	cout << thiefFrame << " " << colorPeriod << "\n";
 	if (thiefFrame >= colorPeriod) {
 		thief.setColor(rand() % 4);
 		thiefFrame = 0;
@@ -120,8 +119,8 @@ void moveWall() {
 	else thiefFrame++;
 
 	//wall이 화면을 벗어날 시 위치 재조정(벽 재생성)
-	if (wall.getX() < 0) {
-		wall = rect(WORLD_X, 20, 10, 50);
+	if (wall.getX() + wall.getWidth() < world.getLeft()) {
+		wall = rect(world.getRight(), 20, 10, 50);
 		thief.resetCollided();
 		player.resetCollided();
 	}
