@@ -194,7 +194,4 @@ void specialkeyboard(int key, int x, int y);
 
 bool collisionCheck(object* a, object* b);
 
-void movePlayerRight();
-void zoomCamera();
-
 void finishGame();

@@ -129,7 +129,7 @@ void moveWall(int value) {
 	}
 
 	glutPostRedisplay();
-	glutTimerFunc(17, moveWall, 1);
+	glutTimerFunc(17, moveWall, 1);		//call timer function recursively until game ends
 }
 
 //color의 색으로 화면을 칠할 수 있도록 팔레트를 color의 색으로 설정한다.
@@ -251,6 +251,7 @@ void writeLife(float x, float y) {
 
 //Fnish game
 void finishGame() {
+	glutPostRedisplay();
 	glutReshapeFunc(NULL);
 	glutIdleFunc(NULL);
 	glutKeyboardFunc(NULL);
