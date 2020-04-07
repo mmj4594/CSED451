@@ -182,7 +182,7 @@ character thief(THIEF_X, THIEF_Y);
 void init();
 void display();
 void reshape(int w, int h);
-void moveWall();
+void moveWall(int value);
 
 void setColor(int color);
 void drawRect(double x, double y, double width, double height, const int color);

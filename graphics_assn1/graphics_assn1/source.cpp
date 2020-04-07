@@ -18,7 +18,8 @@ int main(int argc, char** argv) {
 
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
-	glutIdleFunc(moveWall);
+	//glutIdleFunc(moveWall);
+	glutTimerFunc(17, moveWall, 1);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialkeyboard);
 
@@ -59,7 +60,7 @@ void reshape(int w, int h) {
 	벽과 다른 오브젝트의 충돌을 판정하여
 	충돌이 발생할 경우 충돌 발생 오브젝트의 종류에 따라 행동.
 */
-void moveWall() {
+void moveWall(int value) {
 	wall.setX(wall.getX() - 0.3 * wallSpeed);
 
 	//벽과 플레이어의 충돌
@@ -72,6 +73,7 @@ void moveWall() {
 			if (life <= 0) {
 				cout << "Lose\n";
 				finishGame();
+				return;
 			}
 		}
 		//Pass
@@ -91,6 +93,7 @@ void moveWall() {
 	else if (collisionCheck(&player, &thief)) {
 		cout << "Win\n";
 		finishGame();
+		return;
 	}
 
 	//Move player to right if passes
@@ -126,6 +129,7 @@ void moveWall() {
 	}
 
 	glutPostRedisplay();
+	glutTimerFunc(17, moveWall, 1);
 }
 
 //color의 색으로 화면을 칠할 수 있도록 팔레트를 color의 색으로 설정한다.
