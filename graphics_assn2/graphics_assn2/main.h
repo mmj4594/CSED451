@@ -17,20 +17,18 @@ float WORLD_Y = 100;
 float wallSpeed = 1;
 const float wallSpeedIncrement = 0.5;
 
-//Position of Player
+//Initial position of Player
 const int PLAYER_X = 25;
 const int PLAYER_Y = 25;
 float playerNewX = PLAYER_X;
-//Position of Thief
+
+//Initial position of Thief
 const int THIEF_X = 75;
 const int THIEF_Y = 25;
 //Thief color changing period
 int thiefFrame = 0;
 int colorPeriod = 75;
 
-//Collision Check
-bool wallThiefCollision = false;
-bool wallPlayerCollsion = false;
 //Player moving distance if passes
 float movingDistance = 5;
 //Camera zoom size if passes

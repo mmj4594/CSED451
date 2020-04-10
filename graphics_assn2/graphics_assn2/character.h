@@ -26,11 +26,11 @@ public:
 	void setCollided() { isCollided = true; }
 	void resetCollided() { isCollided = false; }
 
-	void moveRight() { x += 0.1f; }
+	void moveRight() { x += distancePerFrame; }
+
+	void drawCharacter();
 
 private:
 	double rad = 5.0;
 	bool isCollided = false;
 };
-
-void drawCircle(double centerx, double centery, double rad, const int color);

@@ -23,9 +23,8 @@ public:
 	void setWidth(float newWidth) { width = newWidth; }
 	void setHeight(float newHeight) { height = newHeight; }
 
+	void drawRect();
+
 private:
 	float width, height;
 };
-
-
-void drawRect(double x, double y, double width, double height, const int color);

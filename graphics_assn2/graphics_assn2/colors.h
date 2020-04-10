@@ -8,4 +8,4 @@ const int YELLOW = 3;
 const int BLACK = 4;
 const int GRAY = 5;
 
-void setColor(int color);
+void setPalette(int color);

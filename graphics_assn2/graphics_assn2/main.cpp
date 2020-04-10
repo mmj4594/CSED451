@@ -43,15 +43,17 @@ void init() {
 	srand(time(NULL));
 	glClearColor(1.0, 1.0, 1.0, 0.0);
 	glShadeModel(GL_FLAT);
+	world_floor.setColor(BLACK);
 }
 
 //화면을 그려준다.
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
-	drawRect(world_floor.getX(), world_floor.getY(), world_floor.getWidth(), world_floor.getHeight(), BLACK);	//floor	
-	drawCircle(player.getX(), player.getY(), player.getRad(), player.getColor());								//player
-	drawCircle(thief.getX(), thief.getY(), thief.getRad(), thief.getColor());									//thief
-	drawRect(wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight(), wall.getColor());						//wall
+	world_floor.drawRect();
+	wall.drawRect();
+	player.drawCharacter();
+	thief.drawCharacter();
+
 	writeLife(lifeX, lifeY);
 	glutSwapBuffers();
 }
@@ -81,12 +83,8 @@ void frameAction(int value) {
 		return;
 	}
 
-
 	//Move player to right if passes
-	if (player.getX() < playerNewX) {
-		player.moveRight();
-	}
-
+	if (player.getX() < playerNewX) { player.moveRight(); }
 	//zoom in camera
 	if (world.getLeft() < newWorld.getLeft()) zoominCamera();
 
@@ -110,7 +108,7 @@ int moveWall() {
 	wall.setX(wall.getX() - 0.3 * wallSpeed);
 
 	//벽과 플레이어의 충돌
-	if (collisionCheck(&wall, &player)) {
+	if (wall.collisionCheck(&player)) {
 		//Fail
 		if (!allPass && (allFail || wall.getColor() != player.getColor())) {
 			cout << "Fail\n";
@@ -128,11 +126,11 @@ int moveWall() {
 		}
 	}
 	//벽과 도둑의 충돌
-	else if (collisionCheck(&wall, &thief)) {
+	else if (wall.collisionCheck(&thief)) {
 		wall.setColor(thief.getColor());
 	}
 	//플레이어와 도둑의 충돌
-	else if (collisionCheck(&player, &thief)) {
+	else if (player.collisionCheck(&thief)) {
 		return WIN;
 	}
 

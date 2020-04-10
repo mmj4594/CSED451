@@ -1,4 +1,4 @@
-Readme - CSED451 Computer Graphics assn1
+Readme - CSED451 Computer Graphics assn2
 Team GPS(20202405 문민재, 20202728 김진수)
 
 

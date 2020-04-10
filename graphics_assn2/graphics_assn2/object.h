@@ -20,10 +20,10 @@ public:
 	void setColor(const int newColor) { color = newColor; }
 	void setX(float newX) { x = newX; }
 	void setY(float newY) { y = newY; }
+
+	bool collisionCheck(object* a);
 protected:
 	float x, y;
 	int color = 5;
 	int type;	//0 = rect, 1 = character
 };
-
-bool collisionCheck(object* a, object* b);
