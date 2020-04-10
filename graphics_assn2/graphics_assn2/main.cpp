@@ -1,11 +1,22 @@
+#include <GL/glew.h>
+#include <GL/freeglut.h>
+#include <glm/vec3.hpp>
+#include <vector>
+#include <string>
+
 #include <iostream>
-#include "source.h"
 #include <stdlib.h>
 #include <time.h>
+
+#include "main.h"
+#include "colors.h"
 
 //All pass/fail 치트 활성화 여부
 bool allPass = false;
 bool allFail = false;
+
+//Game status
+int gameStatus = PLAYING;
 
 using namespace std;
 
@@ -14,12 +25,12 @@ int main(int argc, char** argv) {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(750, 500);
 	glutInitWindowPosition(500, 100);
-	glutCreateWindow("assn1");
+	glutCreateWindow("assn2");
 
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	//glutIdleFunc(moveWall);
-	glutTimerFunc(17, moveWall, 1);
+	glutTimerFunc(17, frameAction, 1);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialkeyboard);
 
@@ -55,29 +66,60 @@ void reshape(int w, int h) {
 	glLoadIdentity();
 }
 
+//매 frmae(60FPS 기준)마다의 action
+void frameAction(int value) {
+	//벽을 움직이고 game status를 받아옴.
+	gameStatus = moveWall();
+	switch (gameStatus) {
+	case LOSE:
+		cout << "Lose\n";
+		finishGame();
+		return;
+	case WIN:
+		cout << "Win\n";
+		finishGame();
+		return;
+	}
+
+
+	//Move player to right if passes
+	if (player.getX() < playerNewX) {
+		player.moveRight();
+	}
+
+	//zoom in camera
+	if (world.getLeft() < newWorld.getLeft()) zoominCamera();
+
+	//도둑의 색을 주기에 따라 변경
+	if (thiefFrame >= colorPeriod) {
+		thief.setColor(rand() % 4);
+		thiefFrame = 0;
+	}
+	else thiefFrame++;
+
+	glutPostRedisplay();
+	glutTimerFunc(17, frameAction, 1);		//call timer function recursively until game ends
+}
+
 /*
 	벽을 wallSpeed에 맞게 움직여준 후
 	벽과 다른 오브젝트의 충돌을 판정하여
 	충돌이 발생할 경우 충돌 발생 오브젝트의 종류에 따라 행동.
 */
-void moveWall(int value) {
+int moveWall() {
 	wall.setX(wall.getX() - 0.3 * wallSpeed);
 
 	//벽과 플레이어의 충돌
 	if (collisionCheck(&wall, &player)) {
 		//Fail
-		if (!allPass && (allFail || wall.getColor() != player.getColor())) { 
+		if (!allPass && (allFail || wall.getColor() != player.getColor())) {
 			cout << "Fail\n";
 			life--;
 			//Lose
-			if (life <= 0) {
-				cout << "Lose\n";
-				finishGame();
-				return;
-			}
+			if (life <= 0) return LOSE;
 		}
 		//Pass
-		else if (!allFail && (allPass || wall.getColor() == player.getColor())) { 
+		else if (!allFail && (allPass || wall.getColor() == player.getColor())) {
 			cout << "Pass\n";
 			wallSpeed += wallSpeedIncrement;
 			colorPeriod -= 5;
@@ -91,35 +133,8 @@ void moveWall(int value) {
 	}
 	//플레이어와 도둑의 충돌
 	else if (collisionCheck(&player, &thief)) {
-		cout << "Win\n";
-		finishGame();
-		return;
+		return WIN;
 	}
-
-	//Move player to right if passes
-	if (player.getX() < playerNewX) {
-		player.moveRight();
-	}
-	//Zoom camera if passes
-	if (world.getLeft() < newWorld.getLeft())
-	{
-		world = world + incrementPerFrame;
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		gluOrtho2D(world.getLeft(), world.getRight(), world.getBottom(), world.getTop());
-
-		//Move position of lifeText
-		frameMoved++;
-		lifeX = frameMoved * incrementPerFrame.getLeft() + LIFE_X * (world.getRight() - world.getLeft()) / WORLD_X;
-		lifeY = frameMoved * incrementPerFrame.getBottom() + LIFE_Y * (world.getTop() - world.getBottom()) / WORLD_Y;
-	}
-
-	//도둑의 색을 주기에 따라 변경
-	if (thiefFrame >= colorPeriod) {
-		thief.setColor(rand() % 4);
-		thiefFrame = 0;
-	}
-	else thiefFrame++;
 
 	//wall이 화면을 벗어날 시 위치 재조정(벽 재생성)
 	if (wall.getX() + wall.getWidth() < world.getLeft()) {
@@ -127,54 +142,7 @@ void moveWall(int value) {
 		thief.resetCollided();
 		player.resetCollided();
 	}
-
-	glutPostRedisplay();
-	glutTimerFunc(17, moveWall, 1);		//call timer function recursively until game ends
-}
-
-//color의 색으로 화면을 칠할 수 있도록 팔레트를 color의 색으로 설정한다.
-void setColor(int color) {
-	switch (color) {
-	case RED:
-		glColor3f(0.8, 0.0, 0.0);
-		break;
-	case GREEN:
-		glColor3f(0.0, 0.8, 0.0);
-		break;
-	case BLUE:
-		glColor3f(0.0, 0.0, 0.8);
-		break;
-	case YELLOW:
-		glColor3f(0.9, 0.9, 0.0);
-		break;
-	case BLACK:
-		glColor3f(0.0, 0.0, 0.0);
-		break;
-	case GRAY:
-		glColor3f(0.3, 0.3, 0.3);
-		break;
-	}
-}
-
-//화면상에 사각형을 그려준다.
-void drawRect(double x, double y, double width, double height, const int color) {
-	setColor(color);
-	glBegin(GL_POLYGON);
-		glVertex2f(x, y);
-		glVertex2f(x, y + height);
-		glVertex2f(x + width, y + height);
-		glVertex2f(x + width, y);
-	glEnd();
-}
-
-//화면상에 원을 그려준다.
-void drawCircle(double centerx, double centery, double rad, int color) {
-	setColor(color);
-	glBegin(GL_POLYGON);
-		for (float angle = 0; angle < 360; angle += 1.0) {
-			glVertex2f(centerx + rad * cos(angle), centery + rad * sin(angle));
-		}
-	glEnd();
+	return PLAYING;
 }
 
 //키보드 입력에 따른 치트를 정의한다.
@@ -212,30 +180,6 @@ void specialkeyboard(int key, int x, int y) {
 	}
 }
 
-//두 오브젝트 a, b가 충돌하는지 여부를 반환한다.
-bool collisionCheck(object* a, object* b) {
-	//wall - player/thief collision check
-	if (a->getType() == 0) {
-		rect* wall = (rect*)a;
-		character* ch = (character*)b;
-
-		//Check if collision already occured
-		if ((wall->getX() < ch->getX()) && !ch->getCollided()) {
-			ch->setCollided();
-			return true;			
-		}
-		return false;
-	}
-
-	//player - thief collision check
-	else {
-		character* player = (character*)a;
-		character* thief = (character*)b;
-
-		return (player->getX() + player->getRad()) > (thief->getX() - thief->getRad());
-	}
-}
-
 //Display remaining life on window
 void writeLife(float x, float y) {
 	//life
@@ -247,6 +191,19 @@ void writeLife(float x, float y) {
 		char c = *i;
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
 	}
+}
+
+//Zoom in camera is player successfully pass wall
+void zoominCamera() {
+	world = world + incrementPerFrame;
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(world.getLeft(), world.getRight(), world.getBottom(), world.getTop());
+
+	//Move position of lifeText
+	frameMoved++;
+	lifeX = frameMoved * incrementPerFrame.getLeft() + LIFE_X * (world.getRight() - world.getLeft()) / WORLD_X;
+	lifeY = frameMoved * incrementPerFrame.getBottom() + LIFE_Y * (world.getTop() - world.getBottom()) / WORLD_Y;
 }
 
 //Fnish game
