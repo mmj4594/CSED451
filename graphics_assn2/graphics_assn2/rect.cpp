@@ -3,7 +3,7 @@
 #include "colors.h"
 
 //화면상에 사각형을 그려준다.
-void rect::drawRect() {
+void rect::draw() {
 	setPalette(color);
 	glBegin(GL_POLYGON);
 		glVertex2f(x, y);

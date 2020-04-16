@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\models">
+      <UniqueIdentifier>{6cfd5a88-aaba-4ab1-8b72-033c6f0cc239}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\models">
+      <UniqueIdentifier>{fb4870b1-b3a6-4f55-b095-99999de25ef6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -21,13 +27,22 @@
     <ClCompile Include="colors.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="character.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="rect.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="object.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="character_torso.cpp">
+      <Filter>소스 파일\models</Filter>
+    </ClCompile>
+    <ClCompile Include="character_head.cpp">
+      <Filter>소스 파일\models</Filter>
+    </ClCompile>
+    <ClCompile Include="character_limb.cpp">
+      <Filter>소스 파일\models</Filter>
+    </ClCompile>
+    <ClCompile Include="character.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,9 +53,6 @@
     <ClInclude Include="object.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="character.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="rect.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -48,6 +60,21 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="colors.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="treeNode.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="character_torso.h">
+      <Filter>헤더 파일\models</Filter>
+    </ClInclude>
+    <ClInclude Include="character_head.h">
+      <Filter>헤더 파일\models</Filter>
+    </ClInclude>
+    <ClInclude Include="character_limb.h">
+      <Filter>헤더 파일\models</Filter>
+    </ClInclude>
+    <ClInclude Include="character.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

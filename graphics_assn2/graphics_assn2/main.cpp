@@ -1,6 +1,5 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
-#include <glm/vec3.hpp>
 #include <vector>
 #include <string>
 
@@ -10,6 +9,7 @@
 
 #include "main.h"
 #include "colors.h"
+#include "character_torso.h"
 
 //All pass/fail 치트 활성화 여부
 bool allPass = false;
@@ -29,8 +29,7 @@ int main(int argc, char** argv) {
 
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
-	//glutIdleFunc(moveWall);
-	glutTimerFunc(17, frameAction, 1);
+	glutTimerFunc(0, frameAction, 1);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialkeyboard);
 
@@ -49,12 +48,23 @@ void init() {
 //화면을 그려준다.
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
-	world_floor.drawRect();
-	wall.drawRect();
-	player.drawCharacter();
-	thief.drawCharacter();
+	world_floor.draw();
+	wall.draw();
+	player.draw();
+	thief.draw();
 
 	writeLife(lifeX, lifeY);
+
+
+	/*character_torso aaa;
+	glLoadIdentity();
+	glTranslatef(55, 60, 0);
+	glRotatef(60, 0.0f, 0.0f, 1.0f);
+	glTranslatef(-55, -60, 0);
+	aaa.draw();
+	glLoadIdentity();
+	*/
+
 	glutSwapBuffers();
 }
 
@@ -68,7 +78,7 @@ void reshape(int w, int h) {
 	glLoadIdentity();
 }
 
-//매 frmae(60FPS 기준)마다의 action
+//매 frame(60FPS 기준)마다의 action
 void frameAction(int value) {
 	//벽을 움직이고 game status를 받아옴.
 	gameStatus = moveWall();
@@ -184,14 +194,13 @@ void writeLife(float x, float y) {
 	glColor3f(0, 0, 0);
 	glRasterPos2f(x, y);
 	string s = lifeText + to_string(life);
-	for (string::iterator i = s.begin(); i != s.end(); ++i) 
-	{
+	for (string::iterator i = s.begin(); i != s.end(); ++i) {
 		char c = *i;
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
 	}
 }
 
-//Zoom in camera is player successfully pass wall
+//Zoom in camera if player successfully pass wall
 void zoominCamera() {
 	world = world + incrementPerFrame;
 	glMatrixMode(GL_PROJECTION);
@@ -212,3 +221,4 @@ void finishGame() {
 	glutKeyboardFunc(NULL);
 	glutSpecialFunc(NULL);
 }
+

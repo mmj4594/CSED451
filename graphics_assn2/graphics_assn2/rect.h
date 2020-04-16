@@ -15,7 +15,7 @@
 */
 class rect : public object {
 public:
-	rect(float a, float b, float w, float h) { type = 0; x = a; y = b; width = w; height = h; }
+	rect(float a, float b, float w, float h) { type = 0; x = a; y = b; z = 0; width = w; height = h; }
 
 	float getWidth() { return width; }
 	float getHeight() { return height; }
@@ -23,7 +23,7 @@ public:
 	void setWidth(float newWidth) { width = newWidth; }
 	void setHeight(float newHeight) { height = newHeight; }
 
-	void drawRect();
+	void draw();
 
 private:
 	float width, height;

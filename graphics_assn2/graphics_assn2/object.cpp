@@ -1,10 +1,11 @@
+#include "object.h"
 #include "rect.h"
 #include "character.h"
 
 //두 오브젝트 a, b가 충돌하는지 여부를 반환한다.
 bool object::collisionCheck(object* a) {
 	//wall - player/thief collision check
-	if (this->getType() == 0) {
+	if (type == 0) {
 		rect* wall = (rect*)this;
 		character* ch = (character*)a;
 
