@@ -34,16 +34,16 @@ private:
 	treeNode torso_node;
 	treeNode head_node;
 	treeNode lua_node;
-	treeNode lla_node;
 	treeNode rua_node;
-	treeNode rla_node;
 	treeNode lul_node;
-	treeNode lll_node;
 	treeNode rul_node;
+	treeNode lla_node;
+	treeNode rla_node;
+	treeNode lll_node;
 	treeNode rll_node;
 
-	float lua_angle = 0.0;
-	float rua_angle = 0.0;
+	float lua_angle = -10.0;
+	float rua_angle = 10.0;
 	float lul_angle = -60.0;
 	float rul_angle = 60.0;
 	float lla_angle = -90.0;

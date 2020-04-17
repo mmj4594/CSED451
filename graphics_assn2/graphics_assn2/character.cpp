@@ -24,49 +24,49 @@ character::character(float a, float b) {
 	
 	//initialization for torso
 	torso_node.mtx = mat4(1.0f);
-	torso_node.func = drawTorso;
+	torso_node.draw = drawTorso;
 	torso_node.sibling = NULL;
 	torso_node.child = &head_node;
 
 	//initialization for head
-	head_node.mtx = translate(mat4(1.0f), vec3(0, 8, 0));
-	head_node.func = drawHead;
+	head_node.mtx = translate(mat4(1.0f), vec3(0, 0.5 * torso_height + head_rad, 0));
+	head_node.draw = drawHead;
 	head_node.sibling = &lua_node;
 	head_node.child = NULL;
 
 	//initialization for upper limb
 	lua_node.mtx = translate(mat4(1.0f), vec3(-0.5 * torso_width, 0.5 * torso_height - limb_joint_rad , 0)) * rotate(mat4(1.0f), radians(180.0f), vec3(0, 0, 1));
-	lua_node.func = drawLimb;
+	lua_node.draw = drawLimb;
 	lua_node.sibling = &rua_node;
 	lua_node.child = &lla_node;
 	rua_node.mtx = translate(mat4(1.0f), vec3(0.5 * torso_width, 0.5 * torso_height - limb_joint_rad, 0));
-	rua_node.func = drawLimb;
+	rua_node.draw = drawLimb;
 	rua_node.sibling = &lul_node;
 	rua_node.child = &rla_node;
 	lul_node.mtx = translate(mat4(1.0f), vec3(-0.5 * torso_width + limb_joint_rad, -0.5 * torso_height, 0)) * rotate(mat4(1.0f), radians(-90.0f), vec3(0, 0, 1));
-	lul_node.func = drawLimb;
+	lul_node.draw = drawLimb;
 	lul_node.sibling = &rul_node;
 	lul_node.child = &lll_node;
 	rul_node.mtx = translate(mat4(1.0f), vec3(0.5 * torso_width - limb_joint_rad, -0.5 * torso_height, 0)) * rotate(mat4(1.0f), radians(-90.0f), vec3(0, 0, 1));
-	rul_node.func = drawLimb;
+	rul_node.draw = drawLimb;
 	rul_node.sibling = NULL;
 	rul_node.child = &rll_node;
 
 	//initialization for lower limb
 	lla_node.mtx = translate(mat4(1.0f), vec3(limb_length, 0, 0));
-	lla_node.func = drawLimb;
+	lla_node.draw = drawLimb;
 	lla_node.sibling = NULL;
 	lla_node.child = NULL;
 	rla_node.mtx = translate(mat4(1.0f), vec3(limb_length, 0, 0));
-	rla_node.func = drawLimb;
+	rla_node.draw = drawLimb;
 	rla_node.sibling = NULL;
 	rla_node.child = NULL;
 	lll_node.mtx = translate(mat4(1.0f), vec3(limb_length, 0, 0));
-	lll_node.func = drawLimb;
+	lll_node.draw = drawLimb;
 	lll_node.sibling = NULL;
 	lll_node.child = NULL;
 	rll_node.mtx = translate(mat4(1.0f), vec3(limb_length, 0, 0));
-	rll_node.func = drawLimb;
+	rll_node.draw = drawLimb;
 	rll_node.sibling = NULL;
 	rll_node.child = NULL;
 }
@@ -75,67 +75,33 @@ character::character(float a, float b) {
 void character::traverse(treeNode* current) {
 	if (current == NULL) return;
 
+	glPushMatrix();
+		glMultMatrixf(value_ptr(current->mtx * current->additionalTransform));
+		current->draw();
+		if (current->child != NULL) traverse(current->child);
+	glPopMatrix();
+
+	if (current->sibling != NULL) traverse(current->sibling);
 }
 
 //Draw character object on the screen
 void character::draw() {
+	setPalette(color);
 	mat4 additionalTransform = mat4(1.0f);
+
+	lua_node.additionalTransform = rotate(mat4(1.0f), radians(lua_angle), vec3(0, 0, 1));
+	rua_node.additionalTransform = rotate(mat4(1.0f), radians(rua_angle), vec3(0, 0, 1));
+	lul_node.additionalTransform = rotate(mat4(1.0f), radians(lul_angle), vec3(0, 0, 1));
+	rul_node.additionalTransform = rotate(mat4(1.0f), radians(rul_angle), vec3(0, 0, 1));
+	lla_node.additionalTransform = rotate(mat4(1.0f), radians(lla_angle), vec3(0, 0, 1));
+	rla_node.additionalTransform = rotate(mat4(1.0f), radians(rla_angle), vec3(0, 0, 1));
+	lll_node.additionalTransform = rotate(mat4(1.0f), radians(lll_angle), vec3(0, 0, 1));
+	rll_node.additionalTransform = rotate(mat4(1.0f), radians(rll_angle), vec3(0, 0, 1));
 
 	//tree traversal
 	glLoadIdentity();
 	glTranslatef(x, y+30, 0);
-	glPushMatrix();
-		//upper body
-		setPalette(color);
-		torso_node.func();
-		glPushMatrix();
-			glMultMatrixf(glm::value_ptr(head_node.mtx));
-			head_node.func();
-		glPopMatrix();
-		glPushMatrix();
-			additionalTransform = rotate(mat4(1.0f), radians(lua_angle), vec3(0, 0, 1));
-			glMultMatrixf(glm::value_ptr(lua_node.mtx * additionalTransform));
-			lua_node.func();
-			glPushMatrix();
-				additionalTransform = rotate(mat4(1.0f), radians(lla_angle), vec3(0, 0, 1));
-				glMultMatrixf(glm::value_ptr(lla_node.mtx * additionalTransform));
-				lla_node.func();
-			glPopMatrix();
-		glPopMatrix();
-		glPushMatrix();
-			additionalTransform = rotate(mat4(1.0f), radians(rua_angle), vec3(0, 0, 1));
-			glMultMatrixf(glm::value_ptr(rua_node.mtx * additionalTransform));
-			rua_node.func();
-			glPushMatrix();
-				additionalTransform = rotate(mat4(1.0f), radians(rla_angle), vec3(0, 0, 1));
-				glMultMatrixf(glm::value_ptr(rla_node.mtx * additionalTransform));
-				rla_node.func();
-			glPopMatrix();
-		glPopMatrix();
-
-		//lower body
-		setPalette(GRAY);
-		glPushMatrix();
-			additionalTransform = rotate(mat4(1.0f), radians(lul_angle), vec3(0, 0, 1));
-			glMultMatrixf(glm::value_ptr(lul_node.mtx * additionalTransform));
-			lul_node.func();
-			glPushMatrix();
-				additionalTransform = rotate(mat4(1.0f), radians(lll_angle), vec3(0, 0, 1));
-				glMultMatrixf(glm::value_ptr(lll_node.mtx * additionalTransform));
-				lll_node.func();
-			glPopMatrix();
-		glPopMatrix();
-		glPushMatrix();
-			additionalTransform = rotate(mat4(1.0f), radians(rul_angle), vec3(0, 0, 1));
-			glMultMatrixf(glm::value_ptr(rul_node.mtx * additionalTransform));
-			rul_node.func();
-			glPushMatrix();
-				additionalTransform = rotate(mat4(1.0f), radians(rll_angle), vec3(0, 0, 1));
-				glMultMatrixf(glm::value_ptr(rll_node.mtx * additionalTransform));
-				rll_node.func();
-			glPopMatrix();
-		glPopMatrix();
-	glPopMatrix();
+	traverse(&torso_node);
 }
 
 //Draw head of character

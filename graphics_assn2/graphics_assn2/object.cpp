@@ -22,6 +22,6 @@ bool object::collisionCheck(object* a) {
 		character* player = (character*)this;
 		character* thief = (character*)a;
 
-		return (player->getX() + player->getRad()) > (thief->getX() - thief->getRad());
+		return (player->getX()) > (thief->getX());
 	}
 }
