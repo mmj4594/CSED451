@@ -18,16 +18,20 @@ float wallSpeed = 1;
 const float wallSpeedIncrement = 0.5;
 
 //Initial position of Player
-const int PLAYER_X = 25;
-const int PLAYER_Y = 25;
+const float PLAYER_X = 25;
+const float PLAYER_Y = 37.0;
 float playerNewX = PLAYER_X;
 
 //Initial position of Thief
-const int THIEF_X = 75;
-const int THIEF_Y = 25;
+const float THIEF_X = 75;
+const float THIEF_Y = 37.0;
 //Thief color changing period
 int thiefFrame = 0;
 int colorPeriod = 75;
+
+//Lower body animation loop period frame for characters
+int animationFrame = 0;
+int lowerBodyPeriod = 60;
 
 //Player moving distance if passes
 float movingDistance = 5;

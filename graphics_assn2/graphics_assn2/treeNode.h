@@ -12,7 +12,7 @@
 	\detail
 	mat4 mtx: 4*4 matrix to multiply basically on the right of the current model-view matrix.
 	mat4 additionalTransform: Additional transform in addition to base transform.
-	void (*func): Pointer to a function that performed by this node.
+	void (*draw): Pointer to a function that performed by this node.
 	treeNode* sibling: Sibling of LCRS tree.
 	treeNode* child: Child of LCRS tree.
 */

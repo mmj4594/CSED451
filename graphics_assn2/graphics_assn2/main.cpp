@@ -86,7 +86,7 @@ void frameAction(int value) {
 
 	//Move player to right if passes
 	if (player.getX() < playerNewX) { player.moveRight(); }
-	//zoom in camera
+	//zoom in camera if passes
 	if (world.getLeft() < newWorld.getLeft()) zoominCamera();
 
 	//Change color of the thief in every set period
@@ -94,8 +94,13 @@ void frameAction(int value) {
 		thief.setColor(rand() % 4);
 		thiefFrame = 0;
 	}
-	else thiefFrame++;
 
+	//Lower body animation loop for player and thief
+	if (animationFrame >= lowerBodyPeriod) { animationFrame = 0; }
+	player.lowerBodyAnimation(animationFrame, lowerBodyPeriod);
+	thief.lowerBodyAnimation(animationFrame, lowerBodyPeriod);
+
+	thiefFrame++; animationFrame++;
 	glutPostRedisplay();
 	glutTimerFunc(17, frameAction, 1);		//call timer function recursively until game ends
 }

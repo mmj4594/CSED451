@@ -12,11 +12,11 @@
 using namespace glm;
 
 //Static global variables for drawing character
-static double head_rad = 3.0;
-static double torso_width = 4.0;
-static double torso_height = 10.0;
-static double limb_joint_rad = 1.5;
-static double limb_length = 6.0;
+static float head_rad = 3.0;
+static float torso_width = 4.0;
+static float torso_height = 10.0;
+static float limb_joint_rad = 1.5;
+static float limb_length = 6.0;
 
 //Constructor of character class
 character::character(float a, float b) {
@@ -100,8 +100,26 @@ void character::draw() {
 
 	//tree traversal
 	glLoadIdentity();
-	glTranslatef(x, y+30, 0);
+	glTranslatef(x, y, 0);
 	traverse(&torso_node);
+}
+
+//Draw the nth frame of the lower body animation loop.
+void character::lowerBodyAnimation(int currentFrame, int period) {
+	//A->B
+	if (currentFrame <= period/2) {
+		lul_angle = lul_angle_a + ((lul_angle_b - lul_angle_a) / (period / 2) * currentFrame);
+		rul_angle = rul_angle_a + ((rul_angle_b - rul_angle_a) / (period / 2) * currentFrame);
+		lll_angle = lll_angle_a + ((lll_angle_b - lll_angle_a) / (period / 2) * currentFrame);
+		rll_angle = rll_angle_a + ((rll_angle_b - rll_angle_a) / (period / 2) * currentFrame);
+	}
+	//B->A
+	else {
+		lul_angle = lul_angle_b + ((lul_angle_a - lul_angle_b) / (period / 2) * (currentFrame - period / 2));
+		rul_angle = rul_angle_b + ((rul_angle_a - rul_angle_b) / (period / 2) * (currentFrame - period / 2));
+		lll_angle = lll_angle_b + ((lll_angle_a - lll_angle_b) / (period / 2) * (currentFrame - period / 2));
+		rll_angle = rll_angle_b + ((rll_angle_a - rll_angle_b) / (period / 2) * (currentFrame - period / 2));
+	}
 }
 
 //Draw head of character
@@ -113,7 +131,7 @@ void drawHead() {
 	glEnd();
 }
 
-//Draw limb(arm and leg) of character
+//Draw limb(arm or leg) of character
 void drawLimb() {
 	//joint1
 	glBegin(GL_POLYGON);
@@ -139,9 +157,9 @@ void drawLimb() {
 //Draw torso of character
 void drawTorso() {
 	glBegin(GL_POLYGON);
-		glVertex2f(-0.5 * torso_width, -0.5 * torso_height);
-		glVertex2f(-0.5 * torso_width, 0.5 * torso_height);
-		glVertex2f(0.5 * torso_width, 0.5 * torso_height);
-		glVertex2f(0.5 * torso_width, -0.5 * torso_height);
+		glVertex2f(-0.5f * torso_width, -0.5f * torso_height);
+		glVertex2f(-0.5f * torso_width, 0.5f * torso_height);
+		glVertex2f(0.5f * torso_width, 0.5f * torso_height);
+		glVertex2f(0.5f * torso_width, -0.5f * torso_height);
 	glEnd();
 }

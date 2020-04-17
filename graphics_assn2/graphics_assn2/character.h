@@ -28,6 +28,8 @@ public:
 	void traverse(treeNode* current);
 	void draw();
 
+	void lowerBodyAnimation(int currentFrame, int period);
+
 private:
 	bool isCollided = false;
 
@@ -42,7 +44,7 @@ private:
 	treeNode lll_node;
 	treeNode rll_node;
 
-	float lua_angle = -10.0;
+	float lua_angle = -0.0;
 	float rua_angle = 10.0;
 	float lul_angle = -60.0;
 	float rul_angle = 60.0;
@@ -50,6 +52,16 @@ private:
 	float rla_angle = 90.0;
 	float lll_angle = -70.0;
 	float rll_angle = -45.0;
+
+	//for lower body animation
+	float lul_angle_a = -60.0;
+	float lul_angle_b = 75.0;
+	float rul_angle_a = 60.0;
+	float rul_angle_b = -65.0;
+	float lll_angle_a = -70.0;
+	float lll_angle_b = -45.0;
+	float rll_angle_a = -45.0;
+	float rll_angle_b = -70.0;
 };
 
 void drawHead();
