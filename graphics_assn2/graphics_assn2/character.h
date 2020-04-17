@@ -29,10 +29,11 @@ public:
 
 	void moveRight() { x += distancePerFrame; }
 
+	void traverse(treeNode* current);
 	void draw();
 
 private:
-	double rad = 5.0;
+	double rad = 3.0;
 	bool isCollided = false;
 
 	treeNode torso_node;
@@ -47,6 +48,6 @@ private:
 	treeNode rll_node;
 };
 
-void drawHead(float x, float y, float z, float theta);
-void drawLimb(float x, float y, float z, float theta);
-void drawTorso(float x, float y, float z, float theta);
+void drawHead();
+void drawLimb();
+void drawTorso();

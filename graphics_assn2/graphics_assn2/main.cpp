@@ -9,7 +9,6 @@
 
 #include "main.h"
 #include "colors.h"
-#include "character_torso.h"
 
 //All pass/fail 치트 활성화 여부
 bool allPass = false;
@@ -48,22 +47,14 @@ void init() {
 //화면을 그려준다.
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
-	world_floor.draw();
-	wall.draw();
+	glMatrixMode(GL_MODELVIEW);
 	player.draw();
 	thief.draw();
+	glLoadIdentity();
+	world_floor.draw();
+	wall.draw();
 
 	writeLife(lifeX, lifeY);
-
-
-	/*character_torso aaa;
-	glLoadIdentity();
-	glTranslatef(55, 60, 0);
-	glRotatef(60, 0.0f, 0.0f, 1.0f);
-	glTranslatef(-55, -60, 0);
-	aaa.draw();
-	glLoadIdentity();
-	*/
 
 	glutSwapBuffers();
 }
