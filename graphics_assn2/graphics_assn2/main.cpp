@@ -10,7 +10,7 @@
 #include "main.h"
 #include "colors.h"
 
-//All pass/fail 치트 활성화 여부
+//All pass/fail cheat activation status
 bool allPass = false;
 bool allFail = false;
 
@@ -44,7 +44,7 @@ void init() {
 	world_floor.setColor(BLACK);
 }
 
-//화면을 그려준다.
+//Display current status on screen
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
@@ -59,7 +59,7 @@ void display() {
 	glutSwapBuffers();
 }
 
-//게임 창 크기 조절시 행동
+//Action when window of the game reshaped
 void reshape(int w, int h) {
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
@@ -69,9 +69,9 @@ void reshape(int w, int h) {
 	glLoadIdentity();
 }
 
-//매 frame(60FPS 기준)마다의 action
+//Action per frame(60FPS currently)
 void frameAction(int value) {
-	//벽을 움직이고 game status를 받아옴.
+	//move wall and get current status.
 	gameStatus = moveWall();
 	switch (gameStatus) {
 	case LOSE:
@@ -89,7 +89,7 @@ void frameAction(int value) {
 	//zoom in camera
 	if (world.getLeft() < newWorld.getLeft()) zoominCamera();
 
-	//도둑의 색을 주기에 따라 변경
+	//Change color of the thief in every set period
 	if (thiefFrame >= colorPeriod) {
 		thief.setColor(rand() % 4);
 		thiefFrame = 0;
@@ -101,14 +101,14 @@ void frameAction(int value) {
 }
 
 /*
-	벽을 wallSpeed에 맞게 움직여준 후
-	벽과 다른 오브젝트의 충돌을 판정하여
-	충돌이 발생할 경우 충돌 발생 오브젝트의 종류에 따라 행동.
+	Move wall in 'wallSpeed'.
+	And if there is collision between wall and other object, return the game status
+	according to the type of object where the collision occurs.
 */
 int moveWall() {
 	wall.setX(wall.getX() - 0.3 * wallSpeed);
 
-	//벽과 플레이어의 충돌
+	//Collision between wall and player
 	if (wall.collisionCheck(&player)) {
 		//Fail
 		if (!allPass && (allFail || wall.getColor() != player.getColor())) {
@@ -126,16 +126,16 @@ int moveWall() {
 			newWorld = world + coordinatesIncrement;
 		}
 	}
-	//벽과 도둑의 충돌
+	//Collision between wall and thief
 	else if (wall.collisionCheck(&thief)) {
 		wall.setColor(thief.getColor());
 	}
-	//플레이어와 도둑의 충돌
+	//Collision between player and thief
 	else if (player.collisionCheck(&thief)) {
 		return WIN;
 	}
 
-	//wall이 화면을 벗어날 시 위치 재조정(벽 재생성)
+	//Repositioning of wall when it goes out of the screen
 	if (wall.getX() + wall.getWidth() < world.getLeft()) {
 		wall = rect(world.getRight(), 20, 10, 50);
 		thief.resetCollided();
@@ -144,7 +144,7 @@ int moveWall() {
 	return PLAYING;
 }
 
-//키보드 입력에 따른 치트를 정의한다.
+//Define cheat according to user keyboard input.
 void keyboard(unsigned char key, int x, int y) {
 	switch (key) {
 	case 'c':
@@ -161,7 +161,7 @@ void keyboard(unsigned char key, int x, int y) {
 
 	glutPostRedisplay();
 }
-//키보드 입력에 따라 플레이어의 색을 설정한다.
+//Determine color of player according to user keyboard input.
 void specialkeyboard(int key, int x, int y) {
 	switch (key) {
 	case GLUT_KEY_UP:

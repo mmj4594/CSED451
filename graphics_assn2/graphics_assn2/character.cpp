@@ -71,15 +71,13 @@ character::character(float a, float b) {
 	rll_node.child = NULL;
 }
 
-//캐릭터를 그려주기 위한 LCRS 트리를 순환한다.
+//LCRS tree traversal for drawing character
 void character::traverse(treeNode* current) {
 	if (current == NULL) return;
 
 }
 
-
-
-//화면상에 캐릭터를 그려준다.
+//Draw character object on the screen
 void character::draw() {
 	mat4 additionalTransform = mat4(1.0f);
 
@@ -149,7 +147,7 @@ void drawHead() {
 	glEnd();
 }
 
-//Draw limb(arm and leeg) of character
+//Draw limb(arm and leg) of character
 void drawLimb() {
 	//joint1
 	glBegin(GL_POLYGON);

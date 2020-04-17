@@ -7,21 +7,17 @@ static float distancePerFrame = 0.1f;
 	\class	character
 
 	\brief
-	맵 상의 캐릭터를 정의하는 클래스.
+	This class defines character object on the world.
 
 	\detail
-	float x: 캐릭터의 중심(torso)의 x좌표
-	float y: 캐릭터의 중심(torso)의 y좌표
-	float z: 캐릭터의 중심(torso)의 z좌표
-	double rad: 원의 반지름 길이
-	bool isCollided: 벽과의 충돌 여부 판단
+	float x: x coordinate of the center of the character(torso)
+	float y: y coordinate of the center of the character(torso)
+	float z: z coordinate of the center of the character(torso)
+	bool isCollided: Determine the collision with wall
 */
 class character : public object {
 public:
 	character(float a, float b);
-
-	double getRad() { return rad; }
-	void setRad(double newRad) { rad = newRad; }
 
 	bool getCollided() { return isCollided; }
 	void setCollided() { isCollided = true; }
@@ -33,7 +29,6 @@ public:
 	void draw();
 
 private:
-	double rad = 3.0;
 	bool isCollided = false;
 
 	treeNode torso_node;

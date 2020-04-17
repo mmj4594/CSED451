@@ -1,7 +1,7 @@
 #include <GL/glew.h>
 #include "colors.h"
 
-//color의 색으로 화면을 칠할 수 있도록 팔레트를 color의 색으로 설정한다.
+//Set pallette color for drawing.
 void setPalette(int color) {
 	switch (color) {
 	case RED:

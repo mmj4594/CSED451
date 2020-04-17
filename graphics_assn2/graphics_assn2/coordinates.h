@@ -3,7 +3,7 @@
 	\class	corrdinates
 
 	\brief
-	gluOrtho2D를 위한 world 좌표계 정의
+	This class defines coordinate system of the world for gluOrtho2D.
 */
 class coordinates {
 public:

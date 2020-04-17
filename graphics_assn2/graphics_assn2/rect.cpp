@@ -2,7 +2,7 @@
 #include "rect.h"
 #include "colors.h"
 
-//화면상에 사각형을 그려준다.
+//Draw rect object on the screen.
 void rect::draw() {
 	setPalette(color);
 	glBegin(GL_POLYGON);

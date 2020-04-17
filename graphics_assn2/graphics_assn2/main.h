@@ -59,9 +59,7 @@ character player(PLAYER_X, PLAYER_Y);
 character thief(THIEF_X, THIEF_Y);
 
 
-/*
-	Function definition
-*/
+//Function definition
 void init();
 void display();
 void reshape(int w, int h);

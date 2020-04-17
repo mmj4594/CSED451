@@ -4,11 +4,11 @@
 	\class	object
 
 	\brief
-	맵 상의 오브젝트를 정의하는 클래스.
+	This class defines object on the world.
 
 	\detail
-	int color: 해당 오브젝트의 색상(위 색상코드 참고)
-	int type: 오브젝트 타입(0 = rect, 1 = character)
+	int color: Color of this object(refer to colors.h)
+	int type: Type of object(0 = rect, 1 = character)
 */
 class object {
 public:

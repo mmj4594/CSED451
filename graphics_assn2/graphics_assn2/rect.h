@@ -5,13 +5,14 @@
 	\class	 rect
 
 	\brief
-	맵 상의 rectangle을 정의하는 클래스.
+	This class defines rectangle object on the world.
 
 	\detail
-	float x: 사각형의 왼쪽 아래 점의 x좌표
-	float y: 사각형의 왼쪽 아래 점의 y좌표
-	float width:  사각형의 폭(가로 길이)
-	float height: 사각형의 높이(세로 길이)
+	float x: x coordinate of the lower left point of this object
+	float y: y coordinate of the lower left point of this object
+	float z: z coordinate of the lower left point of this object
+	float width: width of the rectangle
+	float height: height of the rectangle
 */
 class rect : public object {
 public:

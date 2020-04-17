@@ -2,7 +2,7 @@
 #include "rect.h"
 #include "character.h"
 
-//두 오브젝트 a, b가 충돌하는지 여부를 반환한다.
+//Return whether this object and object 'a' collides.
 bool object::collisionCheck(object* a) {
 	//wall - player/thief collision check
 	if (type == 0) {
