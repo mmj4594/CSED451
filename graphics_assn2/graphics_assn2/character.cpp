@@ -13,7 +13,7 @@ using namespace glm;
 
 //Static global variables for drawing character
 static double head_rad = 3.0;
-static double torso_width = 8.0;
+static double torso_width = 4.0;
 static double torso_height = 10.0;
 static double limb_joint_rad = 1.5;
 static double limb_length = 6.0;
@@ -81,50 +81,59 @@ void character::traverse(treeNode* current) {
 
 //화면상에 캐릭터를 그려준다.
 void character::draw() {
-	setPalette(color);
+	mat4 additionalTransform = mat4(1.0f);
 
 	//tree traversal
 	glLoadIdentity();
 	glTranslatef(x, y+30, 0);
-
 	glPushMatrix();
+		//upper body
 		setPalette(color);
 		torso_node.func();
-		setPalette(GRAY);
-
 		glPushMatrix();
 			glMultMatrixf(glm::value_ptr(head_node.mtx));
 			head_node.func();
 		glPopMatrix();
 		glPushMatrix();
-			glMultMatrixf(glm::value_ptr(lua_node.mtx));
+			additionalTransform = rotate(mat4(1.0f), radians(lua_angle), vec3(0, 0, 1));
+			glMultMatrixf(glm::value_ptr(lua_node.mtx * additionalTransform));
 			lua_node.func();
 			glPushMatrix();
-				glMultMatrixf(glm::value_ptr(lla_node.mtx));
+				additionalTransform = rotate(mat4(1.0f), radians(lla_angle), vec3(0, 0, 1));
+				glMultMatrixf(glm::value_ptr(lla_node.mtx * additionalTransform));
 				lla_node.func();
 			glPopMatrix();
 		glPopMatrix();
 		glPushMatrix();
-			glMultMatrixf(glm::value_ptr(rua_node.mtx));
+			additionalTransform = rotate(mat4(1.0f), radians(rua_angle), vec3(0, 0, 1));
+			glMultMatrixf(glm::value_ptr(rua_node.mtx * additionalTransform));
 			rua_node.func();
 			glPushMatrix();
-				glMultMatrixf(glm::value_ptr(rla_node.mtx));
+				additionalTransform = rotate(mat4(1.0f), radians(rla_angle), vec3(0, 0, 1));
+				glMultMatrixf(glm::value_ptr(rla_node.mtx * additionalTransform));
 				rla_node.func();
 			glPopMatrix();
 		glPopMatrix();
+
+		//lower body
+		setPalette(GRAY);
 		glPushMatrix();
-			glMultMatrixf(glm::value_ptr(lul_node.mtx));
+			additionalTransform = rotate(mat4(1.0f), radians(lul_angle), vec3(0, 0, 1));
+			glMultMatrixf(glm::value_ptr(lul_node.mtx * additionalTransform));
 			lul_node.func();
 			glPushMatrix();
-				glMultMatrixf(glm::value_ptr(lll_node.mtx));
+				additionalTransform = rotate(mat4(1.0f), radians(lll_angle), vec3(0, 0, 1));
+				glMultMatrixf(glm::value_ptr(lll_node.mtx * additionalTransform));
 				lll_node.func();
 			glPopMatrix();
 		glPopMatrix();
 		glPushMatrix();
-			glMultMatrixf(glm::value_ptr(rul_node.mtx));
+			additionalTransform = rotate(mat4(1.0f), radians(rul_angle), vec3(0, 0, 1));
+			glMultMatrixf(glm::value_ptr(rul_node.mtx * additionalTransform));
 			rul_node.func();
 			glPushMatrix();
-				glMultMatrixf(glm::value_ptr(rll_node.mtx));
+				additionalTransform = rotate(mat4(1.0f), radians(rll_angle), vec3(0, 0, 1));
+				glMultMatrixf(glm::value_ptr(rll_node.mtx * additionalTransform));
 				rll_node.func();
 			glPopMatrix();
 		glPopMatrix();
