@@ -5,6 +5,9 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <math.h>
+#include <iostream>
+#include <stdlib.h>
+using namespace std;
 
 #include "character.h"
 #include "colors.h"
@@ -18,9 +21,12 @@ static float torso_height = 10.0;
 static float limb_joint_rad = 1.5;
 static float limb_length = 6.0;
 
+//Static global variables for jump function
+
+
 //Constructor of character class
-character::character(float a, float b) {
-	type = 1; x = a; y = b, z = 0;
+character::character(float a, float b, pose initializedPose) {
+	type = 1; x = a; y = b; z = 0; newX = a; newY = b;
 	
 	//initialization for torso
 	torso_node.mtx = mat4(1.0f);
@@ -69,6 +75,9 @@ character::character(float a, float b) {
 	rll_node.draw = drawLimb;
 	rll_node.sibling = NULL;
 	rll_node.child = NULL;
+
+	currentPose = initializedPose;
+	newPose = currentPose;
 }
 
 //LCRS tree traversal for drawing character
@@ -89,12 +98,12 @@ void character::draw() {
 	setPalette(color);
 	mat4 additionalTransform = mat4(1.0f);
 
-	lua_node.additionalTransform = rotate(mat4(1.0f), radians(lua_angle), vec3(0, 0, 1));
-	rua_node.additionalTransform = rotate(mat4(1.0f), radians(rua_angle), vec3(0, 0, 1));
+	lua_node.additionalTransform = rotate(mat4(1.0f), radians(currentPose.lua_angle), vec3(0, 0, 1));
+	rua_node.additionalTransform = rotate(mat4(1.0f), radians(currentPose.rua_angle), vec3(0, 0, 1));
 	lul_node.additionalTransform = rotate(mat4(1.0f), radians(lul_angle), vec3(0, 0, 1));
 	rul_node.additionalTransform = rotate(mat4(1.0f), radians(rul_angle), vec3(0, 0, 1));
-	lla_node.additionalTransform = rotate(mat4(1.0f), radians(lla_angle), vec3(0, 0, 1));
-	rla_node.additionalTransform = rotate(mat4(1.0f), radians(rla_angle), vec3(0, 0, 1));
+	lla_node.additionalTransform = rotate(mat4(1.0f), radians(currentPose.lla_angle), vec3(0, 0, 1));
+	rla_node.additionalTransform = rotate(mat4(1.0f), radians(currentPose.rla_angle), vec3(0, 0, 1));
 	lll_node.additionalTransform = rotate(mat4(1.0f), radians(lll_angle), vec3(0, 0, 1));
 	rll_node.additionalTransform = rotate(mat4(1.0f), radians(rll_angle), vec3(0, 0, 1));
 
@@ -119,6 +128,69 @@ void character::lowerBodyAnimation(int currentFrame, int period) {
 		rul_angle = rul_angle_b + ((rul_angle_a - rul_angle_b) / (period / 2) * (currentFrame - period / 2));
 		lll_angle = lll_angle_b + ((lll_angle_a - lll_angle_b) / (period / 2) * (currentFrame - period / 2));
 		rll_angle = rll_angle_b + ((rll_angle_a - rll_angle_b) / (period / 2) * (currentFrame - period / 2));
+	}
+}
+
+//Draw upper body animation to change pose
+void character::upperBodyAnimation() {
+	//Pose changing animation during poseChangeFrame
+	if (poseFrameCheck < poseChangeFrame) {
+		currentPose.lua_angle = currentPose.lua_angle + poseVariance.lua_angle / poseChangeFrame;
+		currentPose.lla_angle = currentPose.lla_angle + poseVariance.lla_angle / poseChangeFrame;
+		currentPose.rua_angle = currentPose.rua_angle + poseVariance.rua_angle / poseChangeFrame;
+		currentPose.rla_angle = currentPose.rla_angle + poseVariance.rla_angle / poseChangeFrame;
+		poseFrameCheck++;
+	}
+}
+
+//Change pose of character
+void character::changePose(pose inputPose) {
+	//Check if inputpose is different with current pose and character is not jumping
+	if (!cmpf(currentPose.lla_angle, inputPose.lla_angle, 3) && poseFrameCheck == poseChangeFrame) {		
+		newPose.lua_angle = inputPose.lua_angle;
+		newPose.lla_angle = inputPose.lla_angle;
+		newPose.rua_angle = inputPose.rua_angle;
+		newPose.rla_angle = inputPose.rla_angle;		
+		poseVariance.lua_angle = newPose.lua_angle - currentPose.lua_angle;
+		poseVariance.lla_angle = newPose.lla_angle - currentPose.lla_angle;
+		poseVariance.rua_angle = newPose.rua_angle - currentPose.rua_angle;
+		poseVariance.rla_angle = newPose.rla_angle - currentPose.rla_angle;
+		currentPose.color = inputPose.color;
+		setColor(currentPose.color);
+		poseFrameCheck = 0;
+	}
+}
+
+void character::checkNewPosition() {
+	//Move right when pass
+	if (cmpf(newX, x, 1)){
+		moveRight();
+	}
+	//Jump
+	else if (cmpf(newX, x, 2)) {
+		moveLeft();
+	}
+
+	//Going up
+	if (cmpf(newY, y, 1)) {
+		moveUp();
+	}
+	//Going down
+	else if (cmpf(newY, y, 2)) {
+		moveDown();
+	}
+	//Finish going up
+	else {
+		newY = 37.0;
+	}
+}
+
+//Jump character
+void character::jump() {
+	//Prevent double jump
+	if (!cmpf(newX, x, 2)) {
+		newX = x - jump_back;
+		newY = y + jump_height;
 	}
 }
 
@@ -162,4 +234,18 @@ void drawTorso() {
 		glVertex2f(0.5f * torso_width, 0.5f * torso_height);
 		glVertex2f(0.5f * torso_width, -0.5f * torso_height);
 	glEnd();
+}
+
+//Compare float variables
+//Mode 1: A > B, 2: A < B, 3: A == B
+bool cmpf(float A, float B, int mode) {
+	if (mode == 1) {
+		return (A - B > 0.005f);
+	}
+	else if(mode == 2){
+		return (B - A > 0.005f);
+	}
+	else {
+		return (fabs(A - B) < 0.01f);
+	}
 }
