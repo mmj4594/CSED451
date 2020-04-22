@@ -219,7 +219,6 @@ void specialkeyboard(int key, int x, int y) {
 	case GLUT_KEY_RIGHT:
 		player.changePose(poseD);
 		break;
-	
 	}
 }
 

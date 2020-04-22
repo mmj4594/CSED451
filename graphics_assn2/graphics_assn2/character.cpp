@@ -143,7 +143,7 @@ void character::upperBodyAnimation() {
 //Change pose of character
 void character::changePose(pose inputPose) {
 	//Check if inputpose is different with current pose and character is not jumping
-	if (!cmpf(currentPose.lla_angle, inputPose.lla_angle, 3) && poseFrameCheck == poseChangeFrame) {		
+	if (currentPose.color != inputPose.color && poseFrameCheck == poseChangeFrame) {
 		newPose.lua_angle = inputPose.lua_angle;
 		newPose.lla_angle = inputPose.lla_angle;
 		newPose.rua_angle = inputPose.rua_angle;

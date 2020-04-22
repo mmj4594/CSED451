@@ -16,9 +16,10 @@ static float jumpFrame = 100;
 static float heightPerFrame = jump_height / (jumpFrame/2);
 
 //Pose Definition
-pose poseA(-10.0f, -90.0f, 10.0f, 90.0f, RED);
-pose poseB(-80, -10, 80, 10, GREEN);
-pose poseC(10, 90, -10, -90, BLUE);
+pose initialPose(5, -10, -5, 10, GRAY);
+pose poseA(-80, -10, 80, 10, RED);
+pose poseB(10, 90, -10, -90, GREEN);
+pose poseC(-10, -90, 10, 90, BLUE);
 pose poseD(10, 70, 10, 70, YELLOW);
 
 /*

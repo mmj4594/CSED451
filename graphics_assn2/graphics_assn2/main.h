@@ -34,7 +34,7 @@ int colorPeriod = 75;
 //Variables of thief jump
 bool askJump = false;
 bool thiefJumped = false;
-float thiefJumpProbability = 1.0;
+float thiefJumpProbability = 0.25;
 float jumpCriteria = 20.0;
 
 //Check if player pass the wall
@@ -69,8 +69,8 @@ int frameMoved = 0;
 //Basic objects in world
 rect world_floor(0, 0, 150, 20);
 rect wall(WORLD_X, 20, 10, wallHeight);
-character player(PLAYER_X, PLAYER_Y, poseA);
-character thief(THIEF_X, THIEF_Y, poseA);
+character player(PLAYER_X, PLAYER_Y, initialPose);
+character thief(THIEF_X, THIEF_Y, initialPose);
 
 
 //Function definition
