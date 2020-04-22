@@ -6,9 +6,15 @@
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #include "main.h"
 #include "colors.h"
+#include "character.h"
+
+//Key value for space
+#define SPACE 32
+
 
 //All pass/fail cheat activation status
 bool allPass = false;
@@ -83,21 +89,46 @@ void frameAction(int value) {
 		return;
 	}
 
-	//Move player to right if passes
-	if (player.getX() < playerNewX) { player.moveRight(); }
-	//zoom in camera if passes
-	if (world.getLeft() < newWorld.getLeft()) zoominCamera();
-
-	//Change color of the thief in every set period
-	if (thiefFrame >= colorPeriod) {
-		thief.setColor(rand() % 4);
-		thiefFrame = 0;
+	//Ask if thief will jump
+	if ((wall.getX() - thief.getX() < 27.5) && !askJump){
+		askJump = true;
+		//thief jump with probability
+		if (rand() % 100 < thiefJumpProbability * 100) {
+			cout << "Jump Thief" << endl;
+			thief.jump();
+			thiefJumped = true;
+		}
 	}
 
-	//Lower body animation loop for player and thief
+	player.checkNewPosition();
+	thief.checkNewPosition();
+
+	
+	//zoom in camera if passes
+	if (world.getRight() > newWorld.getRight()) zoominCamera();
+	
+	//Change pose of the thief in every set period
+	if (thiefFrame >= colorPeriod) {
+		switch (rand() % 4) {
+		case 0: thief.changePose(poseA);
+		case 1: thief.changePose(poseB);
+		case 2: thief.changePose(poseC);
+		case 3: thief.changePose(poseD);
+		}
+		thiefFrame = 0;
+	}
+	
+
+	//Animation loop for player and thief
 	if (animationFrame >= lowerBodyPeriod) { animationFrame = 0; }
 	player.lowerBodyAnimation(animationFrame, lowerBodyPeriod);
 	thief.lowerBodyAnimation(animationFrame, lowerBodyPeriod);
+	player.upperBodyAnimation();
+	thief.upperBodyAnimation();
+
+	//Check and move if player or thief is jumping
+	//player.isJumping();
+	//thief.isJumping();
 
 	thiefFrame++; animationFrame++;
 	glutPostRedisplay();
@@ -115,35 +146,51 @@ int moveWall() {
 	//Collision between wall and player
 	if (wall.collisionCheck(&player)) {
 		//Fail
-		if (!allPass && (allFail || wall.getColor() != player.getColor())) {
+		if (!allPass && (allFail || wall.getColor() != player.getColor() || ((wall.getColor() == 5) && (player.getY() < PLAYER_Y + jumpCriteria)))) {
 			cout << "Fail\n";
 			life--;
 			//Lose
 			if (life <= 0) return LOSE;
 		}
 		//Pass
-		else if (!allFail && (allPass || wall.getColor() == player.getColor())) {
+		else if (!allFail && (allPass || wall.getColor() == player.getColor() || ((wall.getColor() == 5) && (player.getY() > PLAYER_Y + jumpCriteria)))) {
 			cout << "Pass\n";
+			pass = true;
+			/*
 			wallSpeed += wallSpeedIncrement;
 			colorPeriod -= 5;
-			playerNewX += movingDistance;
+			player.setnewX(player.getX() + player.getMovingDistance());
 			newWorld = world + coordinatesIncrement;
+			*/
 		}
 	}
 	//Collision between wall and thief
 	else if (wall.collisionCheck(&thief)) {
-		wall.setColor(thief.getColor());
+		if (!thiefJumped) {
+			wall.setColor(thief.getColor());
+		}
 	}
 	//Collision between player and thief
 	else if (player.collisionCheck(&thief)) {
 		return WIN;
 	}
 
+	//Move player to right and zoom camera if win
+	if ((wall.getX() + wall.getWidth() < world.getLeft()) && pass && (player.getY() == PLAYER_Y) ) {		
+		wallSpeed += wallSpeedIncrement;
+		colorPeriod -= 5;
+		player.setnewX(player.getX() + player.getMovingDistance());
+		newWorld = world + coordinatesIncrement;
+		pass = false;
+	}
+
 	//Repositioning of wall when it goes out of the screen
-	if (wall.getX() + wall.getWidth() < world.getLeft()) {
-		wall = rect(world.getRight(), 20, 10, 50);
+	if (wall.getX() + wall.getWidth() + wallSpeed*20 < world.getLeft()) {
+		wall = rect(world.getRight(), 20, 10, wallHeight);
 		thief.resetCollided();
 		player.resetCollided();
+		askJump = false;
+		thiefJumped = false;
 	}
 	return PLAYING;
 }
@@ -161,6 +208,10 @@ void keyboard(unsigned char key, int x, int y) {
 		allFail = true;
 		cout << "All fail\n";
 		break;
+	case SPACE:
+		player.jump();
+		cout << "JUMP" << endl;
+		break;
 	}
 
 	glutPostRedisplay();
@@ -169,17 +220,18 @@ void keyboard(unsigned char key, int x, int y) {
 void specialkeyboard(int key, int x, int y) {
 	switch (key) {
 	case GLUT_KEY_UP:
-		player.setColor(RED);
+		player.changePose(poseA);
 		break;
 	case GLUT_KEY_DOWN:
-		player.setColor(GREEN);
+		player.changePose(poseB);;
 		break;
 	case GLUT_KEY_LEFT:
-		player.setColor(BLUE);
+		player.changePose(poseC);
 		break;
 	case GLUT_KEY_RIGHT:
-		player.setColor(YELLOW);
+		player.changePose(poseD);
 		break;
+	
 	}
 }
 
