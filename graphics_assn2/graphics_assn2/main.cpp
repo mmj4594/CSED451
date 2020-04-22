@@ -2,7 +2,6 @@
 #include <GL/freeglut.h>
 #include <vector>
 #include <string>
-
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
@@ -20,7 +19,7 @@ static bool allPass = false;
 static bool allFail = false;
 
 //Game status
-int gameStatus = PLAYING;
+int gameStatus = IDLE;
 
 using namespace std;
 
@@ -86,26 +85,51 @@ void frameAction(int value) {
 		cout << "Win\n";
 		finishGame();
 		return;
+	case PASS:
+		isPassed = true;
+		break;
+	case JUMP:
+		isJumped = true;
+		break;
+	case FAIL:
+		isFailed = true;
+		break;
 	}
+
+	//Move player to right and zoom camera if pass successfully
+	if ((wall.getX() + wall.getWidth() < world.getLeft()) && isPassed && (player.getY() == PLAYER_DEFAULT_Y)) {
+		wallSpeed += wallSpeedIncrement;
+		colorPeriod -= 5;
+		player.setnewX(player.getX() + player.getMovingDistance());
+		newWorld = world + coordinatesIncrement;
+		isPassed = false;
+	}
+	//Move camera left if both thief and player pass the wall by jump
+	else if ((wall.getX() + wall.getWidth() < world.getLeft()) && isJumped && wall.getColor() == GRAY && (player.getY() == PLAYER_DEFAULT_Y)) {
+		newWorld = world + coordinatesMoveCameraLeft;
+		isJumped = false;
+	}
+	//Zoom out camera if thief doesn't jump and player ignore the wall by jump
+	else if ((wall.getX() + wall.getWidth() < world.getLeft()) && isJumped && wall.getColor() != GRAY && (player.getY() == PLAYER_DEFAULT_Y)) {
+		newWorld = world + coordinatesDecrement;
+		isJumped = false;
+	}
+
+	//Move or zoom in/out camera
+	if (world.getRight() > newWorld.getRight() && world.getLeft() > newWorld.getLeft()) moveCameraLeft();
+	else if (world.getRight() > newWorld.getRight()) zoominCamera();
+	else if (world.getLeft() > newWorld.getLeft()) zoomoutCamera();
+
 
 	//Ask if thief will jump
 	if ((wall.getX() - thief.getX() < 27.5) && !askJump){
 		askJump = true;
 		//thief jump with probability
 		if (rand() % 100 < thiefJumpProbability * 100) {
-			cout << "Jump Thief" << endl;
 			thief.jump();
 			thiefJumped = true;
 		}
 	}
-
-	player.checkNewPosition();
-	thief.checkNewPosition();
-
-	
-	//zoom in camera if passes
-	if (world.getRight() > newWorld.getRight()) zoominCamera();
-	
 	//Change pose of the thief in every set period
 	if (thiefFrame >= colorPeriod) {
 		switch (rand() % 4) {
@@ -117,6 +141,11 @@ void frameAction(int value) {
 		thiefFrame = 0;
 	}
 	
+	//Check new position of characters
+	player.checkNewPosition();
+	thief.checkNewPosition();
+
+
 	//Animation loop for player and thief
 	if (animationFrame >= lowerBodyPeriod) { animationFrame = 0; }
 	player.lowerBodyAnimation(animationFrame, lowerBodyPeriod);
@@ -135,21 +164,28 @@ void frameAction(int value) {
 	according to the type of object where the collision occurs.
 */
 int moveWall() {
+	int status = IDLE;
+
 	wall.setX(wall.getX() - 0.3 * wallSpeed);
 
 	//Collision between wall and player
 	if (wall.collisionCheck(&player)) {
+		//Jump
+		if (!allFail && !allPass && player.getY() > PLAYER_DEFAULT_Y + jumpCriteria) {
+			status = JUMP;
+		}
 		//Fail
-		if (!allPass && (allFail || wall.getColor() != player.getColor() || ((wall.getColor() == 5) && (player.getY() < PLAYER_Y + jumpCriteria)))) {
+		else if (!allPass && (allFail || wall.getColor() != player.getColor())) {
+			status = FAIL;
 			cout << "Fail\n";
 			life--;
 			//Lose
-			if (life <= 0) return LOSE;
+			if (life <= 0) status = LOSE;
 		}
 		//Pass
-		else if (!allFail && (allPass || wall.getColor() == player.getColor() || ((wall.getColor() == 5) && (player.getY() > PLAYER_Y + jumpCriteria)))) {
+		else if (!allFail && (allPass || wall.getColor() == player.getColor())) {
+			status = PASS;
 			cout << "Pass\n";
-			pass = true;
 		}
 	}
 	//Collision between wall and thief
@@ -160,16 +196,7 @@ int moveWall() {
 	}
 	//Collision between player and thief
 	else if (player.collisionCheck(&thief)) {
-		return WIN;
-	}
-
-	//Move player to right and zoom camera if win
-	if ((wall.getX() + wall.getWidth() < world.getLeft()) && pass && (player.getY() == PLAYER_Y) ) {		
-		wallSpeed += wallSpeedIncrement;
-		colorPeriod -= 5;
-		player.setnewX(player.getX() + player.getMovingDistance());
-		newWorld = world + coordinatesIncrement;
-		pass = false;
+		status = WIN;
 	}
 
 	//Repositioning of wall when it goes out of the screen
@@ -180,7 +207,7 @@ int moveWall() {
 		askJump = false;
 		thiefJumped = false;
 	}
-	return PLAYING;
+	return status;
 }
 
 //Define cheat according to user keyboard input.
@@ -198,7 +225,6 @@ void keyboard(unsigned char key, int x, int y) {
 		break;
 	case SPACE:
 		player.jump();
-		cout << "JUMP" << endl;
 		break;
 	}
 
@@ -234,7 +260,20 @@ void writeLife(float x, float y) {
 	}
 }
 
-//Zoom in camera if player successfully pass wall
+//Move camera left for 1frame
+void moveCameraLeft() {
+	world = world + moveCameraLeftPerFrame;
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(world.getLeft(), world.getRight(), world.getBottom(), world.getTop());
+
+	//Move position of lifeText
+	lifeX = world.getLeft() + (world.getRight() - world.getLeft()) * LIFE_DEFAULT_X / WORLD_SIZE_X;
+	lifeY = world.getBottom() + (world.getTop() - world.getBottom()) * LIFE_DEFAULT_Y / WORLD_SIZE_Y;
+
+}
+
+//Zoom in camera action for 1frame
 void zoominCamera() {
 	world = world + incrementPerFrame;
 	glMatrixMode(GL_PROJECTION);
@@ -242,9 +281,20 @@ void zoominCamera() {
 	gluOrtho2D(world.getLeft(), world.getRight(), world.getBottom(), world.getTop());
 
 	//Move position of lifeText
-	frameMoved++;
-	lifeX = frameMoved * incrementPerFrame.getLeft() + LIFE_X * (world.getRight() - world.getLeft()) / WORLD_X;
-	lifeY = frameMoved * incrementPerFrame.getBottom() + LIFE_Y * (world.getTop() - world.getBottom()) / WORLD_Y;
+	lifeX = world.getLeft() + (world.getRight() - world.getLeft()) * LIFE_DEFAULT_X / WORLD_SIZE_X;
+	lifeY = world.getBottom() + (world.getTop() - world.getBottom()) * LIFE_DEFAULT_Y / WORLD_SIZE_Y;
+}
+
+//Zoom out camera action for 1frame
+void zoomoutCamera() {
+	world = world + decrementPerFrame;
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(world.getLeft(), world.getRight(), world.getBottom(), world.getTop());
+
+	//Move position of lifeText
+	lifeX = world.getLeft() + (world.getRight() - world.getLeft()) * LIFE_DEFAULT_X / WORLD_SIZE_X;
+	lifeY = world.getBottom() + (world.getTop() - world.getBottom()) * LIFE_DEFAULT_Y / WORLD_SIZE_Y;
 }
 
 //Fnish game

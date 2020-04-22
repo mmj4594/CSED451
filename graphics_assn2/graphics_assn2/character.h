@@ -11,7 +11,7 @@ static float distancePerFrame = movingDistance/movingFrame;
 
 //Variables for player or thief to jump
 static float jump_height = 40.0;
-static float jump_back = 10.0;
+float jump_back = 10.0;
 static float jumpFrame = 100;
 static float heightPerFrame = jump_height / (jumpFrame/2);
 
