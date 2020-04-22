@@ -7,7 +7,6 @@
 #include <math.h>
 #include <iostream>
 #include <stdlib.h>
-using namespace std;
 
 #include "character.h"
 #include "colors.h"
@@ -20,9 +19,6 @@ static float torso_width = 4.0;
 static float torso_height = 10.0;
 static float limb_joint_rad = 1.5;
 static float limb_length = 6.0;
-
-//Static global variables for jump function
-
 
 //Constructor of character class
 character::character(float a, float b, pose initializedPose) {
@@ -76,8 +72,8 @@ character::character(float a, float b, pose initializedPose) {
 	rll_node.sibling = NULL;
 	rll_node.child = NULL;
 
-	currentPose = initializedPose;
-	newPose = currentPose;
+	//pose initialization
+	newPose = currentPose = initializedPose;
 }
 
 //LCRS tree traversal for drawing character

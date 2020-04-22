@@ -2,6 +2,7 @@
 #include "object.h"
 #include "treeNode.h"
 #include "pose.h"
+#include "colors.h"
 
 //Variables for player to move right when passes
 static float movingFrame = 50.0;
@@ -15,10 +16,10 @@ static float jumpFrame = 100;
 static float heightPerFrame = jump_height / (jumpFrame/2);
 
 //Pose Definition
-pose poseA(-10.0f, -90.0f, 10.0f, 90.0f, 0);
-pose poseB(-80, -10, 80, 10, 1);
-pose poseC(10, 90, -10, -90, 2);
-pose poseD(10, 70, 10, 70, 3);
+pose poseA(-10.0f, -90.0f, 10.0f, 90.0f, RED);
+pose poseB(-80, -10, 80, 10, GREEN);
+pose poseC(10, 90, -10, -90, BLUE);
+pose poseD(10, 70, 10, 70, YELLOW);
 
 /*
 	\class	character

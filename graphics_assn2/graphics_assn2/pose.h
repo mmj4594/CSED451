@@ -1,7 +1,16 @@
 #pragma once
 
 /*
- * This class defines poses that character can have.
+	\class pose
+
+	\brief
+	This class defines postures that character can have.
+
+	\detail
+	float lua_angle: joint angle of left upper arm
+	float lla_angle: joint angle of left lower arm
+	float rua_angle: joint angle of right upper arm
+	float rla_angle: joint angle of right upper arm
  */
 
 class pose {

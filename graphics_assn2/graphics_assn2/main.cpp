@@ -15,10 +15,9 @@
 //Key value for space
 #define SPACE 32
 
-
 //All pass/fail cheat activation status
-bool allPass = false;
-bool allFail = false;
+static bool allPass = false;
+static bool allFail = false;
 
 //Game status
 int gameStatus = PLAYING;
@@ -110,25 +109,20 @@ void frameAction(int value) {
 	//Change pose of the thief in every set period
 	if (thiefFrame >= colorPeriod) {
 		switch (rand() % 4) {
-		case 0: thief.changePose(poseA);
-		case 1: thief.changePose(poseB);
-		case 2: thief.changePose(poseC);
-		case 3: thief.changePose(poseD);
+		case 0: thief.changePose(poseA); break;
+		case 1: thief.changePose(poseB); break;
+		case 2: thief.changePose(poseC); break;
+		case 3: thief.changePose(poseD); break;
 		}
 		thiefFrame = 0;
 	}
 	
-
 	//Animation loop for player and thief
 	if (animationFrame >= lowerBodyPeriod) { animationFrame = 0; }
 	player.lowerBodyAnimation(animationFrame, lowerBodyPeriod);
 	thief.lowerBodyAnimation(animationFrame, lowerBodyPeriod);
 	player.upperBodyAnimation();
 	thief.upperBodyAnimation();
-
-	//Check and move if player or thief is jumping
-	//player.isJumping();
-	//thief.isJumping();
 
 	thiefFrame++; animationFrame++;
 	glutPostRedisplay();
@@ -156,12 +150,6 @@ int moveWall() {
 		else if (!allFail && (allPass || wall.getColor() == player.getColor() || ((wall.getColor() == 5) && (player.getY() > PLAYER_Y + jumpCriteria)))) {
 			cout << "Pass\n";
 			pass = true;
-			/*
-			wallSpeed += wallSpeedIncrement;
-			colorPeriod -= 5;
-			player.setnewX(player.getX() + player.getMovingDistance());
-			newWorld = world + coordinatesIncrement;
-			*/
 		}
 	}
 	//Collision between wall and thief
@@ -223,7 +211,7 @@ void specialkeyboard(int key, int x, int y) {
 		player.changePose(poseA);
 		break;
 	case GLUT_KEY_DOWN:
-		player.changePose(poseB);;
+		player.changePose(poseB);
 		break;
 	case GLUT_KEY_LEFT:
 		player.changePose(poseC);
