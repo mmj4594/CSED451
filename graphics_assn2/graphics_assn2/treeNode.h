@@ -7,7 +7,7 @@
 
 	\brief
 	This class defines node for implementing
-	left child right sibling(LCR) tree.
+	left child right sibling(LCRS) tree.
 
 	\detail
 	mat4 mtx: 4*4 matrix to multiply basically on the right of the current model-view matrix.

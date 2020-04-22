@@ -44,12 +44,12 @@ private:
 	treeNode lll_node;
 	treeNode rll_node;
 
-	float lua_angle = -0.0;
+	float lua_angle = 10.0;
 	float rua_angle = 10.0;
 	float lul_angle = -60.0;
 	float rul_angle = 60.0;
-	float lla_angle = -90.0;
-	float rla_angle = 90.0;
+	float lla_angle = -100.0;
+	float rla_angle = 80.0;
 	float lll_angle = -70.0;
 	float rll_angle = -45.0;
 

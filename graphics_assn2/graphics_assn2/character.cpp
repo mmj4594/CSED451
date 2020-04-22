@@ -87,7 +87,6 @@ void character::traverse(treeNode* current) {
 //Draw character object on the screen
 void character::draw() {
 	setPalette(color);
-	mat4 additionalTransform = mat4(1.0f);
 
 	lua_node.additionalTransform = rotate(mat4(1.0f), radians(lua_angle), vec3(0, 0, 1));
 	rua_node.additionalTransform = rotate(mat4(1.0f), radians(rua_angle), vec3(0, 0, 1));
@@ -100,8 +99,10 @@ void character::draw() {
 
 	//tree traversal
 	glLoadIdentity();
-	glTranslatef(x, y, 0);
-	traverse(&torso_node);
+	glPushMatrix();
+		glTranslatef(x, y, 0);
+		traverse(&torso_node);
+	glPopMatrix();
 }
 
 //Draw the nth frame of the lower body animation loop.

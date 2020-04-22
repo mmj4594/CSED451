@@ -50,7 +50,6 @@ void display() {
 	glMatrixMode(GL_MODELVIEW);
 	player.draw();
 	thief.draw();
-	glLoadIdentity();
 	world_floor.draw();
 	wall.draw();
 
