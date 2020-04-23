@@ -7,8 +7,8 @@ Team GPS(20202405 문민재, 20202728 김진수)
 ($ProjectDir)\include - OpenGl과 GLM을 프로젝트에서 사용하기 위한 헤더 파일들이 들어있다.
 ($ProjectDir)\lib - freeglut, glew32의 라이브러리가 들어있다.
 ($ProjectDir)\x64\Debug - 디버그 관련 폴더이다.
-($ProjectDir)\source.cpp - 이번 assn1의 소스 코드이다.
-($ProjectDir)\source.h - 이번 assn1에서 사용된 헤더 파일이다. assn2의 구현에 사용된 전역변수, 클래스 등이 있다.
+($ProjectDir)\source.cpp - 이번 assn2의 소스 코드이다.
+($ProjectDir)\source.h - 이번 assn2에서 사용된 헤더 파일이다. assn2의 구현에 사용된 전역변수, 클래스 등이 있다.
 
 
 프로그램 실행 방법
