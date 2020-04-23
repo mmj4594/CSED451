@@ -96,7 +96,10 @@ void frameAction(int value) {
 		break;
 	}
 
-	//Move player to right and zoom camera if pass successfully
+	/*
+		Move player to right and zoom camera if pass successfully
+		after the wall disappear and player land successfully
+	*/
 	if ((wall.getX() + wall.getWidth() < world.getLeft()) && isPassed && (player.getY() == PLAYER_DEFAULT_Y)) {
 		wallSpeed += wallSpeedIncrement;
 		colorPeriod -= 5;
@@ -104,12 +107,18 @@ void frameAction(int value) {
 		newWorld = world + coordinatesIncrement;
 		isPassed = false;
 	}
-	//Move camera left if both thief and player pass the wall by jump
+	/*
+		Move camera left if both thief and player pass the wall by jump
+		after the wall disappear and player land successfully
+	*/
 	else if ((wall.getX() + wall.getWidth() < world.getLeft()) && isJumped && wall.getColor() == GRAY && (player.getY() == PLAYER_DEFAULT_Y)) {
 		newWorld = world + coordinatesMoveCameraLeft;
 		isJumped = false;
 	}
-	//Zoom out camera if thief doesn't jump and player ignore the wall by jump
+	/*
+		Zoom out camera if thief doesn't jump and player ignore the wall by jump
+		after the wall disappear and player land successfully
+	*/
 	else if ((wall.getX() + wall.getWidth() < world.getLeft()) && isJumped && wall.getColor() != GRAY && (player.getY() == PLAYER_DEFAULT_Y)) {
 		newWorld = world + coordinatesDecrement;
 		isJumped = false;
@@ -270,7 +279,6 @@ void moveCameraLeft() {
 	//Move position of lifeText
 	lifeX = world.getLeft() + (world.getRight() - world.getLeft()) * LIFE_DEFAULT_X / WORLD_SIZE_X;
 	lifeY = world.getBottom() + (world.getTop() - world.getBottom()) * LIFE_DEFAULT_Y / WORLD_SIZE_Y;
-
 }
 
 //Zoom in camera action for 1frame

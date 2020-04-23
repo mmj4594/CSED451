@@ -72,7 +72,6 @@ private:
 	treeNode lua_node;
 	treeNode rua_node;
 	treeNode lul_node;
-
 	treeNode rul_node;
 	treeNode lla_node;
 	treeNode rla_node;
