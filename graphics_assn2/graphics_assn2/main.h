@@ -32,7 +32,7 @@ const float THIEF_DEFAULT_Y = 37.0;
 
 //Thief color changing period
 int thiefFrame = 50;
-int colorPeriod = 75;
+int posePeriod = 75;
 
 //Variables of thief jump
 bool askJump = false;

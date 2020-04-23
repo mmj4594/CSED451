@@ -102,7 +102,7 @@ void frameAction(int value) {
 	*/
 	if ((wall.getX() + wall.getWidth() < world.getLeft()) && isPassed && (player.getY() == PLAYER_DEFAULT_Y)) {
 		wallSpeed += wallSpeedIncrement;
-		colorPeriod -= 5;
+		posePeriod -= 5;
 		player.setnewX(player.getX() + player.getMovingDistance());
 		newWorld = world + coordinatesIncrement;
 		isPassed = false;
@@ -140,7 +140,7 @@ void frameAction(int value) {
 		}
 	}
 	//Change pose of the thief in every set period
-	if (thiefFrame >= colorPeriod) {
+	if (thiefFrame >= posePeriod) {
 		switch (rand() % 4) {
 		case 0: thief.changePose(poseA); break;
 		case 1: thief.changePose(poseB); break;
