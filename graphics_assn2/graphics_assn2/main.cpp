@@ -184,7 +184,7 @@ int moveWall() {
 			status = JUMP;
 		}
 		//Fail
-		else if (!allPass && (allFail || wall.getColor() != player.getColor())) {
+		else if (!allPass && (allFail || wall.getColor() != player.getColor() || (wall.getColor() == GRAY && player.getColor() == GRAY))) {
 			status = FAIL;
 			cout << "Fail\n";
 			life--;

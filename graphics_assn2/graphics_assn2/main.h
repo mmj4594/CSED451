@@ -37,7 +37,7 @@ int colorPeriod = 75;
 //Variables of thief jump
 bool askJump = false;
 bool thiefJumped = false;
-float thiefJumpProbability = 0.25;
+float thiefJumpProbability = 1.25;
 float jumpCriteria = 20.0;
 
 //Pass, Fail, Jump checker of player
