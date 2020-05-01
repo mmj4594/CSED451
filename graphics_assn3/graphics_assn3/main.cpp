@@ -65,6 +65,7 @@ void display3D() {
 	thief.draw();
 	world_floor.draw();
 	wall.draw();
+	glutSolidSphere(30, 100, 100);
 	writeLife(lifeX, lifeY);
 
 	glutSwapBuffers();
