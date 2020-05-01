@@ -16,9 +16,6 @@
     <Filter Include="헤더 파일\Model">
       <UniqueIdentifier>{33722a98-9caa-45bf-b3c5-02d04e42ac1f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Model\Primitives">
-      <UniqueIdentifier>{726097c6-dfa9-4f52-9ccc-f890a723b515}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

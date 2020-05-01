@@ -28,14 +28,8 @@ int main(int argc, char** argv) {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(750, 500);
 	glutInitWindowPosition(500, 100);
-	glutCreateWindow("assn2");
+	glutCreateWindow("assn3");
 
-	/*
-		For 2D drawing
-		//glutDisplayFunc(display);
-		//glutReshapeFunc(reshape);
-		//glutTimerFunc(0, frameAction, 1);
-	*/
 	glutDisplayFunc(display3D);
 	glutReshapeFunc(reshape3D);
 	glutTimerFunc(0, frameAction, 1);
@@ -51,31 +45,39 @@ void init() {
 	srand(time(NULL));
 	glClearColor(1.0, 1.0, 1.0, 0.0);
 	world_floor.setColor(BLACK);
+	glEnable(GL_DEPTH_TEST);
 }
 
-//Display current status on screen
-void display() {
-	glClear(GL_COLOR_BUFFER_BIT);
+//Display current status on screen(3D)
+void display3D() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
+	gluLookAt(
+		-WORLD_SIZE_X, WORLD_SIZE_Y, 180,			//camera position
+		WORLD_SIZE_X / 2, WORLD_SIZE_Y / 2, 0,		//lookat
+		0, 1, 0										//up
+	);
+
+	drawAxes();
 	player.draw();
 	thief.draw();
 	world_floor.draw();
 	wall.draw();
-
 	writeLife(lifeX, lifeY);
 
 	glutSwapBuffers();
 }
 
-//Action when window of the game reshaped
-void reshape(int w, int h) {
+//Action when window of the game reshaped(3D)
+void reshape3D(int w, int h) {
+	glClearColor(1, 1, 1, 1);
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(world.getLeft(), world.getRight(), world.getBottom(), world.getTop());
-	glMatrixMode(GL_MODELVIEW);	
-	glLoadIdentity();
+	gluPerspective(45, (float)w / h, 1, 2000);
+	glMatrixMode(GL_MODELVIEW);
 }
 
 //Action per frame(60FPS currently)
@@ -129,12 +131,6 @@ void frameAction(int value) {
 		newWorld = world + coordinatesDecrement;
 		isJumped = false;
 	}
-
-	//Move or zoom in/out camera
-	/*if (world.getRight() > newWorld.getRight() && world.getLeft() > newWorld.getLeft()) moveCameraLeft();
-	else if (world.getRight() > newWorld.getRight()) zoominCamera();
-	else if (world.getLeft() > newWorld.getLeft()) zoomoutCamera();*/
-
 
 	//Ask if thief will jump
 	if ((wall.getX() - thief.getX() < 27.5) && !askJump){
@@ -216,7 +212,7 @@ int moveWall() {
 
 	//Repositioning of wall when it goes out of the screen
 	if (wall.getX() + wall.getWidth() + wallSpeed*20 < world.getLeft()) {
-		wall = rect(world.getRight(), 20, 10, wallHeight);
+		wall = rect(world.getRight(), 20, 0, 10, wallHeight, 0);
 		thief.resetCollided();
 		player.resetCollided();
 		askJump = false;
@@ -239,41 +235,6 @@ void drawAxes() {
 	glVertex3i(0, 0, 0);
 	glVertex3i(0, 0, 100);
 	glEnd();
-}
-
-//Display current status on screen(3D)
-void display3D() {
-	glClear(GL_COLOR_BUFFER_BIT);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	gluLookAt(
-		-WORLD_SIZE_X, WORLD_SIZE_Y, 180,			//camera position
-		WORLD_SIZE_X / 2, WORLD_SIZE_Y / 2, 0,		//lookat
-		0, 1, 0										//up
-	);
-
-	drawAxes();
-	player.draw();
-	thief.draw();
-	world_floor.draw();
-	wall.draw();
-	writeLife(lifeX, lifeY);
-
-	glutSwapBuffers();
-}
-
-//Action when window of the game reshaped(3D)
-void reshape3D(int w, int h) {
-	glClearColor(1, 1, 1, 1);
-	glViewport(0, 0, w, h);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(45, (float)w / h, 1, 2000);
-	glMatrixMode(GL_MODELVIEW);
-}
-
-void frameAction3D(int value) {
-
 }
 
 //Define cheat according to user keyboard input.
@@ -324,42 +285,6 @@ void writeLife(float x, float y) {
 		char c = *i;
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
 	}
-}
-
-//Move camera left for 1frame
-void moveCameraLeft() {
-	world = world + moveCameraLeftPerFrame;
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluOrtho2D(world.getLeft(), world.getRight(), world.getBottom(), world.getTop());
-
-	//Move position of lifeText
-	lifeX = world.getLeft() + (world.getRight() - world.getLeft()) * LIFE_DEFAULT_X / WORLD_SIZE_X;
-	lifeY = world.getBottom() + (world.getTop() - world.getBottom()) * LIFE_DEFAULT_Y / WORLD_SIZE_Y;
-}
-
-//Zoom in camera action for 1frame
-void zoominCamera() {
-	world = world + incrementPerFrame;
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluOrtho2D(world.getLeft(), world.getRight(), world.getBottom(), world.getTop());
-
-	//Move position of lifeText
-	lifeX = world.getLeft() + (world.getRight() - world.getLeft()) * LIFE_DEFAULT_X / WORLD_SIZE_X;
-	lifeY = world.getBottom() + (world.getTop() - world.getBottom()) * LIFE_DEFAULT_Y / WORLD_SIZE_Y;
-}
-
-//Zoom out camera action for 1frame
-void zoomoutCamera() {
-	world = world + decrementPerFrame;
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluOrtho2D(world.getLeft(), world.getRight(), world.getBottom(), world.getTop());
-
-	//Move position of lifeText
-	lifeX = world.getLeft() + (world.getRight() - world.getLeft()) * LIFE_DEFAULT_X / WORLD_SIZE_X;
-	lifeY = world.getBottom() + (world.getTop() - world.getBottom()) * LIFE_DEFAULT_Y / WORLD_SIZE_Y;
 }
 
 //Fnish game

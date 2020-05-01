@@ -80,30 +80,23 @@ float lifeX = LIFE_DEFAULT_X;
 float lifeY = LIFE_DEFAULT_Y;
 
 //Basic objects in world
-rect world_floor(-200, -30, 350, 50);
-rect wall(WORLD_SIZE_X, 20, 10, wallHeight);
+rect world_floor(-200, -30, 0, 350, 50, 0);
+rect wall(WORLD_SIZE_X, 20, 0, 10, wallHeight, 0);
 character player(PLAYER_DEFAULT_X, PLAYER_DEFAULT_Y, initialPose);
 character thief(THIEF_DEFAULT_X, THIEF_DEFAULT_Y, initialPose);
 
 
 //Function definition
 void init();
-void display();
-void reshape(int w, int h);
 void frameAction(int value);
 void display3D();
 void reshape3D(int w, int h);
-void frameAction3D(int value);
 int moveWall();
 
 void writeLife(float x, float y);
 
 void keyboard(unsigned char key, int x, int y);
 void specialkeyboard(int key, int x, int y);
-
-void moveCameraLeft();
-void zoominCamera();
-void zoomoutCamera();
 
 void finishGame();
 
