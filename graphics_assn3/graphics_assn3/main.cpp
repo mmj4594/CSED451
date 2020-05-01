@@ -36,6 +36,9 @@ int main(int argc, char** argv) {
 		//glutReshapeFunc(reshape);
 		//glutTimerFunc(0, frameAction, 1);
 	*/
+	glutDisplayFunc(display3D);
+	glutReshapeFunc(reshape3D);
+	glutTimerFunc(0, frameAction, 1);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialkeyboard);
 
@@ -47,7 +50,6 @@ int main(int argc, char** argv) {
 void init() {
 	srand(time(NULL));
 	glClearColor(1.0, 1.0, 1.0, 0.0);
-	glShadeModel(GL_FLAT);
 	world_floor.setColor(BLACK);
 }
 
@@ -55,6 +57,7 @@ void init() {
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 	player.draw();
 	thief.draw();
 	world_floor.draw();
@@ -128,9 +131,9 @@ void frameAction(int value) {
 	}
 
 	//Move or zoom in/out camera
-	if (world.getRight() > newWorld.getRight() && world.getLeft() > newWorld.getLeft()) moveCameraLeft();
+	/*if (world.getRight() > newWorld.getRight() && world.getLeft() > newWorld.getLeft()) moveCameraLeft();
 	else if (world.getRight() > newWorld.getRight()) zoominCamera();
-	else if (world.getLeft() > newWorld.getLeft()) zoomoutCamera();
+	else if (world.getLeft() > newWorld.getLeft()) zoomoutCamera();*/
 
 
 	//Ask if thief will jump
@@ -220,6 +223,57 @@ int moveWall() {
 		thiefJumped = false;
 	}
 	return status;
+}
+
+//Draw Axes in red(x), green(y), blue(z)
+void drawAxes() {
+	glLineWidth(3.0);
+	glBegin(GL_LINES);
+	setPalette(RED);
+	glVertex3i(0, 0, 0);
+	glVertex3i(100, 0, 0);
+	setPalette(GREEN);
+	glVertex3i(0, 0, 0);
+	glVertex3i(0, 100, 0);
+	setPalette(BLUE);
+	glVertex3i(0, 0, 0);
+	glVertex3i(0, 0, 100);
+	glEnd();
+}
+
+//Display current status on screen(3D)
+void display3D() {
+	glClear(GL_COLOR_BUFFER_BIT);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluLookAt(
+		-WORLD_SIZE_X, WORLD_SIZE_Y, 180,			//camera position
+		WORLD_SIZE_X / 2, WORLD_SIZE_Y / 2, 0,		//lookat
+		0, 1, 0										//up
+	);
+
+	drawAxes();
+	player.draw();
+	thief.draw();
+	world_floor.draw();
+	wall.draw();
+	writeLife(lifeX, lifeY);
+
+	glutSwapBuffers();
+}
+
+//Action when window of the game reshaped(3D)
+void reshape3D(int w, int h) {
+	glClearColor(1, 1, 1, 1);
+	glViewport(0, 0, w, h);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(45, (float)w / h, 1, 2000);
+	glMatrixMode(GL_MODELVIEW);
+}
+
+void frameAction3D(int value) {
+
 }
 
 //Define cheat according to user keyboard input.

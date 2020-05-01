@@ -91,6 +91,9 @@ void init();
 void display();
 void reshape(int w, int h);
 void frameAction(int value);
+void display3D();
+void reshape3D(int w, int h);
+void frameAction3D(int value);
 int moveWall();
 
 void writeLife(float x, float y);
@@ -104,5 +107,5 @@ void zoomoutCamera();
 
 void finishGame();
 
-
+void drawAxes();
 

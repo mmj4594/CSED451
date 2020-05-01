@@ -103,7 +103,6 @@ void character::draw() {
 	rll_node.additionalTransform = rotate(mat4(1.0f), radians(rll_angle), vec3(0, 0, 1));
 
 	//tree traversal
-	glLoadIdentity();
 	glPushMatrix();
 		glTranslatef(x, y, 0);
 		traverse(&torso_node);
