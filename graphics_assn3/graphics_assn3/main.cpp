@@ -30,9 +30,12 @@ int main(int argc, char** argv) {
 	glutInitWindowPosition(500, 100);
 	glutCreateWindow("assn2");
 
-	glutDisplayFunc(display);
-	glutReshapeFunc(reshape);
-	glutTimerFunc(0, frameAction, 1);
+	/*
+		For 2D drawing
+		//glutDisplayFunc(display);
+		//glutReshapeFunc(reshape);
+		//glutTimerFunc(0, frameAction, 1);
+	*/
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialkeyboard);
 
