@@ -4,6 +4,17 @@
 #include "pose.h"
 #include "colors.h"
 
+#include <GL/glew.h>
+#include <GL/freeglut.h>
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <math.h>
+#include <iostream>
+#include <stdlib.h>
+
 //Variables for player to move right when passes
 static float movingFrame = 50.0;
 static float movingDistance = 10.0;
@@ -106,3 +117,4 @@ void drawHead();
 void drawLimb();
 void drawTorso();
 bool cmpf(float A, float B, int mode);
+

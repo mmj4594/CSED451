@@ -1,12 +1,12 @@
 #include "object.h"
-#include "rect.h"
+#include "Wall.h"
 #include "character.h"
 
 //Return whether this object and object 'a' collides.
 bool object::collisionCheck(object* a) {
 	//wall - player/thief collision check
 	if (type == 0) {
-		rect* wall = (rect*)this;
+		Wall* wall = (Wall*)this;
 		character* ch = (character*)a;
 
 		//Check if collision already occured

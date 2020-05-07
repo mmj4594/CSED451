@@ -1,13 +1,3 @@
-#include <GL/glew.h>
-#include <glm/vec3.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <math.h>
-#include <iostream>
-#include <stdlib.h>
-
 #include "character.h"
 #include "colors.h"
 
@@ -15,9 +5,10 @@ using namespace glm;
 
 //Static global variables for drawing character
 static const float head_rad = 3.0;
-static const float torso_width = 4.0;
+static const float torso_depth = 3.0;
+static const float torso_width = 6.0;
 static const float torso_height = 10.0;
-static const float limb_joint_rad = 1.5;
+static const float limb_joint_rad = 1;
 static const float limb_length = 6.0;
 
 //Constructor of character class
@@ -37,19 +28,22 @@ character::character(float a, float b, pose initializedPose) {
 	head_node.child = NULL;
 
 	//initialization for upper limb
-	lua_node.mtx = translate(mat4(1.0f), vec3(-0.5 * torso_width, 0.5 * torso_height - limb_joint_rad , 0)) * rotate(mat4(1.0f), radians(180.0f), vec3(0, 0, 1));
+	lua_node.mtx = translate(mat4(1.0f), vec3(0, 0.5 * torso_height - limb_joint_rad , -0.5 * torso_width)) * rotate(mat4(1.0f), radians(180.0f), vec3(0, 0, 1)) * rotate(mat4(1.0f), radians(90.0f), vec3(0, 1, 0));
+	//lua_node.mtx = translate(mat4(1.0f), vec3(0, 0.5 * torso_height - limb_joint_rad, -0.5 * torso_width)) * rotate(mat4(1.0f), radians(180.0f), vec3(0, 0, 1));
 	lua_node.draw = drawLimb;
 	lua_node.sibling = &rua_node;
 	lua_node.child = &lla_node;
-	rua_node.mtx = translate(mat4(1.0f), vec3(0.5 * torso_width, 0.5 * torso_height - limb_joint_rad, 0));
+	//rua_node.mtx = translate(mat4(1.0f), vec3(0, 0.5 * torso_height - limb_joint_rad, 0.5 * torso_width));
+	rua_node.mtx = translate(mat4(1.0f), vec3(0, 0.5 * torso_height - limb_joint_rad, 0.5 * torso_width)) * rotate(mat4(1.0f), radians(-90.0f), vec3(0, 1, 0));
+	
 	rua_node.draw = drawLimb;
 	rua_node.sibling = &lul_node;
 	rua_node.child = &rla_node;
-	lul_node.mtx = translate(mat4(1.0f), vec3(-0.5 * torso_width + limb_joint_rad, -0.5 * torso_height, 0)) * rotate(mat4(1.0f), radians(-90.0f), vec3(0, 0, 1));
+	lul_node.mtx = translate(mat4(1.0f), vec3(0, -0.5 * torso_height, -0.5 * torso_width + limb_joint_rad)) * rotate(mat4(1.0f), radians(-90.0f), vec3(0, 0, 1));
 	lul_node.draw = drawLimb;
 	lul_node.sibling = &rul_node;
 	lul_node.child = &lll_node;
-	rul_node.mtx = translate(mat4(1.0f), vec3(0.5 * torso_width - limb_joint_rad, -0.5 * torso_height, 0)) * rotate(mat4(1.0f), radians(-90.0f), vec3(0, 0, 1));
+	rul_node.mtx = translate(mat4(1.0f), vec3(0, -0.5 * torso_height, 0.5 * torso_width - limb_joint_rad)) * rotate(mat4(1.0f), radians(-90.0f), vec3(0, 0, 1));
 	rul_node.draw = drawLimb;
 	rul_node.sibling = NULL;
 	rul_node.child = &rll_node;
@@ -192,44 +186,76 @@ void character::jump() {
 
 //Draw head of character
 void drawHead() {
+	/*
 	glBegin(GL_POLYGON);
 		for (float angle = 0; angle < 360; angle += 1.0) {
 			glVertex2f(head_rad * cos(angle), head_rad * sin(angle));
 		}
 	glEnd();
+	*/
+	glutSolidSphere(head_rad, 10, 10);
 }
 
 //Draw limb(arm or leg) of character
 void drawLimb() {
 	//joint1
+	/*
 	glBegin(GL_POLYGON);
 		for (float angle = 0; angle < 360; angle += 1.0) {
 			glVertex2f(limb_joint_rad * cos(angle), limb_joint_rad * sin(angle));
 		}
 	glEnd();
+	*/
+
+	
+	glutSolidSphere(limb_joint_rad, 10, 10);
+	
 	//skeleton
+	/*
 	glBegin(GL_POLYGON);
 		glVertex2f(0, -limb_joint_rad);
 		glVertex2f(0, limb_joint_rad);
 		glVertex2f(limb_length, limb_joint_rad);
 		glVertex2f(limb_length, -limb_joint_rad);
 	glEnd();
+	*/
+
+	//DrawCube(limb_length/2,0,0, limb_length, limb_joint_rad*2, limb_joint_rad*2);
+	glPushMatrix();
+	//glTranslatef(limb_length / 2, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glutSolidCylinder(limb_joint_rad, limb_length, 10, 10);
+	glPopMatrix();
 	//joint2
+	/*
 	glBegin(GL_POLYGON);
 		for (float angle = 0; angle < 360; angle += 1.0) {
 			glVertex2f(limb_length + limb_joint_rad * cos(angle), limb_joint_rad * sin(angle));
 		}
 	glEnd();
+	*/
+	glPushMatrix();
+	glTranslatef(limb_length, 0, 0);
+	glutSolidSphere(limb_joint_rad, 10, 10);
+	glPopMatrix();
 }
 
 //Draw torso of character
 void drawTorso() {
+	/*
 	glBegin(GL_POLYGON);
 		glVertex2f(-0.5f * torso_width, -0.5f * torso_height);
 		glVertex2f(-0.5f * torso_width, 0.5f * torso_height);
 		glVertex2f(0.5f * torso_width, 0.5f * torso_height);
 		glVertex2f(0.5f * torso_width, -0.5f * torso_height);
 	glEnd();
+	*/
+	glPushMatrix();
+	glTranslatef(0, torso_height / 2, 0);
+	glRotatef(90, 1, 0, 0);	
+	glutSolidCylinder(torso_width/2, torso_height, 10, 10);
+	glPopMatrix();
+	//DrawCube(0, 0, 0, torso_width, torso_height, torso_depth);
 }
 
 //Compare float variables

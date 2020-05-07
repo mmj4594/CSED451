@@ -1,6 +1,5 @@
 #pragma once
-
-#include "rect.h"
+#include "Wall.h"
 #include "character.h"
 #include "coordinates.h"
 
@@ -14,7 +13,7 @@ const int JUMP = 4;
 const int FAIL = 5;
 
 //Size of displayed world
-float WORLD_SIZE_X = 150;
+float WORLD_SIZE_X = 200;
 float WORLD_SIZE_Y = 100;
 
 //Wall moving speed
@@ -80,8 +79,7 @@ float lifeX = LIFE_DEFAULT_X;
 float lifeY = LIFE_DEFAULT_Y;
 
 //Basic objects in world
-rect world_floor(-200, -30, 0, 350, 50, 0);
-rect wall(WORLD_SIZE_X, 20, 0, 10, wallHeight, 0);
+Wall wall(WORLD_SIZE_X, 20, 0, 10, wallHeight, 0);
 character player(PLAYER_DEFAULT_X, PLAYER_DEFAULT_Y, initialPose);
 character thief(THIEF_DEFAULT_X, THIEF_DEFAULT_Y, initialPose);
 
@@ -101,4 +99,6 @@ void specialkeyboard(int key, int x, int y);
 void finishGame();
 
 void drawAxes();
+
+void drawFloor();
 

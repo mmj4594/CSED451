@@ -1,4 +1,6 @@
 #pragma once
+#pragma once
+#pragma once
 #include "object.h"
 #include <GL/glew.h>
 #include <GL/freeglut.h>
@@ -21,12 +23,12 @@
 */
 
 
-const float gridSize = 25;
-const float floorSize = 500;
+const float wallGridSize = 25;
+const float wallFloorSize = 500;
 
-class rect : public object {
+class Wall : public object {
 public:
-	rect(float a, float b, float c, float w, float h, float d) {
+	Wall(float a, float b, float c, float w, float h, float d) {
 		type = 0;
 		x = a; y = b; z = c;
 		width = w; height = h; depth = d;
@@ -35,13 +37,19 @@ public:
 	float getWidth() { return width; }
 	float getHeight() { return height; }
 	float getDepth() { return depth; }
+	float getShape() { return shape; }
 
 	void setWidth(float newWidth) { width = newWidth; }
 	void setHeight(float newHeight) { height = newHeight; }
 	void setDepth(float newDepth) { depth = newDepth; }
+	void setShape(float newShape) { shape = newShape; }
 
 	void draw();
 
 private:
 	float width, height, depth;
+	int shape = 5;
 };
+
+void DrawCube(GLfloat centerPosX, GLfloat centerPosY, GLfloat centerPosZ, GLfloat widthLength, GLfloat depthLength, GLfloat heightLength);
+

@@ -20,6 +20,7 @@ static bool allFail = false;
 
 //Game status
 int gameStatus = IDLE;
+int camera;
 
 using namespace std;
 
@@ -44,28 +45,61 @@ int main(int argc, char** argv) {
 void init() {
 	srand(time(NULL));
 	glClearColor(1.0, 1.0, 1.0, 0.0);
-	world_floor.setColor(BLACK);
 	glEnable(GL_DEPTH_TEST);
+	glPushAttrib(GL_ALL_ATTRIB_BITS);
+	glEnable(GL_POLYGON_OFFSET_FILL);
+	glPolygonOffset(-2.5f, -2.5f);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	
+	glLineWidth(3.0f);
+	glColor3f(1.0f, 1.0f, 1.0f);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glEnable(GL_LIGHTING);
 }
 
 //Display current status on screen(3D)
+
 void display3D() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gluLookAt(
-		-WORLD_SIZE_X, WORLD_SIZE_Y, 180,			//camera position
-		WORLD_SIZE_X / 2, WORLD_SIZE_Y / 2, 0,		//lookat
-		0, 1, 0										//up
-	);
+	camera = 1;
+	switch (camera) {
+	case 1:
+		gluLookAt(
+			-WORLD_SIZE_X / 2, WORLD_SIZE_Y / 2 + 20, 180 / 2,			//camera position
+			WORLD_SIZE_X / 2, WORLD_SIZE_Y / 4 + 20, 0,		//lookat
+			0, 1, 0										//up
+		);
+		break;
+	case 2:
+		//XY Plane
+		gluLookAt(
+			50, 50, 150,			//camera position
+			50, 50, 0,		//lookat
+			0, 1, 0										//up
+		);
+		break;
+	case 3:
+		//ZY Plane
+		gluLookAt(
+			-50, 50, 0,			//camera position
+			0, 50, 0,		//lookat
+			0, 1, 0										//up
+		);
+		break;
+	}
+
 
 	drawAxes();
 	player.draw();
 	thief.draw();
-	world_floor.draw();
+	drawFloor();
 	wall.draw();
-	glutSolidSphere(30, 100, 100);
+	
 	writeLife(lifeX, lifeY);
 
 	glutSwapBuffers();
@@ -134,7 +168,7 @@ void frameAction(int value) {
 	}
 
 	//Ask if thief will jump
-	if ((wall.getX() - thief.getX() < 27.5) && !askJump){
+	if ((wall.getX() - thief.getX() < 35) && !askJump){
 		askJump = true;
 		//thief jump with probability
 		if (rand() % 100 < thiefJumpProbability * 100) {
@@ -204,6 +238,7 @@ int moveWall() {
 	else if (wall.collisionCheck(&thief)) {
 		if (!thiefJumped) {
 			wall.setColor(thief.getColor());
+			wall.setShape(thief.getColor());
 		}
 	}
 	//Collision between player and thief
@@ -213,7 +248,9 @@ int moveWall() {
 
 	//Repositioning of wall when it goes out of the screen
 	if (wall.getX() + wall.getWidth() + wallSpeed*20 < world.getLeft()) {
-		wall = rect(world.getRight(), 20, 0, 10, wallHeight, 0);
+		int shape = wall.getShape();
+		wall = Wall(world.getRight(), 20, 0, 10, wallHeight, 0);
+		wall.setShape(shape);
 		thief.resetCollided();
 		player.resetCollided();
 		askJump = false;
@@ -296,4 +333,17 @@ void finishGame() {
 	glutKeyboardFunc(NULL);
 	glutSpecialFunc(NULL);
 }
+
+void drawFloor() {
+	GLfloat floorSize = (GLfloat)300;
+	GLfloat gridSize = (GLfloat)25;
+	glColor3f(0, 0, 0);
+	glBegin(GL_LINES);
+	for (GLfloat i = -floorSize; i <= floorSize; i += gridSize) {
+		glVertex3f(i, 20, floorSize); glVertex3f(i, 20, -floorSize);
+		glVertex3f(floorSize, 20, i); glVertex3f(-floorSize, 20, i);
+	}
+	glEnd();
+}
+
 

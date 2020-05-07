@@ -150,7 +150,7 @@
     <ClCompile Include="colors.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="object.cpp" />
-    <ClCompile Include="rect.cpp" />
+    <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="character.h" />
@@ -160,7 +160,7 @@
     <ClInclude Include="treeNode.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="object.h" />
-    <ClInclude Include="rect.h" />
+    <ClInclude Include="Wall.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
