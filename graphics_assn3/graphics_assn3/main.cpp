@@ -20,7 +20,7 @@ static bool allFail = false;
 
 //Game status
 int gameStatus = IDLE;
-int camera;
+int cameraStatus;
 
 using namespace std;
 
@@ -46,17 +46,7 @@ void init() {
 	srand(time(NULL));
 	glClearColor(1.0, 1.0, 1.0, 0.0);
 	glEnable(GL_DEPTH_TEST);
-	glPushAttrib(GL_ALL_ATTRIB_BITS);
-	glEnable(GL_POLYGON_OFFSET_FILL);
-	glPolygonOffset(-2.5f, -2.5f);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	
-	glLineWidth(3.0f);
-	glColor3f(1.0f, 1.0f, 1.0f);
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	//glEnable(GL_LIGHTING);
+	setCamera(TPV);
 }
 
 //Display current status on screen(3D)
@@ -66,33 +56,7 @@ void display3D() {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	camera = 1;
-	switch (camera) {
-	case 1:
-		gluLookAt(
-			-WORLD_SIZE_X / 2, WORLD_SIZE_Y / 2 + 20, 180 / 2,			//camera position
-			WORLD_SIZE_X / 2, WORLD_SIZE_Y / 4 + 20, 0,		//lookat
-			0, 1, 0										//up
-		);
-		break;
-	case 2:
-		//XY Plane
-		gluLookAt(
-			50, 50, 150,			//camera position
-			50, 50, 0,		//lookat
-			0, 1, 0										//up
-		);
-		break;
-	case 3:
-		//ZY Plane
-		gluLookAt(
-			-50, 50, 0,			//camera position
-			0, 50, 0,		//lookat
-			0, 1, 0										//up
-		);
-		break;
-	}
-
+	gluLookAt(eye[0], eye[1], eye[2], reference[0], reference[1], reference[2], upVector[0], upVector[1], upVector[2]);
 
 	drawAxes();
 	player.draw();
@@ -237,6 +201,7 @@ int moveWall() {
 	//Collision between wall and thief
 	else if (wall.collisionCheck(&thief)) {
 		if (!thiefJumped) {
+			//Set shape and color of wall
 			wall.setColor(thief.getColor());
 			wall.setShape(thief.getColor());
 		}
@@ -291,6 +256,18 @@ void keyboard(unsigned char key, int x, int y) {
 	case SPACE:
 		player.jump();
 		break;
+	case '1':
+		setCamera(FPV);
+		break;
+	case '3':
+		setCamera(TPV);
+		break;
+	case '9':
+		setCamera(XYPlane);
+		break; 
+	case '0':
+		setCamera(ZYPlane);
+		break;
 	}
 
 	glutPostRedisplay();
@@ -334,6 +311,7 @@ void finishGame() {
 	glutSpecialFunc(NULL);
 }
 
+//Draw floor
 void drawFloor() {
 	GLfloat floorSize = (GLfloat)300;
 	GLfloat gridSize = (GLfloat)25;
@@ -344,6 +322,13 @@ void drawFloor() {
 		glVertex3f(floorSize, 20, i); glVertex3f(-floorSize, 20, i);
 	}
 	glEnd();
+}
+
+//Set camera to cameraPos
+void setCamera(camera cameraPos) {
+	memcpy(eye, cameraPos.getEye(), sizeof(eye));
+	memcpy(reference, cameraPos.getReference(), sizeof(reference));
+	memcpy(upVector, cameraPos.getUpVector(), sizeof(upVector));
 }
 
 

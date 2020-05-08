@@ -2,6 +2,9 @@
 #include "Wall.h"
 #include "character.h"
 #include "coordinates.h"
+#include "camera.h"
+
+using namespace std;
 
 
 //Game Status
@@ -83,7 +86,18 @@ Wall wall(WORLD_SIZE_X, 20, 0, 10, wallHeight, 0);
 character player(PLAYER_DEFAULT_X, PLAYER_DEFAULT_Y, initialPose);
 character thief(THIEF_DEFAULT_X, THIEF_DEFAULT_Y, initialPose);
 
+GLdouble eye[3];
+GLdouble reference[3];
+GLdouble upVector[3];
 
+camera FPV(0, 0, 0, 0, 0, 0, 0, 0, 0); //need to implement
+camera TPV(-WORLD_SIZE_X / 2, WORLD_SIZE_Y / 2 + 20, 180 / 2,
+	WORLD_SIZE_X / 2, WORLD_SIZE_Y / 4 + 20, 0 ,
+	0, 1, 0 );
+
+camera XYPlane(50, 50, 150,	50, 50, 0, 0, 1, 0);
+camera ZYPlane(-50, 50, 0, 0, 50, 0, 0, 1, 0);
+					
 //Function definition
 void init();
 void frameAction(int value);
@@ -101,4 +115,6 @@ void finishGame();
 void drawAxes();
 
 void drawFloor();
+
+void setCamera(camera cameraPos);
 

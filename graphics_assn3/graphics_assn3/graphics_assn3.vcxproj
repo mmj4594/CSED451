@@ -153,6 +153,7 @@
     <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="character.h" />
     <ClInclude Include="colors.h" />
     <ClInclude Include="coordinates.h" />
