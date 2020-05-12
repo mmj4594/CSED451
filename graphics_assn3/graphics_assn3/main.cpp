@@ -259,15 +259,15 @@ void keyboard(unsigned char key, int x, int y) {
 		player.jump();
 		break;
 	case '1':
-		if (cameraMode != 1) { fovy *= 2; newFovy = fovy; }
+		if (cameraMode != 1) { fovy *= 2; newFovy *= 2; }
 		setCameraMode(1);
 		break;
 	case '3':
-		if (cameraMode == 1) { fovy /= 2; newFovy = fovy; }
+		if (cameraMode == 1) { fovy /= 2; newFovy /= 2; }
 		setCameraMode(3);
 		break;
 	case '9':
-		if (cameraMode == 1) { fovy /= 2; newFovy = fovy; }
+		if (cameraMode == 1) { fovy /= 2; newFovy /= 2; }
 		setCameraMode(9);
 		break; 
 	}
