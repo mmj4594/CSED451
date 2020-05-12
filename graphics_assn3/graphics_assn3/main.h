@@ -1,7 +1,6 @@
 #pragma once
 #include "Wall.h"
 #include "character.h"
-#include "coordinates.h"
 #include "camera.h"
 
 using namespace std;
@@ -62,17 +61,6 @@ const float BOTTOM_DECREMENT = -1.5;
 const float TOP_DECREMENT = 4.5;
 const float zoomFrame = 50;
 
-//World coordinates to implement zoom
-coordinates world(0, WORLD_SIZE_X, 0, WORLD_SIZE_Y);
-coordinates newWorld(0, WORLD_SIZE_X, 0, WORLD_SIZE_Y);
-coordinates coordinatesIncrement(LEFT_INCREMENT, RIGHT_INCREMENT, BOTTOM_INCREMENT, TOP_INCREMENT);
-coordinates incrementPerFrame(LEFT_INCREMENT / zoomFrame, RIGHT_INCREMENT / zoomFrame, BOTTOM_INCREMENT / zoomFrame, TOP_INCREMENT / zoomFrame);
-coordinates coordinatesDecrement(LEFT_DECREMENT, RIGHT_DECREMENT, BOTTOM_DECREMENT, TOP_DECREMENT);
-coordinates decrementPerFrame(LEFT_DECREMENT / zoomFrame, RIGHT_DECREMENT / zoomFrame, BOTTOM_DECREMENT / zoomFrame, TOP_DECREMENT / zoomFrame);
-coordinates coordinatesMoveCameraLeft(-jump_back, -jump_back, 0, 0);
-coordinates moveCameraLeftPerFrame(-jump_back / zoomFrame, -jump_back / zoomFrame, 0, 0);
-
-
 //Displacement of life on window
 int life = 4;
 std::string lifeText = "Life: ";
@@ -86,15 +74,14 @@ Wall wall(WORLD_SIZE_X, 20, 0, 10, wallHeight, 0);
 character player(PLAYER_DEFAULT_X, PLAYER_DEFAULT_Y, initialPose);
 character thief(THIEF_DEFAULT_X, THIEF_DEFAULT_Y, initialPose);
 
+//Camera configuration
 GLdouble eye[3];
 GLdouble reference[3];
 GLdouble upVector[3];
-
 camera FPV(0, 0, 0, 0, 0, 0, 0, 0, 0); //need to implement
 camera TPV(-WORLD_SIZE_X / 2, WORLD_SIZE_Y / 2 + 20, 180 / 2,
 	WORLD_SIZE_X / 2, WORLD_SIZE_Y / 4 + 20, 0 ,
 	0, 1, 0 );
-
 camera XYPlane(50, 50, 150,	50, 50, 0, 0, 1, 0);
 camera ZYPlane(-50, 50, 0, 0, 50, 0, 0, 1, 0);
 					
@@ -105,16 +92,14 @@ void display3D();
 void reshape3D(int w, int h);
 int moveWall();
 
-void writeLife(float x, float y);
-
 void keyboard(unsigned char key, int x, int y);
 void specialkeyboard(int key, int x, int y);
 
-void finishGame();
-
+void writeLife(float x, float y);
 void drawAxes();
-
 void drawFloor();
 
 void setCamera(camera cameraPos);
+
+void finishGame();
 

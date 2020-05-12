@@ -58,7 +58,7 @@ void display3D() {
 
 	gluLookAt(eye[0], eye[1], eye[2], reference[0], reference[1], reference[2], upVector[0], upVector[1], upVector[2]);
 
-	drawAxes();
+	//drawAxes();
 	player.draw();
 	thief.draw();
 	drawFloor();
@@ -107,27 +107,24 @@ void frameAction(int value) {
 		Move player to right and zoom camera if pass successfully
 		after the wall disappear and player land successfully
 	*/
-	if ((wall.getX() + wall.getWidth() < world.getLeft()) && isPassed && (player.getY() == PLAYER_DEFAULT_Y)) {
+	if ((wall.getX() + wall.getWidth() < 0) && isPassed && (player.getY() == PLAYER_DEFAULT_Y)) {
 		wallSpeed += wallSpeedIncrement;
 		posePeriod -= 5;
 		player.setnewX(player.getX() + player.getMovingDistance());
-		newWorld = world + coordinatesIncrement;
 		isPassed = false;
 	}
 	/*
 		Move camera left if both thief and player pass the wall by jump
 		after the wall disappear and player land successfully
 	*/
-	else if ((wall.getX() + wall.getWidth() < world.getLeft()) && isJumped && wall.getColor() == GRAY && (player.getY() == PLAYER_DEFAULT_Y)) {
-		newWorld = world + coordinatesMoveCameraLeft;
+	else if ((wall.getX() + wall.getWidth() < 0) && isJumped && wall.getColor() == GRAY && (player.getY() == PLAYER_DEFAULT_Y)) {
 		isJumped = false;
 	}
 	/*
 		Zoom out camera if thief doesn't jump and player ignore the wall by jump
 		after the wall disappear and player land successfully
 	*/
-	else if ((wall.getX() + wall.getWidth() < world.getLeft()) && isJumped && wall.getColor() != GRAY && (player.getY() == PLAYER_DEFAULT_Y)) {
-		newWorld = world + coordinatesDecrement;
+	else if ((wall.getX() + wall.getWidth() < 0) && isJumped && wall.getColor() != GRAY && (player.getY() == PLAYER_DEFAULT_Y)) {
 		isJumped = false;
 	}
 
@@ -212,32 +209,17 @@ int moveWall() {
 	}
 
 	//Repositioning of wall when it goes out of the screen
-	if (wall.getX() + wall.getWidth() + wallSpeed*20 < world.getLeft()) {
+	if (wall.getX() + wall.getWidth() + wallSpeed*20 < 0) {
 		int shape = wall.getShape();
-		wall = Wall(world.getRight(), 20, 0, 10, wallHeight, 0);
+		wall = Wall(WORLD_SIZE_X, 20, 0, 10, wallHeight, 0);
 		wall.setShape(shape);
 		thief.resetCollided();
 		player.resetCollided();
 		askJump = false;
 		thiefJumped = false;
+		wall.setShape(5);
 	}
 	return status;
-}
-
-//Draw Axes in red(x), green(y), blue(z)
-void drawAxes() {
-	glLineWidth(3.0);
-	glBegin(GL_LINES);
-	setPalette(RED);
-	glVertex3i(0, 0, 0);
-	glVertex3i(100, 0, 0);
-	setPalette(GREEN);
-	glVertex3i(0, 0, 0);
-	glVertex3i(0, 100, 0);
-	setPalette(BLUE);
-	glVertex3i(0, 0, 0);
-	glVertex3i(0, 0, 100);
-	glEnd();
 }
 
 //Define cheat according to user keyboard input.
@@ -302,13 +284,20 @@ void writeLife(float x, float y) {
 	}
 }
 
-//Fnish game
-void finishGame() {
-	glutPostRedisplay();
-	glutReshapeFunc(NULL);
-	glutIdleFunc(NULL);
-	glutKeyboardFunc(NULL);
-	glutSpecialFunc(NULL);
+//Draw Axes in red(x), green(y), blue(z)
+void drawAxes() {
+	glLineWidth(3.0);
+	glBegin(GL_LINES);
+	setPalette(RED);
+	glVertex3i(0, 0, 0);
+	glVertex3i(100, 0, 0);
+	setPalette(GREEN);
+	glVertex3i(0, 0, 0);
+	glVertex3i(0, 100, 0);
+	setPalette(BLUE);
+	glVertex3i(0, 0, 0);
+	glVertex3i(0, 0, 100);
+	glEnd();
 }
 
 //Draw floor
@@ -331,4 +320,11 @@ void setCamera(camera cameraPos) {
 	memcpy(upVector, cameraPos.getUpVector(), sizeof(upVector));
 }
 
-
+//Fnish game
+void finishGame() {
+	glutPostRedisplay();
+	glutReshapeFunc(NULL);
+	glutIdleFunc(NULL);
+	glutKeyboardFunc(NULL);
+	glutSpecialFunc(NULL);
+}

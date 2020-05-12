@@ -1,6 +1,4 @@
 #pragma once
-#pragma once
-#pragma once
 #include "object.h"
 #include <GL/glew.h>
 #include <GL/freeglut.h>

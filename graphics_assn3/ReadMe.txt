@@ -1,4 +1,4 @@
-Readme - CSED451 Computer Graphics assn2
+Readme - CSED451 Computer Graphics assn3
 Team GPS(20202405 문민재, 20202728 김진수)
 
 
@@ -7,12 +7,12 @@ Team GPS(20202405 문민재, 20202728 김진수)
 ($ProjectDir)\include - OpenGl과 GLM을 프로젝트에서 사용하기 위한 헤더 파일들이 들어있다.
 ($ProjectDir)\lib - freeglut, glew32의 라이브러리가 들어있다.
 ($ProjectDir)\x64\Debug - 디버그 관련 폴더이다.
-($ProjectDir)\source.cpp - 이번 assn2의 소스 코드이다.
-($ProjectDir)\source.h - 이번 assn2에서 사용된 헤더 파일이다. assn2의 구현에 사용된 전역변수, 클래스 등이 있다.
+($ProjectDir)\ 안의 .cpp 파일들 - 이번 assn3-1의 소스 코드이다.
+($ProjectDir)\ 안의 .h 파일들 - 이번 assn3-1에서 사용된 헤더 파일이다. assn3의 구현에 사용된 전역변수, 클래스 등이 있다.
 
 
 프로그램 실행 방법
-프로젝트를 컴파일한 후 freeglut.dll과 glew32.dll이 있는 ($ProjectDir)\bin\x64 위치로 이동하여 graphics_assn2.exe를 실행시킨다.
+프로젝트를 컴파일한 후 freeglut.dll과 glew32.dll이 있는 ($ProjectDir)\bin\x64 위치로 이동하여 graphics_assn3.exe를 실행시킨다.
 
 
 게임 플레이 방법
