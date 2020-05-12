@@ -64,11 +64,9 @@ void display3D() {
 
 	//Draw objects
 	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
 	glLoadIdentity();
 	gluPerspective(fovy, (float)WINDOW_WIDTH / WINDOW_HEIGHT, 1, 2000);
 	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
 	glLoadIdentity();
 	gluLookAt(eye[0], eye[1], eye[2], reference[0], reference[1], reference[2], upVector[0], upVector[1], upVector[2]);
 
@@ -261,7 +259,7 @@ void keyboard(unsigned char key, int x, int y) {
 		player.jump();
 		break;
 	case '1':
-		if (cameraMode == 3) { fovy *= 2; newFovy = fovy; }
+		if (cameraMode != 1) { fovy *= 2; newFovy = fovy; }
 		setCameraMode(1);
 		break;
 	case '3':
@@ -269,6 +267,7 @@ void keyboard(unsigned char key, int x, int y) {
 		setCameraMode(3);
 		break;
 	case '9':
+		if (cameraMode == 1) { fovy /= 2; newFovy = fovy; }
 		setCameraMode(9);
 		break; 
 	}

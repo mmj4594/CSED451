@@ -78,9 +78,7 @@ character thief(THIEF_DEFAULT_X, THIEF_DEFAULT_Y, initialPose);
 
 //Camera configuration
 int cameraMode = 3;		//point of view
-GLdouble eye[3];
-GLdouble reference[3];
-GLdouble upVector[3];
+GLdouble eye[3], reference[3], upVector[3];
 camera FPV(PLAYER_DEFAULT_X+3, PLAYER_DEFAULT_Y + 5 + 3, 0,
 	THIEF_DEFAULT_X, THIEF_DEFAULT_Y + 5 + 3, 0,
 	0, 1, 0);
