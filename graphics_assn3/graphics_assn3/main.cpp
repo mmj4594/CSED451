@@ -53,6 +53,9 @@ void init() {
 
 void display3D() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(fovy, (float)WINDOW_WIDTH / WINDOW_HEIGHT, 1, 2000);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
@@ -71,11 +74,13 @@ void display3D() {
 
 //Action when window of the game reshaped(3D)
 void reshape3D(int w, int h) {
+	WINDOW_WIDTH = w;
+	WINDOW_HEIGHT = h;
 	glClearColor(1, 1, 1, 1);
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(45, (float)w / h, 1, 2000);
+	gluPerspective(fovy, (float)w / h, 1, 2000);
 	glMatrixMode(GL_MODELVIEW);
 }
 
@@ -111,22 +116,22 @@ void frameAction(int value) {
 		wallSpeed += wallSpeedIncrement;
 		posePeriod -= 5;
 		player.setnewX(player.getX() + player.getMovingDistance());
+		newFovy *= 0.85;
+		fovyPerFrame = (newFovy - fovy) / zoomFrame;
 		isPassed = false;
-	}
-	/*
-		Move camera left if both thief and player pass the wall by jump
-		after the wall disappear and player land successfully
-	*/
-	else if ((wall.getX() + wall.getWidth() < 0) && isJumped && wall.getColor() == GRAY && (player.getY() == PLAYER_DEFAULT_Y)) {
-		isJumped = false;
 	}
 	/*
 		Zoom out camera if thief doesn't jump and player ignore the wall by jump
 		after the wall disappear and player land successfully
 	*/
 	else if ((wall.getX() + wall.getWidth() < 0) && isJumped && wall.getColor() != GRAY && (player.getY() == PLAYER_DEFAULT_Y)) {
+		newFovy *= 1.05;
+		fovyPerFrame = (newFovy - fovy) / zoomFrame;
 		isJumped = false;
 	}
+
+	//Zoom in, out action
+	if (abs(newFovy - fovy) > 0.01) { fovy += fovyPerFrame; }
 
 	//Ask if thief will jump
 	if ((wall.getX() - thief.getX() < 35) && !askJump){

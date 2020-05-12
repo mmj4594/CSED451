@@ -5,7 +5,6 @@
 
 using namespace std;
 
-
 //Game Status
 const int IDLE = 0;
 const int LOSE = 1;
@@ -17,6 +16,9 @@ const int FAIL = 5;
 //Size of displayed world
 float WORLD_SIZE_X = 200;
 float WORLD_SIZE_Y = 100;
+//Window size
+float WINDOW_WIDTH = 750;
+float WINDOW_HEIGHT = 500;
 
 //Wall moving speed
 float wallSpeed = 2.5;
@@ -84,6 +86,9 @@ camera TPV(-WORLD_SIZE_X / 2, WORLD_SIZE_Y / 2 + 20, 180 / 2,
 	0, 1, 0 );
 camera XYPlane(50, 50, 150,	50, 50, 0, 0, 1, 0);
 camera ZYPlane(-50, 50, 0, 0, 50, 0, 0, 1, 0);
+float fovy = 45;
+float newFovy = fovy;
+float fovyPerFrame = 0;
 					
 //Function definition
 void init();
