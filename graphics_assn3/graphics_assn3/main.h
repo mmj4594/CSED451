@@ -66,8 +66,8 @@ const float zoomFrame = 50;
 //Displacement of life on window
 int life = 4;
 std::string lifeText = "Life: ";
-const float LIFE_DEFAULT_X = 10;
-const float LIFE_DEFAULT_Y = 90;
+const float LIFE_DEFAULT_X = 50;
+const float LIFE_DEFAULT_Y = 450;
 float lifeX = LIFE_DEFAULT_X;
 float lifeY = LIFE_DEFAULT_Y;
 
@@ -87,8 +87,7 @@ camera FPV(PLAYER_DEFAULT_X+3, PLAYER_DEFAULT_Y + 5 + 3, 0,
 camera TPV(-WORLD_SIZE_X / 2, WORLD_SIZE_Y / 2 + 20, 180 / 2,
 	WORLD_SIZE_X / 2, WORLD_SIZE_Y / 4 + 20, 0 ,
 	0, 1, 0 );
-//camera XYPlane(50, 50, 150,	50, 50, 0, 0, 1, 0);
-//camera ZYPlane(-50, 50, 0, 0, 50, 0, 0, 1, 0);
+camera XYPlane(50, 50, 150,	50, 50, 0, 0, 1, 0);
 float fovy = 45;
 float newFovy = fovy;
 float fovyPerFrame = 0;

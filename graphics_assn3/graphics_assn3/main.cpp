@@ -53,15 +53,25 @@ void init() {
 
 void display3D() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	//Write life at fixed screen position
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(fovy, (float)WINDOW_WIDTH / WINDOW_HEIGHT, 1, 2000);
+	gluOrtho2D(0, WINDOW_WIDTH, 0, WINDOW_HEIGHT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	writeLife(lifeX, lifeY);
+
+	//Draw objects
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glLoadIdentity();
+	gluPerspective(fovy, (float)WINDOW_WIDTH / WINDOW_HEIGHT, 1, 2000);
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+	glLoadIdentity();
 	gluLookAt(eye[0], eye[1], eye[2], reference[0], reference[1], reference[2], upVector[0], upVector[1], upVector[2]);
 
-	//drawAxes();
 	player.draw();
 	thief.draw();
 	drawFloor();
@@ -134,12 +144,9 @@ void frameAction(int value) {
 		thief.getX(), player.getY() + 8, 0,
 		0, 1, 0);
 	switch (cameraMode) {
-	case 1:
-		setCamera(FPV);
-		break;
-	case 3:
-		setCamera(TPV);
-		break;
+	case 1:	setCamera(FPV); break;
+	case 3:	setCamera(TPV);	break;
+	case 9: setCamera(XYPlane); break;
 	}
 	if (abs(newFovy - fovy) > 0.01) { fovy += fovyPerFrame; }
 
@@ -261,12 +268,9 @@ void keyboard(unsigned char key, int x, int y) {
 		if (cameraMode == 1) { fovy /= 2; newFovy = fovy; }
 		setCameraMode(3);
 		break;
-	/*case '9':
-		setCamera(XYPlane);
+	case '9':
+		setCameraMode(9);
 		break; 
-	case '0':
-		setCamera(ZYPlane);
-		break;*/
 	}
 
 	glutPostRedisplay();
@@ -291,8 +295,7 @@ void specialkeyboard(int key, int x, int y) {
 
 //Display remaining life on window
 void writeLife(float x, float y) {
-	//life
-	glColor3f(0, 0, 0);
+	setPalette(BLACK);
 	glRasterPos2f(x, y);
 	string s = lifeText + to_string(life);
 	for (string::iterator i = s.begin(); i != s.end(); ++i) {
