@@ -77,15 +77,18 @@ character player(PLAYER_DEFAULT_X, PLAYER_DEFAULT_Y, initialPose);
 character thief(THIEF_DEFAULT_X, THIEF_DEFAULT_Y, initialPose);
 
 //Camera configuration
+int cameraMode = 3;		//point of view
 GLdouble eye[3];
 GLdouble reference[3];
 GLdouble upVector[3];
-camera FPV(0, 0, 0, 0, 0, 0, 0, 0, 0); //need to implement
+camera FPV(PLAYER_DEFAULT_X+3, PLAYER_DEFAULT_Y + 5 + 3, 0,
+	THIEF_DEFAULT_X, THIEF_DEFAULT_Y + 5 + 3, 0,
+	0, 1, 0);
 camera TPV(-WORLD_SIZE_X / 2, WORLD_SIZE_Y / 2 + 20, 180 / 2,
 	WORLD_SIZE_X / 2, WORLD_SIZE_Y / 4 + 20, 0 ,
 	0, 1, 0 );
-camera XYPlane(50, 50, 150,	50, 50, 0, 0, 1, 0);
-camera ZYPlane(-50, 50, 0, 0, 50, 0, 0, 1, 0);
+//camera XYPlane(50, 50, 150,	50, 50, 0, 0, 1, 0);
+//camera ZYPlane(-50, 50, 0, 0, 50, 0, 0, 1, 0);
 float fovy = 45;
 float newFovy = fovy;
 float fovyPerFrame = 0;
@@ -101,9 +104,9 @@ void keyboard(unsigned char key, int x, int y);
 void specialkeyboard(int key, int x, int y);
 
 void writeLife(float x, float y);
-void drawAxes();
 void drawFloor();
 
+void setCameraMode(int view) { cameraMode = view; }
 void setCamera(camera cameraPos);
 
 void finishGame();

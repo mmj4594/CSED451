@@ -58,7 +58,7 @@ void display3D() {
 	gluPerspective(fovy, (float)WINDOW_WIDTH / WINDOW_HEIGHT, 1, 2000);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-
+	writeLife(lifeX, lifeY);
 	gluLookAt(eye[0], eye[1], eye[2], reference[0], reference[1], reference[2], upVector[0], upVector[1], upVector[2]);
 
 	//drawAxes();
@@ -66,8 +66,6 @@ void display3D() {
 	thief.draw();
 	drawFloor();
 	wall.draw();
-	
-	writeLife(lifeX, lifeY);
 
 	glutSwapBuffers();
 }
@@ -116,7 +114,8 @@ void frameAction(int value) {
 		wallSpeed += wallSpeedIncrement;
 		posePeriod -= 5;
 		player.setnewX(player.getX() + player.getMovingDistance());
-		newFovy *= 0.85;
+
+		newFovy = fovy * 0.85;
 		fovyPerFrame = (newFovy - fovy) / zoomFrame;
 		isPassed = false;
 	}
@@ -125,12 +124,23 @@ void frameAction(int value) {
 		after the wall disappear and player land successfully
 	*/
 	else if ((wall.getX() + wall.getWidth() < 0) && isJumped && wall.getColor() != GRAY && (player.getY() == PLAYER_DEFAULT_Y)) {
-		newFovy *= 1.05;
+		newFovy = fovy * 1.05;
 		fovyPerFrame = (newFovy - fovy) / zoomFrame;
 		isJumped = false;
 	}
 
-	//Zoom in, out action
+	//Camera manipulation
+	FPV = camera(player.getX() + 3, player.getY() + 8, 0,
+		thief.getX(), player.getY() + 8, 0,
+		0, 1, 0);
+	switch (cameraMode) {
+	case 1:
+		setCamera(FPV);
+		break;
+	case 3:
+		setCamera(TPV);
+		break;
+	}
 	if (abs(newFovy - fovy) > 0.01) { fovy += fovyPerFrame; }
 
 	//Ask if thief will jump
@@ -244,17 +254,19 @@ void keyboard(unsigned char key, int x, int y) {
 		player.jump();
 		break;
 	case '1':
-		setCamera(FPV);
+		if (cameraMode == 3) { fovy *= 2; newFovy = fovy; }
+		setCameraMode(1);
 		break;
 	case '3':
-		setCamera(TPV);
+		if (cameraMode == 1) { fovy /= 2; newFovy = fovy; }
+		setCameraMode(3);
 		break;
-	case '9':
+	/*case '9':
 		setCamera(XYPlane);
 		break; 
 	case '0':
 		setCamera(ZYPlane);
-		break;
+		break;*/
 	}
 
 	glutPostRedisplay();
@@ -287,22 +299,6 @@ void writeLife(float x, float y) {
 		char c = *i;
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
 	}
-}
-
-//Draw Axes in red(x), green(y), blue(z)
-void drawAxes() {
-	glLineWidth(3.0);
-	glBegin(GL_LINES);
-	setPalette(RED);
-	glVertex3i(0, 0, 0);
-	glVertex3i(100, 0, 0);
-	setPalette(GREEN);
-	glVertex3i(0, 0, 0);
-	glVertex3i(0, 100, 0);
-	setPalette(BLUE);
-	glVertex3i(0, 0, 0);
-	glVertex3i(0, 0, 100);
-	glEnd();
 }
 
 //Draw floor
