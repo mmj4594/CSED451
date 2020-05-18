@@ -6,14 +6,17 @@
 
 using namespace std;
 
-GLuint vertexShader;
-GLuint fragmentShader;
 GLuint shaderProgram;
-unsigned int VBO, VAO;
+unsigned int VBO, VAO, EBO;
 float vertices[] = {
-	-0.5, -0.5, 0.0,
+	0.5, 0.5, 0.0,
 	0.5, -0.5, 0.0,
-	0.0, 0.5, 0.0
+	-0.5, -0.5, 0.0,
+	-0.5, 0.5, 0.0
+};
+unsigned int indices[] = {
+	0, 1, 3,
+	1, 2, 3
 };
 
 const string readShaderSource(const char* shaderFile);
@@ -54,6 +57,7 @@ const string readShaderSource(const char* shaderFile) {
 void init() {
 	glewInit();
 	//Adding vertex shader
+	GLuint vertexShader;
 	GLchar vShaderfile[] = "vShader.glvs";
 	const string vRawString = readShaderSource(vShaderfile);
 	const char* vSource = vRawString.c_str();
@@ -62,6 +66,7 @@ void init() {
 	glCompileShader(vertexShader);
 
 	//Adding fragment shader
+	GLuint fragmentShader;
 	GLchar fShaderfile[] = "fshader.glfs";
 	const string fRawString = readShaderSource(fShaderfile);
 	const char* fSource = fRawString.c_str();
@@ -74,18 +79,22 @@ void init() {
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
 	glLinkProgram(shaderProgram);
-	/*if (!CheckProgram(shaderProgram)) {
-		cout << "Link Fail!\n";
-	}*/
+	//if (!CheckProgram(shaderProgram)) { cout << "Link Fail!\n"; }
 	glDeleteShader(vertexShader);		//shader를 program 객체로 연결하면 필요x
 	glDeleteShader(fragmentShader);
 
-	//VAO and VBO
-	glGenVertexArrays(1, &VAO);
+	//VBO
 	glGenBuffers(1, &VBO);
-	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	//VAO
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+	//EBO
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
 
 	//Linking Vertex Attributes
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -96,9 +105,15 @@ void init() {
 
 void display3D() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	/*	Wireframe mode or Filling mode	*/
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 	glUseProgram(shaderProgram);
 	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	//glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	glutSwapBuffers();
 }
