@@ -1,7 +1,13 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <iostream>
+#include <fstream>
+#include <string>
 
+using namespace std;
+
+GLuint vertexShader;
+GLuint fragmentShader;
 GLuint shaderProgram;
 unsigned int VBO, VAO;
 float vertices[] = {
@@ -10,11 +16,10 @@ float vertices[] = {
 	0.0, 0.5, 0.0
 };
 
-static char* readShaderSource(const char* shaderFile);
+const string readShaderSource(const char* shaderFile);
 void init();
 void display3D();
-
-using namespace std;
+bool CheckProgram(GLuint program);
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
@@ -39,35 +44,27 @@ int main(int argc, char** argv) {
 }
 
 
-static char* readShaderSource(const char* shaderFile) {
-	FILE* fp = fopen(shaderFile, "r");
-	if (fp == NULL) { return NULL; }
-
-	fseek(fp, 0L, SEEK_END);
-	long size = ftell(fp);
-	fseek(fp, 0L, SEEK_SET);
-	char* buf = new char[size + 1];
-	fread(buf, 1, size, fp);
-	buf[size] = '\0';
-	fclose(fp);
-	return buf;
+const string readShaderSource(const char* shaderFile) {
+	ifstream f(shaderFile);
+	if (!f.is_open()) return NULL;
+	return string(istreambuf_iterator<char>(f), istreambuf_iterator<char>());
 }
 
 
 void init() {
-	GLenum err = glewInit();
+	glewInit();
 	//Adding vertex shader
-	GLuint vertexShader;
 	GLchar vShaderfile[] = "vShader.glvs";
-	GLchar* vSource = readShaderSource(vShaderfile);
+	const string vRawString = readShaderSource(vShaderfile);
+	const char* vSource = vRawString.c_str();
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vSource, NULL);
 	glCompileShader(vertexShader);
 
 	//Adding fragment shader
-	GLuint fragmentShader;
 	GLchar fShaderfile[] = "fshader.glfs";
-	GLchar* fSource = readShaderSource(fShaderfile);
+	const string fRawString = readShaderSource(fShaderfile);
+	const char* fSource = fRawString.c_str();
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &fSource, NULL);
 	glCompileShader(fragmentShader);
@@ -76,8 +73,10 @@ void init() {
 	shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
-	glUseProgram(shaderProgram);
 	glLinkProgram(shaderProgram);
+	/*if (!CheckProgram(shaderProgram)) {
+		cout << "Link Fail!\n";
+	}*/
 	glDeleteShader(vertexShader);		//shader를 program 객체로 연결하면 필요x
 	glDeleteShader(fragmentShader);
 
@@ -102,4 +101,22 @@ void display3D() {
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 
 	glutSwapBuffers();
+}
+
+bool CheckProgram(GLuint program) {
+	GLint state;
+	glGetProgramiv(program, GL_LINK_STATUS, &state);
+	if (GL_FALSE == state) {
+		int infologLength = 0;
+		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infologLength);
+		if (infologLength > 1) {
+			int charsWritten = 0;
+			char* infoLog = new char[infologLength];
+			glGetProgramInfoLog(program, infologLength, &charsWritten, infoLog);
+			std::cout << infoLog << std::endl;
+			delete[] infoLog;
+		}
+		return false;
+	}
+	return true;
 }
