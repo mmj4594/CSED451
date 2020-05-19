@@ -101,12 +101,13 @@ glm::mat4 matProj;
 glm::mat4 matView = glm::mat4(1.0f);
 
 GLuint shaderProgram;
-unsigned int VBO, VAO, EBO;
+unsigned int positionVBO, colorVBO, VAO, EBO;
 float vertices[] = {
-	0.5, 0.5, 0.0,		1.0, 0.0, 0.0,
-	0.5, -0.5, 0.0,		0.0, 1.0, 0.0,
-	-0.5, -0.5, 0.0,	0.0, 0.0, 1.0,
-	-0.5, 0.5, 0.0,		1.0, 1.0, 1.0
+	//position			//color
+	20, 20, 0,			1.0, 0.0, 0.0,
+	20, -20, 0,		0.0, 1.0, 0.0,
+	-20, -20, 0,		0.0, 0.0, 1.0,
+	-20, 20, 0,		1.0, 1.0, 1.0
 };
 unsigned int indices[] = {
 	0, 1, 2,

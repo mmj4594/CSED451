@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <stack>
+#include <algorithm>
 
 #include "main.h"
 #include "colors.h"
@@ -22,9 +23,9 @@ int main(int argc, char** argv) {
 	glutCreateWindow("assn3_2");
 	glutDisplayFunc(display3D);
 	glutReshapeFunc(reshape3D);
-	//glutTimerFunc(0, frameAction, 1);
+	glutTimerFunc(0, frameAction, 1);
 	glutKeyboardFunc(keyboard);
-	glutSpecialFunc(specialkeyboard);
+	//glutSpecialFunc(specialkeyboard);
 
 	init();
 	glutMainLoop();
@@ -36,7 +37,7 @@ int main(int argc, char** argv) {
 
 	//deallocate all resources when program ends
 	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &positionVBO);
 	glDeleteBuffers(1, &EBO);
 	glDeleteProgram(shaderProgram);
 	return 0;
@@ -69,8 +70,11 @@ void init() {
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 	//VBO
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glGenBuffers(1, &positionVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, positionVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glGenBuffers(1, &colorVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	//EBO
 	glGenBuffers(1, &EBO);
@@ -78,9 +82,11 @@ void init() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	//Linking Vertex Attributes (위치)
+	glBindBuffer(GL_ARRAY_BUFFER, positionVBO);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 	//Linking Vertex Attributes (컬러)
+	glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
 	glEnableVertexAttribArray(1);
 
@@ -88,6 +94,9 @@ void init() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);			//VBO
 	glBindVertexArray(0);						//VAO
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);	//EBO
+
+	//Initial Camera Setting
+	setCamera(TPV);
 }
 
 //Read shader file from 'vShaderFile', 'fShaderFile' and compile them.
@@ -136,17 +145,21 @@ void display3D() {
 	glBindVertexArray(VAO);
 
 	//우리의 shader program에서 uniform 변수의 위치를 얻음.
-	int m_uniProjection = glGetUniformLocation(shaderProgram, "projection");
-	int m_uniView = glGetUniformLocation(shaderProgram, "modelView");
+	int uniformProjection = glGetUniformLocation(shaderProgram, "projection");
+	int uniformView = glGetUniformLocation(shaderProgram, "modelView");
 
 	//projection
-	matProj = glm::ortho(-1, 1, -1, 1);
-	glUniformMatrix4fv(m_uniProjection, 1, GL_FALSE, glm::value_ptr(matProj));
+	matProj = glm::perspective(fovy, (float)WINDOW_WIDTH / WINDOW_HEIGHT, 1.0f, 2000.0f);
+	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(matProj));
 	//modelView
-	matView = glm::mat4(1.0f);
-	glUniformMatrix4fv(m_uniView, 1, GL_FALSE, glm::value_ptr(matView));
-	
+	matView = glm::lookAt(glm::vec3(eye[0], eye[1], eye[2]),
+						glm::vec3(reference[0], reference[1], reference[2]),
+						glm::vec3(upVector[0], upVector[1], upVector[2])
+		);
+	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(matView));
+	//Draw Objects
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
 	glutSwapBuffers();
 }
 
@@ -159,6 +172,18 @@ void reshape3D(int w, int h) {
 	matProj = glm::perspective(fovy, (float)w / h, 1.0f, 2000.0f);
 
 	glutPostRedisplay();
+}
+
+//Action per frame(60FPS currently)
+void frameAction(int value) {
+	switch (cameraMode) {
+	case 1:	setCamera(FPV); break;
+	case 3:	setCamera(TPV);	break;
+	case 9: setCamera(XYPlane); break;
+	}
+
+	glutPostRedisplay();
+	glutTimerFunc(17, frameAction, 1);		//call timer function recursively until game ends
 }
 
 //Define cheat according to user keyboard input.
@@ -178,35 +203,25 @@ void keyboard(unsigned char key, int x, int y) {
 		player.jump();
 		break;
 	case '1':
-		if (cameraMode != 1) { fovy *= 2; newFovy *= 2; }
+		//if (cameraMode != 1) { fovy *= 2; newFovy *= 2; }
 		setCameraMode(1);
 		break;
 	case '3':
-		if (cameraMode == 1) { fovy /= 2; newFovy /= 2; }
+		//if (cameraMode == 1) { fovy /= 2; newFovy /= 2; }
 		setCameraMode(3);
 		break;
 	case '9':
-		if (cameraMode == 1) { fovy /= 2; newFovy /= 2; }
+		//if (cameraMode == 1) { fovy /= 2; newFovy /= 2; }
 		setCameraMode(9);
 		break;
 	}
 
 	glutPostRedisplay();
 }
-//Determine color of player according to user keyboard input.
-void specialkeyboard(int key, int x, int y) {
-	switch (key) {
-	case GLUT_KEY_UP:
-		player.changePose(poseA);
-		break;
-	case GLUT_KEY_DOWN:
-		player.changePose(poseB);
-		break;
-	case GLUT_KEY_LEFT:
-		player.changePose(poseC);
-		break;
-	case GLUT_KEY_RIGHT:
-		player.changePose(poseD);
-		break;
-	}
+
+//Set camera to cameraPos
+void setCamera(camera cameraPos) {
+	memcpy(eye, cameraPos.getEye(), sizeof(eye));
+	memcpy(reference, cameraPos.getReference(), sizeof(reference));
+	memcpy(upVector, cameraPos.getUpVector(), sizeof(upVector));
 }

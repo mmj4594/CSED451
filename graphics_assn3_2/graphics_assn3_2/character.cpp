@@ -72,11 +72,13 @@ character::character(float a, float b, pose initializedPose) {
 void character::traverse(treeNode* current) {
 	if (current == NULL) return;
 
-	glPushMatrix();
-		glMultMatrixf(value_ptr(current->mtx * current->additionalTransform));
-		current->draw();
-		if (current->child != NULL) traverse(current->child);
-	glPopMatrix();
+	/*	Need to change
+		glPushMatrix();
+			glMultMatrixf(value_ptr(current->mtx * current->additionalTransform));
+			current->draw();
+			if (current->child != NULL) traverse(current->child);
+		glPopMatrix();
+	*/
 
 	if (current->sibling != NULL) traverse(current->sibling);
 }
@@ -94,11 +96,13 @@ void character::draw() {
 	lll_node.additionalTransform = rotate(mat4(1.0f), radians(lll_angle), vec3(0, 0, 1));
 	rll_node.additionalTransform = rotate(mat4(1.0f), radians(rll_angle), vec3(0, 0, 1));
 
-	//tree traversal
-	glPushMatrix();
-		glTranslatef(x, y, 0);
-		traverse(&torso_node);
-	glPopMatrix();
+	/*	Need to change
+		//tree traversal
+		glPushMatrix();
+			glTranslatef(x, y, 0);
+			traverse(&torso_node);
+		glPopMatrix();
+	*/
 }
 
 //Draw the nth frame of the lower body animation loop.
@@ -182,37 +186,42 @@ void character::jump() {
 	}
 }
 
-//Draw head of character
-void drawHead() {
-	glutSolidSphere(head_rad, 10, 10);
-}
+/*	Need to change
+	//Draw head of character
+	void drawHead() {
+		glutSolidSphere(head_rad, 10, 10);
+	}
 
-//Draw limb(arm or leg) of character
-void drawLimb() {
-	//joint1	
-	glutSolidSphere(limb_joint_rad, 10, 10);
+	//Draw limb(arm or leg) of character
+	void drawLimb() {
+		//joint1	
+		glutSolidSphere(limb_joint_rad, 10, 10);
 	
-	//skeleton
-	glPushMatrix();
-	glRotatef(90, 0, 1, 0);
-	glutSolidCylinder(limb_joint_rad, limb_length, 10, 10);
-	glPopMatrix();
+		//skeleton
+		glPushMatrix();
+		glRotatef(90, 0, 1, 0);
+		glutSolidCylinder(limb_joint_rad, limb_length, 10, 10);
+		glPopMatrix();
 
-	//joint2
-	glPushMatrix();
-	glTranslatef(limb_length, 0, 0);
-	glutSolidSphere(limb_joint_rad, 10, 10);
-	glPopMatrix();
-}
+		//joint2
+		glPushMatrix();
+		glTranslatef(limb_length, 0, 0);
+		glutSolidSphere(limb_joint_rad, 10, 10);
+		glPopMatrix();
+	}
 
-//Draw torso of character
-void drawTorso() {
-	glPushMatrix();
-	glTranslatef(0, torso_height / 2, 0);
-	glRotatef(90, 1, 0, 0);	
-	glutSolidCylinder(torso_width/2, torso_height, 10, 10);
-	glPopMatrix();
-}
+	//Draw torso of character
+	void drawTorso() {
+		glPushMatrix();
+		glTranslatef(0, torso_height / 2, 0);
+		glRotatef(90, 1, 0, 0);	
+		glutSolidCylinder(torso_width/2, torso_height, 10, 10);
+		glPopMatrix();
+	}
+*/
+void drawHead() {}
+void drawTorso() {}
+void drawLimb() {}
 
 //Compare float variables
 //Mode 1: A > B, 2: A < B, 3: A == B
