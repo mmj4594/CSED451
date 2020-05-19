@@ -1,23 +1,27 @@
-#include <GL/glew.h>
-#include <GL/freeglut.h>
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <stack>
+
+#include "main.h"
+#include "colors.h"
 
 using namespace std;
 
 GLuint shaderProgram;
 unsigned int VBO, VAO, EBO;
 float vertices[] = {
-	0.5, 0.5, 0.0,
-	0.5, -0.5, 0.0,
-	-0.5, -0.5, 0.0,
-	-0.5, 0.5, 0.0
+	0.5, 0.5, 0.0,		1.0, 0.0, 0.0,
+	0.5, -0.5, 0.0,		0.0, 1.0, 0.0,
+	-0.5, -0.5, 0.0,	0.0, 0.0, 1.0
+	//-0.5, 0.5, 0.0,		0.5, 0.5, 0.5,
 };
 unsigned int indices[] = {
 	0, 1, 3,
 	1, 2, 3
 };
+stack<glm::mat4> modelViewStack;
+stack<glm::mat4> projectionStack;
 
 const string readShaderSource(const char* shaderFile);
 void init();
@@ -85,7 +89,7 @@ void init() {
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
 	glLinkProgram(shaderProgram);
-	//if (!CheckProgram(shaderProgram)) { cout << "Link Fail!\n"; }
+	if (!CheckProgram(shaderProgram)) { cout << "Link Fail!\n"; }
 	glDeleteShader(vertexShader);		//shader는 program 객체와 연결되면 필요x
 	glDeleteShader(fragmentShader);
 
@@ -107,9 +111,12 @@ void init() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	//Linking Vertex Attributes
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	//Linking Vertex Attributes (위치)
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+	//Linking Vertex Attributes (컬러)
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	//For safe unbound of VBO, VAO, EBO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);			//VBO
@@ -121,12 +128,29 @@ void display3D() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	/*	Wireframe mode or Filling mode	*/
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	glUseProgram(shaderProgram);
 	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+
+	//우리의 shader program에서 'view'라는 이름의 uniform 변수의 위치를 얻음.
+	int m_uniProjection = glGetUniformLocation(shaderProgram, "projection");
+	int m_uniView = glGetUniformLocation(shaderProgram, "modelView");
+
+	//projection
+	glm::mat4 matProj;
+	//matProj = glm::perspective(45.0f, 640.0f / 480.0f, 1.0f, 500.f);
+	matProj = glm::ortho(-1, 1, -1, 1);
+	glUniformMatrix4fv(m_uniProjection, 1, GL_FALSE, glm::value_ptr(matProj));
+
+	//modelView
+	glm::mat4 matView = glm::mat4(1.0f);
+	glUniformMatrix4fv(m_uniView, 1, GL_FALSE, glm::value_ptr(matView));
+	
+
 
 	glutSwapBuffers();
 }

@@ -1,6 +1,9 @@
-#version 330 core
+#version 460
 
-out vec4 color;
+out vec4 fragColor;
+in vec3 ourColor;
+uniform mat4 model_view;
+
 void main() {
-	color = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+	fragColor = vec4(ourColor, 1.0);
 }
