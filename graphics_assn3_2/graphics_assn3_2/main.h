@@ -89,12 +89,37 @@ camera XYPlane(50, 50, 150,	50, 50, 0, 0, 1, 0);
 float fovy = 45;
 float newFovy = fovy;
 float fovyPerFrame = 0;
+
+//Vertex and fragment shader
+GLuint vertexShader;
+GLuint fragmentShader;
+
+//User-defined matrix stack
+stack<glm::mat4> modelViewStack;
+stack<glm::mat4> projectionStack;
+glm::mat4 matProj;
+glm::mat4 matView = glm::mat4(1.0f);
+
+GLuint shaderProgram;
+unsigned int VBO, VAO, EBO;
+float vertices[] = {
+	0.5, 0.5, 0.0,		1.0, 0.0, 0.0,
+	0.5, -0.5, 0.0,		0.0, 1.0, 0.0,
+	-0.5, -0.5, 0.0,	0.0, 0.0, 1.0,
+	-0.5, 0.5, 0.0,		1.0, 1.0, 1.0
+};
+unsigned int indices[] = {
+	0, 1, 2,
+	2, 3, 0
+};
 					
 //Function definition
 void init();
-void frameAction(int value);
+void readShaderSource(const char* vShaderFile, const char* fShaderFile);
+bool CheckProgram(GLuint program);
 void display3D();
 void reshape3D(int w, int h);
+void frameAction(int value);
 int moveWall();
 
 void keyboard(unsigned char key, int x, int y);
