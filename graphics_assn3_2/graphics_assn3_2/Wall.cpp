@@ -1,37 +1,39 @@
 #include "Wall.h"
 #include "colors.h"
 #include <iostream>
+#include "matrixStack.h"
 
 using namespace std;
+using namespace glm;
 
 //Draw rect object on the screen.
 void Wall::draw() {
 	setPalette(color);
 	switch (shape) {
 	case 0:		//Cone
-		glPushMatrix();
-		glTranslatef(x, y, z);
-		glRotatef(-90, 1, 0, 0);
-		glutSolidCone(height/2, height, 10, 10);
-		glPopMatrix();
+		pushMatrix(GL_MODELVIEW);
+			mtxView = translate(mtxView, vec3(x, y, z));
+			mtxView = rotate(mtxView, -90.0f, vec3(1, 0, 0));
+			glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
+			//solid cone drawing function
+		popMatrix(GL_MODELVIEW);
 		break;
 	case 1:		//Torus
-		glPushMatrix();
-		glTranslatef(x, y+height/2, z);
-		glRotatef(-90, 0, 1, 0);
-		glutSolidTorus(5, height/2, 10, 10);
-		glPopMatrix();
+		pushMatrix(GL_MODELVIEW);
+			mtxView = translate(mtxView, vec3(x, y + height / 2, z));
+			mtxView = rotate(mtxView, -90.0f, vec3(0, 1, 0));
+			glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
+			//solid torus drawing function
+		popMatrix(GL_MODELVIEW);
 		break;
 	case 2:		//Reversed T-shape
-		DrawCuboid(x, y + height / 2, z, width, height, 5);
-		DrawCuboid(x, y + 2.5, z, width, 5, height);
+		//cuboid drawing function
 		break;
 	case 3:		//T-shape
-		DrawCuboid(x, y+height/2, z, width, height, 5);
-		DrawCuboid(x, y + height, z, width, 5, height);
+		//cuboid drawing function
 		break;
 	case 5:		//Default
-		DrawCuboid(x, y + height / 2, z, width, height, height);
+		//cuboid drawing function
 		break;
 	}
 	

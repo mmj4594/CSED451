@@ -1,5 +1,6 @@
 #include "character.h"
 #include "colors.h"
+#include "matrixStack.h"
 
 using namespace glm;
 
@@ -72,14 +73,12 @@ character::character(float a, float b, pose initializedPose) {
 void character::traverse(treeNode* current) {
 	if (current == NULL) return;
 
-	/*	Need to change
-		glPushMatrix();
-			glMultMatrixf(value_ptr(current->mtx * current->additionalTransform));
-			current->draw();
-			if (current->child != NULL) traverse(current->child);
-		glPopMatrix();
-	*/
-
+	pushMatrix(GL_MODELVIEW);
+		mtxView *= (current->mtx * current->additionalTransform);
+		glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
+		current->draw();
+		if (current->child != NULL) traverse(current->child);
+	popMatrix(GL_MODELVIEW);
 	if (current->sibling != NULL) traverse(current->sibling);
 }
 
@@ -96,13 +95,11 @@ void character::draw() {
 	lll_node.additionalTransform = rotate(mat4(1.0f), radians(lll_angle), vec3(0, 0, 1));
 	rll_node.additionalTransform = rotate(mat4(1.0f), radians(rll_angle), vec3(0, 0, 1));
 
-	/*	Need to change
-		//tree traversal
-		glPushMatrix();
-			glTranslatef(x, y, 0);
-			traverse(&torso_node);
-		glPopMatrix();
-	*/
+	//tree traversal
+	pushMatrix(GL_MODELVIEW);
+		mtxView = translate(mtxView, vec3(x, y, 0));	
+		traverse(&torso_node);
+	popMatrix(GL_MODELVIEW);
 }
 
 //Draw the nth frame of the lower body animation loop.
@@ -186,42 +183,40 @@ void character::jump() {
 	}
 }
 
-/*	Need to change
-	//Draw head of character
-	void drawHead() {
-		glutSolidSphere(head_rad, 10, 10);
-	}
+//Draw head of character
+void drawHead() {
+	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
+	//head drawing function here
+}
 
-	//Draw limb(arm or leg) of character
-	void drawLimb() {
-		//joint1	
-		glutSolidSphere(limb_joint_rad, 10, 10);
-	
-		//skeleton
-		glPushMatrix();
-		glRotatef(90, 0, 1, 0);
-		glutSolidCylinder(limb_joint_rad, limb_length, 10, 10);
-		glPopMatrix();
+//Draw limb(arm or leg) of character
+void drawLimb() {
+	//joint1
+	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
+	//joint1 drawing function here
+	//skeleton
+	pushMatrix(GL_MODELVIEW);
+	mtxView = rotate(mtxView, 90.0f, vec3(0, 1, 0));
+	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
+	//skeleton drawing function here
+	popMatrix(GL_MODELVIEW);
+	//joint2
+	pushMatrix(GL_MODELVIEW);
+	mtxView = translate(mtxView, vec3(limb_length, 0, 0));
+	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
+	//join2 drawing function here
+	popMatrix(GL_MODELVIEW);
+}
 
-		//joint2
-		glPushMatrix();
-		glTranslatef(limb_length, 0, 0);
-		glutSolidSphere(limb_joint_rad, 10, 10);
-		glPopMatrix();
-	}
-
-	//Draw torso of character
-	void drawTorso() {
-		glPushMatrix();
-		glTranslatef(0, torso_height / 2, 0);
-		glRotatef(90, 1, 0, 0);	
-		glutSolidCylinder(torso_width/2, torso_height, 10, 10);
-		glPopMatrix();
-	}
-*/
-void drawHead() {}
-void drawTorso() {}
-void drawLimb() {}
+//Draw torso of character
+void drawTorso() {
+	pushMatrix(GL_MODELVIEW);
+	mtxView = translate(mtxView, vec3(0, torso_height / 2, 0));
+	mtxView = rotate(mtxView, 90.0f, vec3(1, 0, 0));
+	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
+	//Torso drawing function here
+	popMatrix(GL_MODELVIEW);
+}
 
 //Compare float variables
 //Mode 1: A > B, 2: A < B, 3: A == B

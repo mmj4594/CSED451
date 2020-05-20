@@ -6,6 +6,7 @@
 
 #include "main.h"
 #include "colors.h"
+#include "matrixStack.h"
 
 //Key value for space
 #define SPACE 32
@@ -135,6 +136,7 @@ bool CheckProgram(GLuint program) {
 }
 
 void display3D() {
+	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	/*	Wireframe mode or Filling mode	*/
@@ -146,19 +148,24 @@ void display3D() {
 
 	//우리의 shader program에서 uniform 변수의 위치를 얻음.
 	int uniformProjection = glGetUniformLocation(shaderProgram, "projection");
-	int uniformView = glGetUniformLocation(shaderProgram, "modelView");
+	int uniformModelView = glGetUniformLocation(shaderProgram, "modelView");
 
 	//projection
-	matProj = glm::perspective(fovy, (float)WINDOW_WIDTH / WINDOW_HEIGHT, 1.0f, 2000.0f);
-	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(matProj));
+	mtxProj = glm::perspective(fovy, (float)WINDOW_WIDTH / WINDOW_HEIGHT, 1.0f, 2000.0f);
+	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(mtxProj));
 	//modelView
-	matView = glm::lookAt(glm::vec3(eye[0], eye[1], eye[2]),
+	mtxView = glm::lookAt(glm::vec3(eye[0], eye[1], eye[2]),
 						glm::vec3(reference[0], reference[1], reference[2]),
 						glm::vec3(upVector[0], upVector[1], upVector[2])
 		);
-	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(matView));
-	//Draw Objects
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	pushMatrix(GL_MODELVIEW);
+		mtxView = glm::translate(mtxView, glm::vec3(0, 0, 100));
+		glUniformMatrix4fv(2, 1, GL_FALSE, glm::value_ptr(mtxView));	//fixed location(2) in vShader.glvs
+		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+	popMatrix(GL_MODELVIEW);
+	//DrawElements를 여러 번 호출하면 여러 번 그려짐.
+	glUniformMatrix4fv(uniformModelView, 1, GL_FALSE, glm::value_ptr(mtxView));
+	glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
 
 	glutSwapBuffers();
 }
@@ -169,7 +176,7 @@ void reshape3D(int w, int h) {
 	WINDOW_HEIGHT = h;
 	glClearColor(1, 1, 1, 1);
 	glViewport(0, 0, w, h);
-	matProj = glm::perspective(fovy, (float)w / h, 1.0f, 2000.0f);
+	mtxProj = glm::perspective(fovy, (float)w / h, 1.0f, 2000.0f);
 
 	glutPostRedisplay();
 }

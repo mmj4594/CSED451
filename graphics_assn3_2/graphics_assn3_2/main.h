@@ -79,8 +79,8 @@ character thief(THIEF_DEFAULT_X, THIEF_DEFAULT_Y, initialPose);
 //Camera configuration
 int cameraMode = 3;		//point of view
 GLdouble eye[3], reference[3], upVector[3];
-camera FPV(PLAYER_DEFAULT_X+3, PLAYER_DEFAULT_Y + 5 + 3, 0,
-	THIEF_DEFAULT_X, THIEF_DEFAULT_Y + 5 + 3, 0,
+camera FPV(-WORLD_SIZE_X / 2, WORLD_SIZE_Y / 2 + 20, 0,
+	WORLD_SIZE_X / 2, WORLD_SIZE_Y / 4 + 20, 0,
 	0, 1, 0);
 camera TPV(-WORLD_SIZE_X / 2, WORLD_SIZE_Y / 2 + 20, 180 / 2,
 	WORLD_SIZE_X / 2, WORLD_SIZE_Y / 4 + 20, 0 ,
@@ -94,24 +94,59 @@ float fovyPerFrame = 0;
 GLuint vertexShader;
 GLuint fragmentShader;
 
-//User-defined matrix stack
-stack<glm::mat4> modelViewStack;
-stack<glm::mat4> projectionStack;
-glm::mat4 matProj;
-glm::mat4 matView = glm::mat4(1.0f);
-
 GLuint shaderProgram;
 unsigned int positionVBO, colorVBO, VAO, EBO;
 float vertices[] = {
 	//position			//color
-	20, 20, 0,			1.0, 0.0, 0.0,
-	20, -20, 0,		0.0, 1.0, 0.0,
-	-20, -20, 0,		0.0, 0.0, 1.0,
-	-20, 20, 0,		1.0, 1.0, 1.0
+    /* front surface is blue */
+    -20,  20, 20,    0.0, 0.0, 1.0,
+    -20, -20, 20,    0.0, 0.0, 1.0,
+    20, -20, 20,     0.0, 0.0, 1.0,
+    20,  20, 20,     0.0, 0.0, 1.0,
+    /* left surface is green */
+    -20,  20,  20,   0.0, 1.0, 0.0,
+    -20,  20, -20,   0.0, 1.0, 0.0,
+    -20, -20, -20,   0.0, 1.0, 0.0,
+    -20, -20,  20,   0.0, 1.0, 0.0,
+    /* top surface is red */
+    -20, 20, 20,     1.0, 0.0, 0.0,
+    20, 20, 20,      1.0, 0.0, 0.0,
+    20, 20, -20,     1.0, 0.0, 0.0,
+    -20, 20, -20,    1.0, 0.0, 0.0,
+    /* right surface is yellow */
+    20,  20, -20,    1.0, 1.0, 0.0,
+    20,  20,  20,    1.0, 1.0, 0.0,
+    20, -20,  20,    1.0, 1.0, 0.0,
+    20, -20, -20,    1.0, 1.0, 0.0,
+    /* back surface is cyan */
+    -20,  20, -20,   0.0, 1.0, 1.0,
+    20,  20, -20,    0.0, 1.0, 1.0,
+    20, -20, -20,    0.0, 1.0, 1.0,
+    -20, -20, -20,   0.0, 1.0, 1.0,
+    /* bottom surface is magenta */
+    -20, -20, -20,   1.0, 0.0, 1.0,
+    -20, -20,  20,   1.0, 0.0, 1.0,
+    20, -20,  20,    1.0, 0.0, 1.0,
+    20, -20, -20,    1.0, 0.0, 1.0
 };
 unsigned int indices[] = {
-	0, 1, 2,
-	2, 3, 0
+     3,1,2,
+     3,0,1,
+
+     4,6,7,
+     4,5,6,
+
+     8,9,10,
+     8,10,11,
+
+     12,13,14,
+     12,14,15,
+
+     16,17,19,
+     17,18,19,
+
+     20,23,21,
+     21,23,22
 };
 					
 //Function definition
