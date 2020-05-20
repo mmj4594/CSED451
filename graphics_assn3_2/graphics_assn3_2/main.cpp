@@ -82,19 +82,14 @@ void init() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	//Linking Vertex Attributes (위치)
+	//Linking Vertex Attributes (위치: vShader.glvs의 aPos - location=0)
 	glBindBuffer(GL_ARRAY_BUFFER, positionVBO);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	//Linking Vertex Attributes (컬러)
+	//Linking Vertex Attributes (컬러: vShader.glvs의 aColor - location=1)
 	glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
 	glEnableVertexAttribArray(1);
-
-	//For safe unbound of VBO, VAO, EBO
-	glBindBuffer(GL_ARRAY_BUFFER, 0);			//VBO
-	glBindVertexArray(0);						//VAO
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);	//EBO
 
 	//Initial Camera Setting
 	setCamera(TPV);
@@ -158,6 +153,7 @@ void display3D() {
 						glm::vec3(reference[0], reference[1], reference[2]),
 						glm::vec3(upVector[0], upVector[1], upVector[2])
 		);
+	//modelView push, pop test
 	pushMatrix(GL_MODELVIEW);
 		mtxView = glm::translate(mtxView, glm::vec3(0, 0, 100));
 		glUniformMatrix4fv(2, 1, GL_FALSE, glm::value_ptr(mtxView));	//fixed location(2) in vShader.glvs
