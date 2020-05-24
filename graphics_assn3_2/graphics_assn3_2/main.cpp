@@ -117,8 +117,8 @@ void display3D() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	/*	Wireframe mode or Filling mode	*/
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 
 	//VAO
@@ -129,26 +129,13 @@ void display3D() {
 	//VBO
 	glGenBuffers(1, &positionVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, positionVBO);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	glGenBuffers(1, &colorVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
 	//EBO
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 	
-	/*
-	//Linking Vertex Attributes (위치: vShader.glvs의 aPos - location=0)
-	glBindBuffer(GL_ARRAY_BUFFER, positionVBO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	//Linking Vertex Attributes (컬러: vShader.glvs의 aColor - location=1)
-	glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	*/
-
 	glUseProgram(shaderProgram);
 	glBindVertexArray(VAO);
 
@@ -164,21 +151,10 @@ void display3D() {
 						glm::vec3(reference[0], reference[1], reference[2]),
 						glm::vec3(upVector[0], upVector[1], upVector[2])
 		);
-	/*
-	//modelView push, pop test
-	pushMatrix(GL_MODELVIEW);
-		mtxView = glm::translate(mtxView, glm::vec3(0, 0, 100));
-		glUniformMatrix4fv(2, 1, GL_FALSE, glm::value_ptr(mtxView));	//fixed location(2) in vShader.glvs
-		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
-		
-	popMatrix(GL_MODELVIEW);
-	//DrawElements를 여러 번 호출하면 여러 번 그려짐.
-	glUniformMatrix4fv(uniformModelView, 1, GL_FALSE, glm::value_ptr(mtxView));
-	glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
-	*/
 	
 	worldFloor.draw();
 	player.draw();
+	thief.draw();
 
 	glutSwapBuffers();
 }

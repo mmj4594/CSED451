@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
@@ -11,16 +12,18 @@
 
 #include "matrixStack.h"
 
-class Sphere
+class Cylinder
 {
 public:
     // ctor/dtor
-    Sphere(float radius = 1.0f, int sectorCount = 36, int stackCount = 18);
-    float getRadius() const { return radius; }
+    Cylinder(float baseRadius, float topRadius, float height, int sectors, int stacks);
+    float getBaseRadius() const { return baseRadius; }
+    float getTopRadius() const { return topRadius; }
+    float getHeight() const { return height; }
     int getSectorCount() const { return sectorCount; }
     int getStackCount() const { return stackCount; }
-    void set(float radius, int sectorCount, int stackCount);
-    
+    void set(float baseRadius, float topRadius, float height, int sectorCount, int stackCount);
+
     void buildVertices();
 
     void addVertex(float x, float y, float z);
@@ -31,12 +34,20 @@ public:
     void clearArrays();
     void initializeColor();
 
- private:
-    float radius;
-    int sectorCount, stackCount;
+private:
+    void buildUnitCircleVertices();
+
+    float baseRadius;
+    float topRadius;
+    float height;
+    int sectorCount;                        // # of slices
+    int stackCount;                         // # of stacks
+
+    unsigned int baseIndex;                 // starting index of base
+    unsigned int topIndex;                  // starting index of top
+
+    std::vector<float> unitCircleVertices;
     std::vector<float> vertices;
-    std::vector<float> normals;
-    std::vector<float> texCoords;
     std::vector<unsigned int> indices;
 
     //vertices color

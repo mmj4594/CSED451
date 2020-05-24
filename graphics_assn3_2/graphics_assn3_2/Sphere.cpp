@@ -6,14 +6,11 @@ const int MIN_SECTOR_COUNT = 3;
 const int MIN_STACK_COUNT = 2;
 int i = 0;
 
-Sphere::Sphere(float radius, int sectors, int stacks) : interleavedStride(32)
+Sphere::Sphere(float radius, int sectors, int stacks)
 {
     set(radius, sectors, stacks);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// setters
-///////////////////////////////////////////////////////////////////////////////
 void Sphere::set(float radius, int sectors, int stacks)
 {
     this->radius = radius;
@@ -24,24 +21,6 @@ void Sphere::set(float radius, int sectors, int stacks)
     if (sectors < MIN_STACK_COUNT)
         this->sectorCount = MIN_STACK_COUNT;
     buildVertices();
-}
-
-void Sphere::setRadius(float radius)
-{
-    if (radius != this->radius)
-        set(radius, sectorCount, stackCount);
-}
-
-void Sphere::setSectorCount(int sectors)
-{
-    if (sectors != this->sectorCount)
-        set(radius, sectors, stackCount);
-}
-
-void Sphere::setStackCount(int stacks)
-{
-    if (stacks != this->stackCount)
-        set(radius, sectorCount, stacks);
 }
 
 void Sphere::buildVertices()
@@ -115,26 +94,8 @@ void Sphere::buildVertices()
                 addVertex(v2.x, v2.y, v2.z);
                 addVertex(v4.x, v4.y, v4.z);
 
-                // put tex coords of triangle
-                addTexCoord(v1.s, v1.t);
-                addTexCoord(v2.s, v2.t);
-                addTexCoord(v4.s, v4.t);
-
-                /*
-                // put normal
-                n = computeFaceNormal(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v4.x, v4.y, v4.z);
-                for (k = 0; k < 3; ++k)  // same normals for 3 vertices
-                {
-                    addNormal(n[0], n[1], n[2]);
-                }
-                */
-
                 // put indices of 1 triangle
                 addIndices(index, index + 1, index + 2);
-
-                // indices for line (first stack requires only vertical line)
-                lineIndices.push_back(index);
-                lineIndices.push_back(index + 1);
 
                 index += 3;     // for next
             }
@@ -145,28 +106,8 @@ void Sphere::buildVertices()
                 addVertex(v2.x, v2.y, v2.z);
                 addVertex(v3.x, v3.y, v3.z);
 
-                // put tex coords of triangle
-                addTexCoord(v1.s, v1.t);
-                addTexCoord(v2.s, v2.t);
-                addTexCoord(v3.s, v3.t);
-
-                // put normal
-                /*
-                n = computeFaceNormal(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v3.x, v3.y, v3.z);
-                for (k = 0; k < 3; ++k)  // same normals for 3 vertices
-                {
-                    addNormal(n[0], n[1], n[2]);
-                }
-                */
-
                 // put indices of 1 triangle
                 addIndices(index, index + 1, index + 2);
-
-                // indices for lines (last stack requires both vert/hori lines)
-                lineIndices.push_back(index);
-                lineIndices.push_back(index + 1);
-                lineIndices.push_back(index);
-                lineIndices.push_back(index + 2);
 
                 index += 3;     // for next
             }
@@ -178,105 +119,34 @@ void Sphere::buildVertices()
                 addVertex(v3.x, v3.y, v3.z);
                 addVertex(v4.x, v4.y, v4.z);
 
-                // put tex coords of quad
-                addTexCoord(v1.s, v1.t);
-                addTexCoord(v2.s, v2.t);
-                addTexCoord(v3.s, v3.t);
-                addTexCoord(v4.s, v4.t);
-
-                /*
-                // put normal
-                n = computeFaceNormal(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v3.x, v3.y, v3.z);
-                for (k = 0; k < 4; ++k)  // same normals for 4 vertices
-                {
-                    addNormal(n[0], n[1], n[2]);
-                }
-                */
-
                 // put indices of quad (2 triangles)
                 addIndices(index, index + 1, index + 2);
                 addIndices(index + 2, index + 1, index + 3);
-
-                // indices for lines
-                lineIndices.push_back(index);
-                lineIndices.push_back(index + 1);
-                lineIndices.push_back(index);
-                lineIndices.push_back(index + 2);
 
                 index += 4;     // for next
             }
         }
     }
-
-    // generate interleaved vertex array as well
-    //buildInterleavedVertices();
-    //cout << vertices.size() << endl;
-    //cout << indices.size() << endl;
-}
-
-/*
-void Sphere::buildInterleavedVertices()
-{
-    std::vector<float>().swap(interleavedVertices);
-
-    std::size_t i, j;
-    std::size_t count = vertices.size();
-    for (i = 0, j = 0; i < count; i += 3, j += 2)
-    {
-        interleavedVertices.push_back(vertices[i]);
-        interleavedVertices.push_back(vertices[i + 1]);
-        interleavedVertices.push_back(vertices[i + 2]);
-
-        interleavedVertices.push_back(normals[i]);
-        interleavedVertices.push_back(normals[i + 1]);
-        interleavedVertices.push_back(normals[i + 2]);
-
-        interleavedVertices.push_back(texCoords[j]);
-        interleavedVertices.push_back(texCoords[j + 1]);
-    }
-}
-*/
+    initializeColor();
+ }
 
 void Sphere::addVertex(float x, float y, float z)
 {
-    //cout << x <<" "<< y << " " << z;
-    
-    //vertices.push_back(glm::vec3(x, y, z));
-    
     vertices.push_back(x);
     vertices.push_back(y);
-    vertices.push_back(z);
-    
-}
-
-void Sphere::addNormal(float nx, float ny, float nz)
-{
-    normals.push_back(nx);
-    normals.push_back(ny);
-    normals.push_back(nz);
-}
-
-void Sphere::addTexCoord(float s, float t)
-{
-    texCoords.push_back(s);
-    texCoords.push_back(t);
+    vertices.push_back(z);    
 }
 
 void Sphere::addIndices(unsigned int i1, unsigned int i2, unsigned int i3)
 {
-    
-    //cout << i1 << " " << i2 << " " << i3 << endl;
-    //indices.push_back(glm::uvec3(i1,i2,i3));
-    
     indices.push_back(i1);
     indices.push_back(i2);
     indices.push_back(i3);
-    
 }
 
 void Sphere::draw()
 {
-    
+    //position VBO
     glBindBuffer(GL_ARRAY_BUFFER, positionVBO);           // for vertex data
     glBufferData(GL_ARRAY_BUFFER,                   // target
         (unsigned int)vertices.size() * sizeof(float), // data size, # of bytes
@@ -285,14 +155,16 @@ void Sphere::draw()
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
+    //color VBO
     glBindBuffer(GL_ARRAY_BUFFER, colorVBO);           // for vertex data
     glBufferData(GL_ARRAY_BUFFER,                   // target
         (unsigned int)vertices.size() * sizeof(float), // data size, # of bytes
-        &vertices[0],   // ptr to vertex data
+        &vertices_gray[0],   // ptr to vertex data
         GL_STATIC_DRAW);                   // usage
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
+    //EBO
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,           // target
         indices.size() * sizeof(unsigned int),             // data size, # of bytes
         &indices[0],               // ptr to index data
@@ -310,8 +182,36 @@ void Sphere::draw()
 void Sphere::clearArrays()
 {
     std::vector<float>().swap(vertices);
-    std::vector<float>().swap(normals);
-    std::vector<float>().swap(texCoords);
+
     std::vector<unsigned int>().swap(indices);
-    std::vector<unsigned int>().swap(lineIndices);
+
+}
+
+void Sphere::initializeColor() {
+    for (int i = 0; i < vertices.size(); i++) {
+        //gray
+        vertices_gray.push_back(0.3f);
+        vertices_gray.push_back(0.3f);
+        vertices_gray.push_back(0.3f);
+
+        //red
+        vertices_red.push_back(0.8f);
+        vertices_red.push_back(0);
+        vertices_red.push_back(0);
+
+        //green
+        vertices_green.push_back(0);
+        vertices_green.push_back(0.8f);
+        vertices_green.push_back(0);
+
+        //yellow
+        vertices_yellow.push_back(0.9f);
+        vertices_yellow.push_back(0.9f);
+        vertices_yellow.push_back(0);
+
+        //blue
+        vertices_blue.push_back(0);
+        vertices_blue.push_back(0);
+        vertices_blue.push_back(0.8f);
+    }
 }

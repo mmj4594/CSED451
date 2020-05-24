@@ -150,6 +150,7 @@
   <ItemGroup>
     <ClCompile Include="character.cpp" />
     <ClCompile Include="colors.cpp" />
+    <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="object.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="character.h" />
     <ClInclude Include="colors.h" />
+    <ClInclude Include="Cylinder.h" />
     <ClInclude Include="Floor.h" />
     <ClInclude Include="matrixStack.h" />
     <ClInclude Include="pose.h" />

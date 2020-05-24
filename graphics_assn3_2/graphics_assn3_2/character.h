@@ -4,6 +4,7 @@
 #include "pose.h"
 #include "colors.h"
 #include "sphere.h"
+#include "Cylinder.h"
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
@@ -21,6 +22,17 @@ static float jump_height = 40.0;
 float jump_back = 10.0;
 static float jumpFrame = 100;
 static float heightPerFrame = jump_height / (jumpFrame/2);
+
+//Static global variables for drawing character
+static const float head_rad = 3.0;
+static const float torso_depth = 3.0;
+static const float torso_width = 6.0;
+static const float torso_height = 10.0;
+static const float limb_joint_rad = 1;
+static const float limb_length = 6.0;
+
+static int sectorCount = 16;
+static int stackCount = 16;
 
 //Pose Definition
 pose initialPose(5, -10, -5, 10, GRAY);
@@ -110,7 +122,11 @@ private:
 	
 };
 
-Sphere head(30, 16, 16);
+Sphere head(head_rad, sectorCount, stackCount);
+Sphere joint(limb_joint_rad, sectorCount, stackCount);
+Cylinder limb(limb_joint_rad, limb_joint_rad, limb_length, sectorCount, stackCount);
+Cylinder torso(torso_width/2, torso_width / 2, torso_height, sectorCount, stackCount);
+
 
 void drawHead();
 void drawLimb();

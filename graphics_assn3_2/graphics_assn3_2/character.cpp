@@ -4,13 +4,7 @@
 
 using namespace glm;
 
-//Static global variables for drawing character
-static const float head_rad = 3.0;
-static const float torso_depth = 3.0;
-static const float torso_width = 6.0;
-static const float torso_height = 10.0;
-static const float limb_joint_rad = 1;
-static const float limb_length = 6.0;
+
 
 //Constructor of character class
 character::character(float a, float b, pose initializedPose) {
@@ -194,7 +188,7 @@ void drawHead() {
 void drawLimb() {
 	//joint1
 	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
-	//joint1 drawing function here
+	joint.draw();
 	//skeleton
 	pushMatrix(GL_MODELVIEW);
 	mtxView = rotate(mtxView, 90.0f, vec3(0, 1, 0));
@@ -205,7 +199,7 @@ void drawLimb() {
 	pushMatrix(GL_MODELVIEW);
 	mtxView = translate(mtxView, vec3(limb_length, 0, 0));
 	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
-	//join2 drawing function here
+	joint.draw();
 	popMatrix(GL_MODELVIEW);
 }
 
@@ -213,9 +207,9 @@ void drawLimb() {
 void drawTorso() {
 	pushMatrix(GL_MODELVIEW);
 	mtxView = translate(mtxView, vec3(0, torso_height / 2, 0));
-	mtxView = rotate(mtxView, 90.0f, vec3(1, 0, 0));
+	mtxView = rotate(mtxView, 90.0f, vec3(1, 1, 0));
 	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
-	//Torso drawing function here
+	torso.draw();
 	popMatrix(GL_MODELVIEW);
 }
 
