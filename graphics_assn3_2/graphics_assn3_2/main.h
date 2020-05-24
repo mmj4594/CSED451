@@ -2,6 +2,8 @@
 #include "Wall.h"
 #include "character.h"
 #include "camera.h"
+#include "Floor.h"
+#include "test.h"
 
 using namespace std;
 
@@ -86,6 +88,7 @@ camera TPV(-WORLD_SIZE_X / 2, WORLD_SIZE_Y / 2 + 20, 180 / 2,
 	WORLD_SIZE_X / 2, WORLD_SIZE_Y / 4 + 20, 0 ,
 	0, 1, 0 );
 camera XYPlane(50, 50, 150,	50, 50, 0, 0, 1, 0);
+
 float fovy = 45;
 float newFovy = fovy;
 float fovyPerFrame = 0;
@@ -96,6 +99,13 @@ GLuint fragmentShader;
 
 GLuint shaderProgram;
 unsigned int positionVBO, colorVBO, VAO, EBO;
+
+GLfloat floorSize = 300;
+GLfloat gridSize = 25;
+Floor worldFloor(300, 25);
+
+
+
 float vertices[] = {
 	//position			//color
     /* front surface is blue */
@@ -129,6 +139,7 @@ float vertices[] = {
     20, -20,  20,    1.0, 0.0, 1.0,
     20, -20, -20,    1.0, 0.0, 1.0
 };
+
 unsigned int indices[] = {
      3,1,2,
      3,0,1,
@@ -148,6 +159,10 @@ unsigned int indices[] = {
      20,23,21,
      21,23,22
 };
+
+
+
+
 					
 //Function definition
 void init();
@@ -162,7 +177,6 @@ void keyboard(unsigned char key, int x, int y);
 void specialkeyboard(int key, int x, int y);
 
 void writeLife(float x, float y);
-void drawFloor();
 
 void setCameraMode(int view) { cameraMode = view; }
 void setCamera(camera cameraPos);

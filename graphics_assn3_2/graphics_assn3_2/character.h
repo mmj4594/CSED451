@@ -3,6 +3,7 @@
 #include "treeNode.h"
 #include "pose.h"
 #include "colors.h"
+#include "sphere.h"
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
@@ -68,6 +69,7 @@ public:
 
 	void checkNewPosition();
 	void jump();
+	
 
 private:
 	bool isCollided = false;
@@ -105,11 +107,14 @@ private:
 	pose poseVariance;
 	float poseChangeFrame = 30.0;
 	int poseFrameCheck = 30;
+	
 };
 
+Sphere head(30, 16, 16);
 
 void drawHead();
 void drawLimb();
 void drawTorso();
+
 bool cmpf(float A, float B, int mode);
 

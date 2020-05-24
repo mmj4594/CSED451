@@ -187,6 +187,7 @@ void character::jump() {
 void drawHead() {
 	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
 	//head drawing function here
+	head.draw();
 }
 
 //Draw limb(arm or leg) of character
