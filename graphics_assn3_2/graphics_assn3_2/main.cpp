@@ -53,6 +53,7 @@ int main(int argc, char** argv) {
 
 void init() {
 	glewInit();
+	writeLife();
 	//Adding vertex, fragment shader
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -116,7 +117,6 @@ bool CheckProgram(GLuint program) {
 }
 
 void display3D() {
-	//writeLife(lifeX, lifeY);
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -291,7 +291,9 @@ int moveWall() {
 		else if (!allPass && (allFail || wall.getColor() != player.getColor() || (wall.getColor() == GRAY && player.getColor() == GRAY))) {
 			status = FAIL;
 			cout << "Fail\n";
+			
 			life--;
+			writeLife();
 			//Lose
 			if (life <= 0) status = LOSE;
 		}
@@ -395,4 +397,11 @@ void finishGame() {
 	glutIdleFunc(NULL);
 	glutKeyboardFunc(NULL);
 	glutSpecialFunc(NULL);
+}
+
+void writeLife() {
+
+	string s = lifeText + to_string(life);
+	cout << s << endl;
+
 }

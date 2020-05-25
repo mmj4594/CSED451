@@ -112,7 +112,7 @@ int moveWall();
 void keyboard(unsigned char key, int x, int y);
 void specialkeyboard(int key, int x, int y);
 
-void writeLife(float x, float y);
+void writeLife();
 
 void setCameraMode(int view) { cameraMode = view; }
 void setCamera(camera cameraPos);
