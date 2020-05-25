@@ -1,5 +1,4 @@
 #include "character.h"
-#include "colors.h"
 #include "matrixStack.h"
 #include <iostream>
 
@@ -84,7 +83,6 @@ void character::traverse(treeNode* current) {
 
 	pushMatrix(GL_MODELVIEW);
 		mtxView *= (current->mtx * current->additionalTransform);
-		glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
 		switch (current->nodeType) {
 			case 0:
 			case 1: {current->draw(head, torso); break; }		//head, torso
@@ -97,8 +95,6 @@ void character::traverse(treeNode* current) {
 
 //Draw character object on the screen
 void character::draw() {
-	setPalette(color);
-
 	lua_node.additionalTransform = rotate(mat4(1.0f), radians(currentPose.lua_angle), vec3(0, 0, 1));
 	rua_node.additionalTransform = rotate(mat4(1.0f), radians(currentPose.rua_angle), vec3(0, 0, 1));
 	lul_node.additionalTransform = rotate(mat4(1.0f), radians(lul_angle), vec3(0, 0, 1));
@@ -207,26 +203,22 @@ void character::fillColor(int color) {
 
 //Draw head of character
 void drawHead(Sphere head, Cylinder unused) {
-	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
 	head.draw();
 }
 
 //Draw limb(arm or leg) of character
 void drawLimb(Sphere joint, Cylinder limb) {
 	//joint1
-	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
 	joint.draw();
 	//skeleton
 	pushMatrix(GL_MODELVIEW);
 	mtxView = rotate(mtxView, radians(90.0f), vec3(0, 1, 0));
-	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
 	mtxView = translate(mtxView, vec3(0, 0, limb_length/2));
 	limb.draw();
 	popMatrix(GL_MODELVIEW);
 	//joint2
 	pushMatrix(GL_MODELVIEW);
 	mtxView = translate(mtxView, vec3(limb_length, 0, 0));
-	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
 	joint.draw();
 	popMatrix(GL_MODELVIEW);
 }
@@ -235,7 +227,6 @@ void drawLimb(Sphere joint, Cylinder limb) {
 void drawTorso(Sphere unused, Cylinder torso) {
 	pushMatrix(GL_MODELVIEW);
 	mtxView = rotate(mtxView, radians(90.0f), vec3(1, 0, 0));
-	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
 	torso.draw();
 	popMatrix(GL_MODELVIEW);
 }

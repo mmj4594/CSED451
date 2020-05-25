@@ -3,7 +3,7 @@
 #include "treeNode.h"
 #include "pose.h"
 #include "colors.h"
-#include "sphere.h"
+#include "Sphere.h"
 #include "Cylinder.h"
 
 #include <GL/glew.h>

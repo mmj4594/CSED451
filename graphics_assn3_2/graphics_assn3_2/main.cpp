@@ -75,8 +75,18 @@ void init() {
 		그리고 display 함수 내에서 glBindVertexArray(VAO) 만 수행하면
 		해당 VAO에 저장된 VBO 및 EBO가 함께 불러와진다.
 	*/
+	//VAO
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+	//VBO
+	glGenBuffers(1, &positionVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, positionVBO);
+	glGenBuffers(1, &colorVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
+	//EBO
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	
-
 	//Initial Camera Setting
 	setCamera(TPV);
 }
@@ -123,20 +133,6 @@ void display3D() {
 	/*	Wireframe mode or Filling mode	*/
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-	//VAO
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
-
-	//VBO
-	glGenBuffers(1, &positionVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, positionVBO);
-	glGenBuffers(1, &colorVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
-
-	//EBO
-	glGenBuffers(1, &EBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	
 	glUseProgram(shaderProgram);
 	glBindVertexArray(VAO);
