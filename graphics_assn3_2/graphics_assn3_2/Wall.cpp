@@ -15,7 +15,7 @@ void Wall::draw() {
 			mtxView = translate(mtxView, vec3(x, y, z));
 			mtxView = rotate(mtxView, -90.0f, vec3(1, 0, 0));
 			glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
-			//solid cone drawing function
+			cone.draw();
 		popMatrix(GL_MODELVIEW);
 		break;
 	case 1:		//Torus
@@ -34,6 +34,7 @@ void Wall::draw() {
 		break;
 	case 5:		//Default
 		//cuboid drawing function
+		cone.draw();
 		break;
 	}
 	

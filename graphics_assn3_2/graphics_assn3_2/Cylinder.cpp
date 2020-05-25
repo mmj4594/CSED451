@@ -193,10 +193,39 @@ void Cylinder::draw() {
 
     //color VBO
     glBindBuffer(GL_ARRAY_BUFFER, colorVBO);           // for vertex data
-    glBufferData(GL_ARRAY_BUFFER,                   // target
-        (unsigned int)vertices.size() * sizeof(float), // data size, # of bytes
-        &vertices_gray[0],   // ptr to vertex data
-        GL_STATIC_DRAW);                   // usage
+    switch (color) {
+    case 0:
+        glBufferData(GL_ARRAY_BUFFER,                   // target
+            (unsigned int)vertices.size() * sizeof(float), // data size, # of bytes
+            &vertices_red[0],   // ptr to vertex data
+            GL_STATIC_DRAW);
+        break;
+    case 1:
+        glBufferData(GL_ARRAY_BUFFER,                   // target
+            (unsigned int)vertices.size() * sizeof(float), // data size, # of bytes
+            &vertices_green[0],   // ptr to vertex data
+            GL_STATIC_DRAW);
+        break;
+    case 2:
+        glBufferData(GL_ARRAY_BUFFER,                   // target
+            (unsigned int)vertices.size() * sizeof(float), // data size, # of bytes
+            &vertices_blue[0],   // ptr to vertex data
+            GL_STATIC_DRAW);
+        break;
+    case 3:
+        glBufferData(GL_ARRAY_BUFFER,                   // target
+            (unsigned int)vertices.size() * sizeof(float), // data size, # of bytes
+            &vertices_yellow[0],   // ptr to vertex data
+            GL_STATIC_DRAW);
+        break;
+    case 5:
+        glBufferData(GL_ARRAY_BUFFER,                   // target
+            (unsigned int)vertices.size() * sizeof(float), // data size, # of bytes
+            &vertices_gray[0],   // ptr to vertex data
+            GL_STATIC_DRAW);
+        break;
+    }
+                      // usage
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 

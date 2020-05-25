@@ -29,7 +29,7 @@ public:
     void addVertex(float x, float y, float z);
 
     void addIndices(unsigned int i1, unsigned int i2, unsigned int i3);
-
+    void setColor(int color) { this->color = color; };
     void draw();
     void clearArrays();
     void initializeColor();
@@ -56,4 +56,5 @@ private:
     std::vector<float> vertices_green;
     std::vector<float> vertices_yellow;
     std::vector<float> vertices_blue;
+    int color = 5;
 };

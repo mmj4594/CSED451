@@ -1,5 +1,6 @@
 #pragma once
 #include "object.h"
+#include "Cylinder.h"
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
@@ -29,7 +30,9 @@ public:
 private:
 	float width, height, depth;
 	int shape = 5;
+	
 };
 
+Cylinder cone((float)0, 27.5/2, 27.5, 16, 16);
 void DrawCuboid(GLfloat centerPosX, GLfloat centerPosY, GLfloat centerPosZ, GLfloat widthLength, GLfloat depthLength, GLfloat heightLength);
 

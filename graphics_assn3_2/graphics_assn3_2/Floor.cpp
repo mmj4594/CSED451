@@ -16,6 +16,5 @@ void Floor::draw() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, floor_indices.size() * sizeof(glm::uvec2), glm::value_ptr(floor_indices[0]), GL_STATIC_DRAW);
 
 	glUniformMatrix4fv(2, 1, GL_FALSE, glm::value_ptr(mtxView));
-	//cout << sizeof(indices) << endl;
 	glDrawElements(GL_LINES, sizeof(indices), GL_UNSIGNED_INT, 0);
 }

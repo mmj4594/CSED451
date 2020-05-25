@@ -113,65 +113,65 @@ void frameAction(int value) {
 		isFailed = true;
 		break;
 	}
+	
+	///*
+	//	Move player to right and zoom camera if pass successfully
+	//	after the wall disappear and player land successfully
+	//*/
+	//if ((wall.getX() + wall.getWidth() < 0) && isPassed && (player.getY() == PLAYER_DEFAULT_Y)) {
+	//	wallSpeed += wallSpeedIncrement;
+	//	posePeriod -= 5;
+	//	player.setnewX(player.getX() + player.getMovingDistance());
 
-	/*
-		Move player to right and zoom camera if pass successfully
-		after the wall disappear and player land successfully
-	*/
-	if ((wall.getX() + wall.getWidth() < 0) && isPassed && (player.getY() == PLAYER_DEFAULT_Y)) {
-		wallSpeed += wallSpeedIncrement;
-		posePeriod -= 5;
-		player.setnewX(player.getX() + player.getMovingDistance());
+	//	newFovy = fovy * 0.85;
+	//	fovyPerFrame = (newFovy - fovy) / zoomFrame;
+	//	isPassed = false;
+	//}
+	///*
+	//	Zoom out camera if thief doesn't jump and player ignore the wall by jump
+	//	after the wall disappear and player land successfully
+	//*/
+	//else if ((wall.getX() + wall.getWidth() < 0) && isJumped && wall.getColor() != GRAY && (player.getY() == PLAYER_DEFAULT_Y)) {
+	//	newFovy = fovy * 1.05;
+	//	fovyPerFrame = (newFovy - fovy) / zoomFrame;
+	//	isJumped = false;
+	//}
 
-		newFovy = fovy * 0.85;
-		fovyPerFrame = (newFovy - fovy) / zoomFrame;
-		isPassed = false;
-	}
-	/*
-		Zoom out camera if thief doesn't jump and player ignore the wall by jump
-		after the wall disappear and player land successfully
-	*/
-	else if ((wall.getX() + wall.getWidth() < 0) && isJumped && wall.getColor() != GRAY && (player.getY() == PLAYER_DEFAULT_Y)) {
-		newFovy = fovy * 1.05;
-		fovyPerFrame = (newFovy - fovy) / zoomFrame;
-		isJumped = false;
-	}
+	////Camera manipulation
+	//FPV = camera(player.getX() + 3, player.getY() + 8, 0,
+	//	thief.getX(), player.getY() + 8, 0,
+	//	0, 1, 0);
+	//switch (cameraMode) {
+	//case 1:	setCamera(FPV); break;
+	//case 3:	setCamera(TPV);	break;
+	//case 9: setCamera(XYPlane); break;
+	//}
+	//if (abs(newFovy - fovy) > 0.01) { fovy += fovyPerFrame; }
 
-	//Camera manipulation
-	FPV = camera(player.getX() + 3, player.getY() + 8, 0,
-		thief.getX(), player.getY() + 8, 0,
-		0, 1, 0);
-	switch (cameraMode) {
-	case 1:	setCamera(FPV); break;
-	case 3:	setCamera(TPV);	break;
-	case 9: setCamera(XYPlane); break;
-	}
-	if (abs(newFovy - fovy) > 0.01) { fovy += fovyPerFrame; }
-
-	//Ask if thief will jump
-	if ((wall.getX() - thief.getX() < 35) && !askJump){
-		askJump = true;
-		//thief jump with probability
-		if (rand() % 100 < thiefJumpProbability * 100) {
-			thief.jump();
-			thiefJumped = true;
-		}
-	}
-	//Change pose of the thief in every set period
-	if (thiefFrame >= posePeriod) {
-		switch (rand() % 4) {
-		case 0: thief.changePose(poseA); break;
-		case 1: thief.changePose(poseB); break;
-		case 2: thief.changePose(poseC); break;
-		case 3: thief.changePose(poseD); break;
-		}
-		thiefFrame = 0;
-	}
+	////Ask if thief will jump
+	//if ((wall.getX() - thief.getX() < 35) && !askJump){
+	//	askJump = true;
+	//	//thief jump with probability
+	//	if (rand() % 100 < thiefJumpProbability * 100) {
+	//		thief.jump();
+	//		thiefJumped = true;
+	//	}
+	//}
+	////Change pose of the thief in every set period
+	//if (thiefFrame >= posePeriod) {
+	//	switch (rand() % 4) {
+	//	case 0: thief.changePose(poseA); break;
+	//	case 1: thief.changePose(poseB); break;
+	//	case 2: thief.changePose(poseC); break;
+	//	case 3: thief.changePose(poseD); break;
+	//	}
+	//	thiefFrame = 0;
+	//}
 	
 	//Check new position of characters
 	player.checkNewPosition();
 	thief.checkNewPosition();
-
+	
 
 	//Animation loop for player and thief
 	if (animationFrame >= lowerBodyPeriod) { animationFrame = 0; }

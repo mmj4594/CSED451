@@ -1,13 +1,19 @@
 #include "character.h"
 #include "colors.h"
 #include "matrixStack.h"
+#include <iostream>
 
 using namespace glm;
+using namespace std;
 
 
 
 //Constructor of character class
 character::character(float a, float b, pose initializedPose) {
+	head.set(head_rad, sectorCount, stackCount);
+	joint.set(limb_joint_rad, sectorCount, stackCount);
+	limb.set(limb_joint_rad, limb_joint_rad, limb_length, sectorCount, stackCount);
+	torso.set(torso_width / 2, torso_width / 2, torso_height, sectorCount, stackCount);
 	type = 1; x = a; y = b; z = 0; newX = a; newY = b;
 	
 	//initialization for torso
@@ -140,6 +146,8 @@ void character::changePose(pose inputPose) {
 		poseVariance.rla_angle = newPose.rla_angle - currentPose.rla_angle;
 		currentPose.color = inputPose.color;
 		setColor(currentPose.color);
+		torso.setColor(currentPose.color);
+		
 		poseFrameCheck = 0;
 	}
 }
@@ -181,6 +189,8 @@ void character::jump() {
 void drawHead() {
 	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
 	//head drawing function here
+	//torso.draw();
+	cout << color << endl;
 	head.draw();
 }
 
@@ -191,9 +201,10 @@ void drawLimb() {
 	joint.draw();
 	//skeleton
 	pushMatrix(GL_MODELVIEW);
-	mtxView = rotate(mtxView, 90.0f, vec3(0, 1, 0));
+	mtxView = rotate(mtxView, radians(90.0f), vec3(0, 1, 0));
 	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
-	//skeleton drawing function here
+	mtxView = translate(mtxView, vec3(0, 0, limb_length/2));
+	limb.draw();
 	popMatrix(GL_MODELVIEW);
 	//joint2
 	pushMatrix(GL_MODELVIEW);
@@ -206,8 +217,7 @@ void drawLimb() {
 //Draw torso of character
 void drawTorso() {
 	pushMatrix(GL_MODELVIEW);
-	mtxView = translate(mtxView, vec3(0, torso_height / 2, 0));
-	mtxView = rotate(mtxView, 90.0f, vec3(1, 1, 0));
+	mtxView = rotate(mtxView, radians(90.0f), vec3(1, 0, 0));
 	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
 	torso.draw();
 	popMatrix(GL_MODELVIEW);

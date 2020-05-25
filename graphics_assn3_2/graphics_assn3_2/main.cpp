@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 	glutReshapeFunc(reshape3D);
 	glutTimerFunc(0, frameAction, 1);
 	glutKeyboardFunc(keyboard);
-	//glutSpecialFunc(specialkeyboard);
+	glutSpecialFunc(specialkeyboard);
 
 
 	init();
@@ -155,7 +155,7 @@ void display3D() {
 	worldFloor.draw();
 	player.draw();
 	thief.draw();
-
+	wall.draw();
 	glutSwapBuffers();
 }
 
@@ -177,6 +177,69 @@ void frameAction(int value) {
 	case 9: setCamera(XYPlane); break;
 	}
 
+	//Change pose of the thief in every set period
+	if (thiefFrame >= posePeriod) {
+		switch (rand() % 4) {
+		case 0: thief.changePose(poseA); break;
+		case 1: thief.changePose(poseB); break;
+		case 2: thief.changePose(poseC); break;
+		case 3: thief.changePose(poseD); break;
+		}
+		thiefFrame = 0;
+	}
+
+	if ((wall.getX() + wall.getWidth() < 0) && isPassed && (player.getY() == PLAYER_DEFAULT_Y)) {
+		wallSpeed += wallSpeedIncrement;
+		posePeriod -= 5;
+		player.setnewX(player.getX() + player.getMovingDistance());
+
+		newFovy = fovy * 0.85;
+		fovyPerFrame = (newFovy - fovy) / zoomFrame;
+		isPassed = false;
+	}
+	/*
+		Zoom out camera if thief doesn't jump and player ignore the wall by jump
+		after the wall disappear and player land successfully
+	*/
+	else if ((wall.getX() + wall.getWidth() < 0) && isJumped && wall.getColor() != GRAY && (player.getY() == PLAYER_DEFAULT_Y)) {
+		newFovy = fovy * 1.05;
+		fovyPerFrame = (newFovy - fovy) / zoomFrame;
+		isJumped = false;
+	}
+	if (abs(newFovy - fovy) > 0.01) { fovy += fovyPerFrame; }
+
+	//Ask if thief will jump
+	if ((wall.getX() - thief.getX() < 35) && !askJump) {
+		askJump = true;
+		//thief jump with probability
+		if (rand() % 100 < thiefJumpProbability * 100) {
+			thief.jump();
+			thiefJumped = true;
+		}
+	}
+	//Change pose of the thief in every set period
+	if (thiefFrame >= posePeriod) {
+		switch (rand() % 4) {
+		case 0: thief.changePose(poseA); break;
+		case 1: thief.changePose(poseB); break;
+		case 2: thief.changePose(poseC); break;
+		case 3: thief.changePose(poseD); break;
+		}
+		thiefFrame = 0;
+	}
+
+	//Check new position of characters
+	player.checkNewPosition();
+	thief.checkNewPosition();
+
+	//Animation loop for player and thief
+	if (animationFrame >= lowerBodyPeriod) { animationFrame = 0; }
+	player.lowerBodyAnimation(animationFrame, lowerBodyPeriod);
+	thief.lowerBodyAnimation(animationFrame, lowerBodyPeriod);
+	player.upperBodyAnimation();
+	thief.upperBodyAnimation();
+
+	thiefFrame++; animationFrame++;
 	glutPostRedisplay();
 	glutTimerFunc(17, frameAction, 1);		//call timer function recursively until game ends
 }
@@ -211,7 +274,26 @@ void keyboard(unsigned char key, int x, int y) {
 		break;
 	}
 
+	//Animation loop for player and thief
 	glutPostRedisplay();
+}
+
+//Determine color of player according to user keyboard input.
+void specialkeyboard(int key, int x, int y) {
+	switch (key) {
+	case GLUT_KEY_UP:
+		player.changePose(poseA);
+		break;
+	case GLUT_KEY_DOWN:
+		player.changePose(poseB);
+		break;
+	case GLUT_KEY_LEFT:
+		player.changePose(poseC);
+		break;
+	case GLUT_KEY_RIGHT:
+		player.changePose(poseD);
+		break;
+	}
 }
 
 //Set camera to cameraPos
