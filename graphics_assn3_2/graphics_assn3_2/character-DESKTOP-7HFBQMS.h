@@ -41,7 +41,6 @@ pose poseB(10, 90, -10, -90, GREEN);
 pose poseC(-10, -90, 10, 90, BLUE);
 pose poseD(10, 70, 10, 70, YELLOW);
 
-int color;
 
 /*
 	\class	character
@@ -82,7 +81,6 @@ public:
 	float getMovingDistance(){ return movingDistance; }
 	int getColor() { return currentPose.color; };
 
-	void fillColor(int color);
 	void checkNewPosition();
 	void jump();
 	
@@ -123,15 +121,18 @@ private:
 	pose poseVariance;
 	float poseChangeFrame = 30.0;
 	int poseFrameCheck = 30;
-	Sphere head;
-	Sphere joint;
-	Cylinder limb;
-	Cylinder torso;
+	
 };
 
-void drawHead(Sphere head, Cylinder cylinder1);
-void drawLimb(Sphere joint, Cylinder limb);
-void drawTorso(Sphere sphere1, Cylinder torso);
+Sphere head(head_rad, sectorCount, stackCount);
+Sphere joint(limb_joint_rad, sectorCount, stackCount);
+Cylinder limb(limb_joint_rad, limb_joint_rad, limb_length, sectorCount, stackCount);
+Cylinder torso(torso_width/2, torso_width/2, torso_height, sectorCount, stackCount);
+
+
+void drawHead();
+void drawLimb();
+void drawTorso();
 
 bool cmpf(float A, float B, int mode);
 
