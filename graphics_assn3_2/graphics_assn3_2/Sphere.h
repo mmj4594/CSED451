@@ -20,6 +20,7 @@ public:
     int getSectorCount() const { return sectorCount; }
     int getStackCount() const { return stackCount; }
     void set(float radius, int sectorCount, int stackCount);
+    void setColor(int color) { this->color = color; };
     
     void buildVertices();
 
@@ -34,6 +35,7 @@ public:
  private:
     float radius;
     int sectorCount, stackCount;
+    int color;
     std::vector<float> vertices;
     std::vector<float> normals;
     std::vector<float> texCoords;

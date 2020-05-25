@@ -82,6 +82,7 @@ public:
 	float getMovingDistance(){ return movingDistance; }
 	int getColor() { return currentPose.color; };
 
+	void fillColor(int color);
 	void checkNewPosition();
 	void jump();
 	

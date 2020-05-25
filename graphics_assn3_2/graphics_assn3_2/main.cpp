@@ -17,6 +17,9 @@
 static bool allPass = false;
 static bool allFail = false;
 
+//Game status
+int gameStatus = IDLE;
+
 using namespace std;
 
 int main(int argc, char** argv) {
@@ -113,6 +116,7 @@ bool CheckProgram(GLuint program) {
 }
 
 void display3D() {
+	//writeLife(lifeX, lifeY);
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -188,6 +192,28 @@ void frameAction(int value) {
 		thiefFrame = 0;
 	}
 
+	//move wall and get current status.
+	gameStatus = moveWall();
+	switch (gameStatus) {
+	case LOSE:
+		cout << "Lose\n";
+		finishGame();
+		return;
+	case WIN:
+		cout << "Win\n";
+		finishGame();
+		return;
+	case PASS:
+		isPassed = true;
+		break;
+	case JUMP:
+		isJumped = true;
+		break;
+	case FAIL:
+		isFailed = true;
+		break;
+	}
+
 	if ((wall.getX() + wall.getWidth() < 0) && isPassed && (player.getY() == PLAYER_DEFAULT_Y)) {
 		wallSpeed += wallSpeedIncrement;
 		posePeriod -= 5;
@@ -243,6 +269,59 @@ void frameAction(int value) {
 	glutPostRedisplay();
 	glutTimerFunc(17, frameAction, 1);		//call timer function recursively until game ends
 }
+
+int moveWall() {
+	int status = IDLE;
+
+	wall.setX(wall.getX() - 0.3 * wallSpeed);
+
+	//Collision between wall and player
+	if (wall.collisionCheck(&player)) {
+		//Jump
+		if (!allFail && !allPass && player.getY() > PLAYER_DEFAULT_Y + jumpCriteria) {
+			status = JUMP;
+		}
+		//Fail
+		else if (!allPass && (allFail || wall.getColor() != player.getColor() || (wall.getColor() == GRAY && player.getColor() == GRAY))) {
+			status = FAIL;
+			cout << "Fail\n";
+			life--;
+			//Lose
+			if (life <= 0) status = LOSE;
+		}
+		//Pass
+		else if (!allFail && (allPass || wall.getColor() == player.getColor())) {
+			status = PASS;
+			cout << "Pass\n";
+		}
+	}
+	//Collision between wall and thief
+	else if (wall.collisionCheck(&thief)) {
+		if (!thiefJumped) {
+			//Set shape and color of wall
+			wall.setColor(thief.getColor());
+			wall.setShape(thief.getColor());
+		}
+	}
+	//Collision between player and thief
+	else if (player.collisionCheck(&thief)) {
+		status = WIN;
+	}
+
+	//Repositioning of wall when it goes out of the screen
+	if (wall.getX() + wall.getWidth() + wallSpeed * 20 < 0) {
+		int shape = wall.getShape();
+		wall = Wall(WORLD_SIZE_X, 20, 0, 10, wallHeight, 0);
+		wall.setShape(shape);
+		thief.resetCollided();
+		player.resetCollided();
+		askJump = false;
+		thiefJumped = false;
+		wall.setShape(5);
+	}
+	return status;
+}
+
 
 //Define cheat according to user keyboard input.
 void keyboard(unsigned char key, int x, int y) {
@@ -301,4 +380,13 @@ void setCamera(camera cameraPos) {
 	memcpy(eye, cameraPos.getEye(), sizeof(eye));
 	memcpy(reference, cameraPos.getReference(), sizeof(reference));
 	memcpy(upVector, cameraPos.getUpVector(), sizeof(upVector));
+}
+
+//Fnish game
+void finishGame() {
+	glutPostRedisplay();
+	glutReshapeFunc(NULL);
+	glutIdleFunc(NULL);
+	glutKeyboardFunc(NULL);
+	glutSpecialFunc(NULL);
 }

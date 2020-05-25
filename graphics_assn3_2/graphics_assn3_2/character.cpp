@@ -12,6 +12,7 @@ character::character(float a, float b, pose initializedPose) {
 	joint.set(limb_joint_rad, sectorCount, stackCount);
 	limb.set(limb_joint_rad, limb_joint_rad, limb_length, sectorCount, stackCount);
 	torso.set(torso_width / 2, torso_width / 2, torso_height, sectorCount, stackCount);
+	fillColor(5);
 	type = 1; x = a; y = b; z = 0; newX = a; newY = b;
 	
 	//initialization for torso
@@ -158,7 +159,7 @@ void character::changePose(pose inputPose) {
 		poseVariance.rla_angle = newPose.rla_angle - currentPose.rla_angle;
 		currentPose.color = inputPose.color;
 		setColor(currentPose.color);
-		torso.setColor(currentPose.color);
+		fillColor(currentPose.color);
 		
 		poseFrameCheck = 0;
 	}
@@ -195,6 +196,13 @@ void character::jump() {
 		newX = x - jump_back;
 		newY = y + jump_height;
 	}
+}
+
+void character::fillColor(int color) {
+	torso.setColor(color);
+	head.setColor(color);
+	limb.setColor(color);
+	joint.setColor(color);
 }
 
 //Draw head of character
