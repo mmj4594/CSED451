@@ -19,14 +19,14 @@ character::character(float a, float b, pose initializedPose) {
 	torso_node.draw = drawTorso;
 	torso_node.sibling = NULL;
 	torso_node.child = &head_node;
-	torso_node.nodeType = 1;
+	torso_node.nodeType = 0;
 
 	//initialization for head
 	head_node.mtx = translate(mat4(1.0f), vec3(0, 0.5 * torso_height + head_rad, 0));
 	head_node.draw = drawHead;
 	head_node.sibling = &lua_node;
 	head_node.child = NULL;
-	head_node.nodeType = 0;
+	head_node.nodeType = 1;
 
 	//initialization for upper limb
 	lua_node.mtx = translate(mat4(1.0f), vec3(0, 0.5 * torso_height - limb_joint_rad , -0.5 * torso_width)) * rotate(mat4(1.0f), radians(180.0f), vec3(0, 0, 1)) * rotate(mat4(1.0f), radians(90.0f), vec3(0, 1, 0));
@@ -85,8 +85,8 @@ void character::traverse(treeNode* current) {
 		mtxView *= (current->mtx * current->additionalTransform);
 		glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
 		switch (current->nodeType) {
-			case 0: {current->draw(head, torso); break; }		//head
-			case 1: {current->draw(head, torso); break; }		//torso
+			case 0:
+			case 1: {current->draw(head, torso); break; }		//head, torso
 			case 2: {current->draw(joint, limb); break; }		//limb
 		}
 		if (current->child != NULL) { traverse(current->child); }
@@ -198,11 +198,8 @@ void character::jump() {
 }
 
 //Draw head of character
-void drawHead(Sphere head, Cylinder cylinder1) {
+void drawHead(Sphere head, Cylinder unused) {
 	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
-	//head drawing function here
-	//torso.draw();
-	cout << color << endl;
 	head.draw();
 }
 
@@ -227,7 +224,7 @@ void drawLimb(Sphere joint, Cylinder limb) {
 }
 
 //Draw torso of character
-void drawTorso(Sphere sphere1, Cylinder torso) {
+void drawTorso(Sphere unused, Cylinder torso) {
 	pushMatrix(GL_MODELVIEW);
 	mtxView = rotate(mtxView, radians(90.0f), vec3(1, 0, 0));
 	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));

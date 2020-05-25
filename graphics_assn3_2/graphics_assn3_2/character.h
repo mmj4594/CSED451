@@ -128,9 +128,9 @@ private:
 	Cylinder torso;
 };
 
-void drawHead(Sphere head, Cylinder cylinder1);
+void drawHead(Sphere head, Cylinder unused);
 void drawLimb(Sphere joint, Cylinder limb);
-void drawTorso(Sphere sphere1, Cylinder torso);
+void drawTorso(Sphere unused, Cylinder torso);
 
 bool cmpf(float A, float B, int mode);
 

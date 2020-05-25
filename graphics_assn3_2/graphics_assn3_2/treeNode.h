@@ -25,5 +25,5 @@ public:
 	void (*draw) (Sphere, Cylinder);
 	treeNode* sibling;
 	treeNode* child;
-	int nodeType;	//0 = head, 1 = torso, 2 = limb
+	int nodeType;	//0 = torso, 1 = head, 2 = limb
 };
