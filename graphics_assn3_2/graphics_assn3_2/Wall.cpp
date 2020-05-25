@@ -8,36 +8,51 @@ using namespace glm;
 
 //Draw rect object on the screen.
 void Wall::draw() {
-	setPalette(color);
+	//cout << shape << endl;
 	switch (shape) {
 	case 0:		//Cone
+		cone.setColor(color);
 		pushMatrix(GL_MODELVIEW);
-			mtxView = translate(mtxView, vec3(x, y, z));
-			mtxView = rotate(mtxView, -90.0f, vec3(1, 0, 0));
+			mtxView = translate(mtxView, vec3(x, y + 27.5 / 2, z));
+			mtxView = rotate(mtxView, radians(-90.0f), vec3(1, 0, 0));
 			glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
 			cone.draw();
 		popMatrix(GL_MODELVIEW);
 		break;
 	case 1:		//Torus
+		reverseCone.setColor(color);
 		pushMatrix(GL_MODELVIEW);
-			mtxView = translate(mtxView, vec3(x, y + height / 2, z));
-			mtxView = rotate(mtxView, -90.0f, vec3(0, 1, 0));
+			mtxView = translate(mtxView, vec3(x, y + 27.5 / 2, z));
+			mtxView = rotate(mtxView, radians(-90.0f), vec3(1, 0, 0));
 			glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
-			//solid torus drawing function
+			reverseCone.draw();
 		popMatrix(GL_MODELVIEW);
 		break;
 	case 2:		//Reversed T-shape
-		//cuboid drawing function
+		cylinder1.setColor(color);
+		pushMatrix(GL_MODELVIEW);
+		mtxView = translate(mtxView, vec3(x, y + 27.5 / 2, z));
+		mtxView = rotate(mtxView, radians(-90.0f), vec3(1, 0, 0));
+		glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
+		cylinder1.draw();
+		popMatrix(GL_MODELVIEW);
 		break;
 	case 3:		//T-shape
-		//cuboid drawing function
+		cylinder2.setColor(color);
+		pushMatrix(GL_MODELVIEW);
+		mtxView = translate(mtxView, vec3(x, y + 27.5 / 2, z));
+		mtxView = rotate(mtxView, radians(-90.0f), vec3(1, 0, 0));
+		glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
+		cylinder2.draw();
+		popMatrix(GL_MODELVIEW);
 		break;
 	case 5:		//Default
+		cylinder.setColor(color);
 		pushMatrix(GL_MODELVIEW);
-			mtxView = translate(mtxView, vec3(x, y, z));
+			mtxView = translate(mtxView, vec3(x, y+27.5/2, z));
 			mtxView = rotate(mtxView, radians(-90.0f), vec3(1, 0, 0));
 			glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
-			cone.draw();
+			cylinder.draw();
 		popMatrix(GL_MODELVIEW);
 		break;
 	}
