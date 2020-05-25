@@ -215,7 +215,7 @@ void frameAction(int value) {
 		posePeriod -= 5;
 		player.setnewX(player.getX() + player.getMovingDistance());
 
-		newFovy = fovy * 0.99;
+		newFovy = fovy * 0.85;
 		fovyPerFrame = (newFovy - fovy) / zoomFrame;
 		isPassed = false;
 	}

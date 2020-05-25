@@ -11,7 +11,6 @@ void Wall::draw() {
 	setPalette(color);
 	switch (shape) {
 	case 0:		//Cone
-		cout << x << endl;
 		pushMatrix(GL_MODELVIEW);
 			mtxView = translate(mtxView, vec3(x, y, z));
 			mtxView = rotate(mtxView, -90.0f, vec3(1, 0, 0));
