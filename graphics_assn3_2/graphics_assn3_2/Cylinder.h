@@ -16,6 +16,7 @@ class Cylinder
 {
 public:
     // ctor/dtor
+    Cylinder() { baseRadius = topRadius = height = 0; sectorCount = stackCount = baseIndex = topIndex = 0; }
     Cylinder(float baseRadius, float topRadius, float height, int sectors, int stacks);
     float getBaseRadius() const { return baseRadius; }
     float getTopRadius() const { return topRadius; }

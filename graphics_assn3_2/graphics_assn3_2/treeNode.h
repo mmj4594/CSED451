@@ -1,6 +1,8 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include "Sphere.h"
+#include "Cylinder.h"
 
 /*
 	\class	object
@@ -20,7 +22,8 @@ class treeNode {
 public:
 	glm::mat4 mtx;
 	glm::mat4 additionalTransform = glm::mat4(1.0f);
-	void (*draw) ();
+	void (*draw) (Sphere, Cylinder);
 	treeNode* sibling;
 	treeNode* child;
+	int nodeType;	//0 = head, 1 = torso, 2 = limb
 };

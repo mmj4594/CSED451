@@ -6,8 +6,6 @@
 using namespace glm;
 using namespace std;
 
-
-
 //Constructor of character class
 character::character(float a, float b, pose initializedPose) {
 	head.set(head_rad, sectorCount, stackCount);
@@ -21,49 +19,59 @@ character::character(float a, float b, pose initializedPose) {
 	torso_node.draw = drawTorso;
 	torso_node.sibling = NULL;
 	torso_node.child = &head_node;
+	torso_node.nodeType = 1;
 
 	//initialization for head
 	head_node.mtx = translate(mat4(1.0f), vec3(0, 0.5 * torso_height + head_rad, 0));
 	head_node.draw = drawHead;
 	head_node.sibling = &lua_node;
 	head_node.child = NULL;
+	head_node.nodeType = 0;
 
 	//initialization for upper limb
 	lua_node.mtx = translate(mat4(1.0f), vec3(0, 0.5 * torso_height - limb_joint_rad , -0.5 * torso_width)) * rotate(mat4(1.0f), radians(180.0f), vec3(0, 0, 1)) * rotate(mat4(1.0f), radians(90.0f), vec3(0, 1, 0));
 	lua_node.draw = drawLimb;
 	lua_node.sibling = &rua_node;
 	lua_node.child = &lla_node;
+	lua_node.nodeType = 2;
+
 	rua_node.mtx = translate(mat4(1.0f), vec3(0, 0.5 * torso_height - limb_joint_rad, 0.5 * torso_width)) * rotate(mat4(1.0f), radians(-90.0f), vec3(0, 1, 0));
-	
 	rua_node.draw = drawLimb;
 	rua_node.sibling = &lul_node;
 	rua_node.child = &rla_node;
+	rua_node.nodeType = 2;
 	lul_node.mtx = translate(mat4(1.0f), vec3(0, -0.5 * torso_height, -0.5 * torso_width + limb_joint_rad)) * rotate(mat4(1.0f), radians(-90.0f), vec3(0, 0, 1));
 	lul_node.draw = drawLimb;
 	lul_node.sibling = &rul_node;
 	lul_node.child = &lll_node;
+	lul_node.nodeType = 2;
 	rul_node.mtx = translate(mat4(1.0f), vec3(0, -0.5 * torso_height, 0.5 * torso_width - limb_joint_rad)) * rotate(mat4(1.0f), radians(-90.0f), vec3(0, 0, 1));
 	rul_node.draw = drawLimb;
 	rul_node.sibling = NULL;
 	rul_node.child = &rll_node;
+	rul_node.nodeType = 2;
 
 	//initialization for lower limb
 	lla_node.mtx = translate(mat4(1.0f), vec3(limb_length, 0, 0));
 	lla_node.draw = drawLimb;
 	lla_node.sibling = NULL;
 	lla_node.child = NULL;
+	lla_node.nodeType = 2;
 	rla_node.mtx = translate(mat4(1.0f), vec3(limb_length, 0, 0));
 	rla_node.draw = drawLimb;
 	rla_node.sibling = NULL;
 	rla_node.child = NULL;
+	rla_node.nodeType = 2;
 	lll_node.mtx = translate(mat4(1.0f), vec3(limb_length, 0, 0));
 	lll_node.draw = drawLimb;
 	lll_node.sibling = NULL;
 	lll_node.child = NULL;
+	lll_node.nodeType = 2;
 	rll_node.mtx = translate(mat4(1.0f), vec3(limb_length, 0, 0));
 	rll_node.draw = drawLimb;
 	rll_node.sibling = NULL;
 	rll_node.child = NULL;
+	rll_node.nodeType = 2;
 
 	//pose initialization
 	newPose = currentPose = initializedPose;
@@ -76,8 +84,12 @@ void character::traverse(treeNode* current) {
 	pushMatrix(GL_MODELVIEW);
 		mtxView *= (current->mtx * current->additionalTransform);
 		glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
-		current->draw();
-		if (current->child != NULL) traverse(current->child);
+		switch (current->nodeType) {
+			case 0: {current->draw(head, torso); break; }		//head
+			case 1: {current->draw(head, torso); break; }		//torso
+			case 2: {current->draw(joint, limb); break; }		//limb
+		}
+		if (current->child != NULL) { traverse(current->child); }
 	popMatrix(GL_MODELVIEW);
 	if (current->sibling != NULL) traverse(current->sibling);
 }
@@ -186,7 +198,7 @@ void character::jump() {
 }
 
 //Draw head of character
-void drawHead() {
+void drawHead(Sphere head, Cylinder cylinder1) {
 	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
 	//head drawing function here
 	//torso.draw();
@@ -195,7 +207,7 @@ void drawHead() {
 }
 
 //Draw limb(arm or leg) of character
-void drawLimb() {
+void drawLimb(Sphere joint, Cylinder limb) {
 	//joint1
 	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
 	joint.draw();
@@ -215,7 +227,7 @@ void drawLimb() {
 }
 
 //Draw torso of character
-void drawTorso() {
+void drawTorso(Sphere sphere1, Cylinder torso) {
 	pushMatrix(GL_MODELVIEW);
 	mtxView = rotate(mtxView, radians(90.0f), vec3(1, 0, 0));
 	glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));

@@ -128,16 +128,9 @@ private:
 	Cylinder torso;
 };
 
-
-//Sphere head (head_rad, sectorCount, stackCount);
-//Sphere joint(limb_joint_rad, sectorCount, stackCount);
-//Cylinder limb(limb_joint_rad, limb_joint_rad, limb_length, sectorCount, stackCount);
-//Cylinder torso(torso_width/2, torso_width/2, torso_height, sectorCount, stackCount);
-
-
-void drawHead();
-void drawLimb();
-void drawTorso();
+void drawHead(Sphere head, Cylinder cylinder1);
+void drawLimb(Sphere joint, Cylinder limb);
+void drawTorso(Sphere sphere1, Cylinder torso);
 
 bool cmpf(float A, float B, int mode);
 
