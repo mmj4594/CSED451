@@ -3,7 +3,6 @@
 #include "character.h"
 #include "camera.h"
 #include "Floor.h"
-#include "test.h"
 
 using namespace std;
 
@@ -77,18 +76,20 @@ float lifeY = LIFE_DEFAULT_Y;
 Wall wall(WORLD_SIZE_X, 20, 0, 10, wallHeight, 0);
 character player(PLAYER_DEFAULT_X, PLAYER_DEFAULT_Y, initialPose);
 character thief(THIEF_DEFAULT_X, THIEF_DEFAULT_Y, initialPose);
+GLfloat floorSize = 300;
+GLfloat gridSize = 25;
+Floor worldFloor(floorSize, gridSize);
 
 //Camera configuration
 int cameraMode = 3;		//point of view
 GLdouble eye[3], reference[3], upVector[3];
-camera FPV(-WORLD_SIZE_X / 2, WORLD_SIZE_Y / 2 + 20, 0,
-	WORLD_SIZE_X / 2, WORLD_SIZE_Y / 4 + 20, 0,
-	0, 1, 0);
+camera FPV(PLAYER_DEFAULT_X + 3, PLAYER_DEFAULT_Y + 5 + 3, 0,
+    THIEF_DEFAULT_X, THIEF_DEFAULT_Y + 5 + 3, 0,
+    0, 1, 0);
 camera TPV(-WORLD_SIZE_X / 2, WORLD_SIZE_Y / 2 + 20, 180 / 2,
-	WORLD_SIZE_X / 2, WORLD_SIZE_Y / 4 + 20, 0 ,
-	0, 1, 0 );
-camera XYPlane(50, 50, 150,	50, 50, 0, 0, 1, 0);
-
+    WORLD_SIZE_X / 2, WORLD_SIZE_Y / 4 + 20, 0,
+    0, 1, 0);
+camera XYPlane(50, 50, 150, 50, 50, 0, 0, 1, 0);
 float fovy = 45;
 float newFovy = fovy;
 float fovyPerFrame = 0;
@@ -96,73 +97,8 @@ float fovyPerFrame = 0;
 //Vertex and fragment shader
 GLuint vertexShader;
 GLuint fragmentShader;
-
 GLuint shaderProgram;
 unsigned int positionVBO, colorVBO, VAO, EBO;
-
-GLfloat floorSize = 300;
-GLfloat gridSize = 25;
-Floor worldFloor(300, 25);
-
-
-
-float vertices[] = {
-	//position			//color
-    /* front surface is blue */
-    -20,  20, 20,    0.0, 0.0, 1.0,
-    -20, -20, 20,    0.0, 0.0, 1.0,
-    20, -20, 20,     0.0, 0.0, 1.0,
-    20,  20, 20,     0.0, 0.0, 1.0,
-    /* left surface is green */
-    -20,  20,  20,   0.0, 1.0, 0.0,
-    -20,  20, -20,   0.0, 1.0, 0.0,
-    -20, -20, -20,   0.0, 1.0, 0.0,
-    -20, -20,  20,   0.0, 1.0, 0.0,
-    /* top surface is red */
-    -20, 20, 20,     1.0, 0.0, 0.0,
-    20, 20, 20,      1.0, 0.0, 0.0,
-    20, 20, -20,     1.0, 0.0, 0.0,
-    -20, 20, -20,    1.0, 0.0, 0.0,
-    /* right surface is yellow */
-    20,  20, -20,    1.0, 1.0, 0.0,
-    20,  20,  20,    1.0, 1.0, 0.0,
-    20, -20,  20,    1.0, 1.0, 0.0,
-    20, -20, -20,    1.0, 1.0, 0.0,
-    /* back surface is cyan */
-    -20,  20, -20,   0.0, 1.0, 1.0,
-    20,  20, -20,    0.0, 1.0, 1.0,
-    20, -20, -20,    0.0, 1.0, 1.0,
-    -20, -20, -20,   0.0, 1.0, 1.0,
-    /* bottom surface is magenta */
-    -20, -20, -20,   1.0, 0.0, 1.0,
-    -20, -20,  20,   1.0, 0.0, 1.0,
-    20, -20,  20,    1.0, 0.0, 1.0,
-    20, -20, -20,    1.0, 0.0, 1.0
-};
-
-unsigned int indices[] = {
-     3,1,2,
-     3,0,1,
-
-     4,6,7,
-     4,5,6,
-
-     8,9,10,
-     8,10,11,
-
-     12,13,14,
-     12,14,15,
-
-     16,17,19,
-     17,18,19,
-
-     20,23,21,
-     21,23,22
-};
-
-
-
-
 					
 //Function definition
 void init();

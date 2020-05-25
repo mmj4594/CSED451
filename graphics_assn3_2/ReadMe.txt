@@ -12,7 +12,7 @@ Team GPS(20202405 문민재, 20202728 김진수)
 
 
 프로그램 실행 방법
-프로젝트를 컴파일한 후 freeglut.dll과 glew32.dll이 있는 ($ProjectDir)\bin\x64 위치로 이동하여 graphics_assn3.exe를 실행시킨다.
+프로젝트를 컴파일한 후 freeglut.dll과 glew32.dll이 있는 ($ProjectDir)\bin\x64 위치로 이동하여 graphics_assn3_2.exe를 실행시킨다.
 
 
 게임 플레이 방법

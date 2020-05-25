@@ -166,7 +166,6 @@
     <ClInclude Include="matrixStack.h" />
     <ClInclude Include="pose.h" />
     <ClInclude Include="Sphere.h" />
-    <ClInclude Include="test.h" />
     <ClInclude Include="treeNode.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="object.h" />

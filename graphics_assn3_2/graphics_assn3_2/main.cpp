@@ -124,12 +124,10 @@ void display3D() {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-
 	//VAO
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
-	
 	//VBO
 	glGenBuffers(1, &positionVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, positionVBO);
@@ -148,7 +146,7 @@ void display3D() {
 	int uniformModelView = glGetUniformLocation(shaderProgram, "modelView");
 
 	//projection
-	mtxProj = glm::perspective(fovy, (float)WINDOW_WIDTH / WINDOW_HEIGHT, 1.0f, 2000.0f);
+	mtxProj = glm::perspective(glm::radians(fovy), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 1.0f, 2000.0f);
 	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(mtxProj));
 	//modelView
 	mtxView = glm::lookAt(glm::vec3(eye[0], eye[1], eye[2]),
@@ -169,18 +167,12 @@ void reshape3D(int w, int h) {
 	WINDOW_HEIGHT = h;
 	glClearColor(1, 1, 1, 1);
 	glViewport(0, 0, w, h);
-	mtxProj = glm::perspective(fovy, (float)w / h, 1.0f, 2000.0f);
+	mtxProj = glm::perspective(glm::radians(fovy), (float)w / h, 1.0f, 2000.0f);
 	glutPostRedisplay();
 }
 
 //Action per frame(60FPS currently)
 void frameAction(int value) {
-	switch (cameraMode) {
-	case 1:	setCamera(FPV); break;
-	case 3:	setCamera(TPV);	break;
-	case 9: setCamera(XYPlane); break;
-	}
-
 	//Change pose of the thief in every set period
 	if (thiefFrame >= posePeriod) {
 		switch (rand() % 4) {
@@ -214,12 +206,16 @@ void frameAction(int value) {
 		break;
 	}
 
+	/*
+		Move player to right and zoom camera if pass successfully
+		after the wall disappear and player land successfully
+	*/
 	if ((wall.getX() + wall.getWidth() < 0) && isPassed && (player.getY() == PLAYER_DEFAULT_Y)) {
 		wallSpeed += wallSpeedIncrement;
 		posePeriod -= 5;
 		player.setnewX(player.getX() + player.getMovingDistance());
 
-		newFovy = fovy * 0.85;
+		newFovy = fovy * 0.99;
 		fovyPerFrame = (newFovy - fovy) / zoomFrame;
 		isPassed = false;
 	}
@@ -231,6 +227,16 @@ void frameAction(int value) {
 		newFovy = fovy * 1.05;
 		fovyPerFrame = (newFovy - fovy) / zoomFrame;
 		isJumped = false;
+	}
+
+	//Camera manipulation
+	FPV = camera(player.getX() + 3, player.getY() + 8, 0,
+		thief.getX(), player.getY() + 8, 0,
+		0, 1, 0);
+	switch (cameraMode) {
+	case 1:	setCamera(FPV); break;
+	case 3:	setCamera(TPV);	break;
+	case 9: setCamera(XYPlane); break;
 	}
 	if (abs(newFovy - fovy) > 0.01) { fovy += fovyPerFrame; }
 
@@ -340,15 +346,15 @@ void keyboard(unsigned char key, int x, int y) {
 		player.jump();
 		break;
 	case '1':
-		//if (cameraMode != 1) { fovy *= 2; newFovy *= 2; }
+		if (cameraMode != 1) { fovy *= 2; newFovy *= 2; }
 		setCameraMode(1);
 		break;
 	case '3':
-		//if (cameraMode == 1) { fovy /= 2; newFovy /= 2; }
+		if (cameraMode == 1) { fovy /= 2; newFovy /= 2; }
 		setCameraMode(3);
 		break;
 	case '9':
-		//if (cameraMode == 1) { fovy /= 2; newFovy /= 2; }
+		if (cameraMode == 1) { fovy /= 2; newFovy /= 2; }
 		setCameraMode(9);
 		break;
 	}

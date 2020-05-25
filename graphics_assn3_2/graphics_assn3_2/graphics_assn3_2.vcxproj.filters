@@ -68,9 +68,6 @@
     <ClInclude Include="matrixStack.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="test.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Floor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
