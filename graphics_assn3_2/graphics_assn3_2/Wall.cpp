@@ -10,7 +10,7 @@ using namespace glm;
 void Wall::draw() {
 	//cout << shape << endl;
 	switch (shape) {
-	case 0:		//Cone
+	case 0:		//cone
 		cone.setColor(color);
 		pushMatrix(GL_MODELVIEW);
 			mtxView = translate(mtxView, vec3(x, y + 27.5 / 2, z));
@@ -19,7 +19,7 @@ void Wall::draw() {
 			cone.draw();
 		popMatrix(GL_MODELVIEW);
 		break;
-	case 1:		//Torus
+	case 1:		//reverseCone
 		reverseCone.setColor(color);
 		pushMatrix(GL_MODELVIEW);
 			mtxView = translate(mtxView, vec3(x, y + 27.5 / 2, z));
@@ -28,7 +28,7 @@ void Wall::draw() {
 			reverseCone.draw();
 		popMatrix(GL_MODELVIEW);
 		break;
-	case 2:		//Reversed T-shape
+	case 2:		//cylinder1
 		cylinder1.setColor(color);
 		pushMatrix(GL_MODELVIEW);
 		mtxView = translate(mtxView, vec3(x, y + 27.5 / 2, z));
@@ -37,7 +37,7 @@ void Wall::draw() {
 		cylinder1.draw();
 		popMatrix(GL_MODELVIEW);
 		break;
-	case 3:		//T-shape
+	case 3:		//cylinder2
 		cylinder2.setColor(color);
 		pushMatrix(GL_MODELVIEW);
 		mtxView = translate(mtxView, vec3(x, y + 27.5 / 2, z));
@@ -46,7 +46,7 @@ void Wall::draw() {
 		cylinder2.draw();
 		popMatrix(GL_MODELVIEW);
 		break;
-	case 5:		//Default
+	case 5:		//Default cylinder
 		cylinder.setColor(color);
 		pushMatrix(GL_MODELVIEW);
 			mtxView = translate(mtxView, vec3(x, y+27.5/2, z));

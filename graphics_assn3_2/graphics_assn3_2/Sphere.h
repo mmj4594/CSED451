@@ -37,8 +37,6 @@ public:
     int sectorCount, stackCount;
     int color;
     std::vector<float> vertices;
-    std::vector<float> normals;
-    std::vector<float> texCoords;
     std::vector<unsigned int> indices;
 
     //vertices color
