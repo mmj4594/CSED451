@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <iostream>
 #include <fstream>
+#include <time.h>
 
 #include "main.h"
 #include "colors.h"
@@ -45,6 +46,7 @@ int main(int argc, char** argv) {
 }
 
 void init() {
+	srand(time(NULL));
 	glewInit();
 	writeLife();
 	//Adding vertex, fragment shader
@@ -125,6 +127,7 @@ bool CheckProgram(GLuint program) {
 	return true;
 }
 
+//Display current screen
 void display3D() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -259,6 +262,11 @@ void frameAction(int value) {
 	glutTimerFunc(17, frameAction, 1);		//call timer function recursively until game ends
 }
 
+/*
+	Move wall in 'wallSpeed'.
+	And if there is collision between wall and other object, return the game status
+	according to the type of object where the collision occurs.
+*/
 int moveWall() {
 	int status = IDLE;
 

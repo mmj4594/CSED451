@@ -91,7 +91,7 @@ camera FPV(PLAYER_DEFAULT_X + 3, PLAYER_DEFAULT_Y + 5 + 3, 0,
 camera TPV(-WORLD_SIZE_X / 2, WORLD_SIZE_Y / 2 + 20, 180 / 2,
     WORLD_SIZE_X / 2, WORLD_SIZE_Y / 4 + 20, 0,
     0, 1, 0);
-camera XYPlane(50, 50, 150, 50, 50, 0, 0, 1, 0);
+camera XYPlane(80, 45, 150, 80, 45, 0, 0, 1, 0);
 float fovy = 45;
 float newFovy = fovy;
 float fovyPerFrame = 0;
