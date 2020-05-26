@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+
 #include "Wall.h"
 #include "character.h"
 #include "camera.h"

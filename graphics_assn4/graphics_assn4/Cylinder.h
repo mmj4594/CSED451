@@ -1,17 +1,30 @@
 #pragma once
-#pragma once
-
 #include <GL/glew.h>
-#include <GL/freeglut.h>
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <stack>
-#include <algorithm>
 #include <vector>
 
 #include "matrixStack.h"
 
+/*
+    \class	Cylinder
+
+    \brief
+    This class defines cylinder object that used to implement
+    walls and body of character.
+
+    \detail
+    float baseRadius: Radius of bottom circle
+    float topRadius: Radius of top circle
+    float height: height of the cylinder
+    int sectorCount: # of slices
+    int stackCount: # of stacks
+    unsigned int baseIndex: starting index of base
+    unsigned int topIndex: starting index of top
+
+    vector<float> unitCircleVertices: Vertices that make up unit circle
+    vector<float> vertices: Vertices that make up the cylinder
+    vector<unsigned int> indices: Indices of vertices
+    vector<float> vertices_gray/red/green/yellow/blue: Color of vertices
+*/
 class Cylinder
 {
 public:

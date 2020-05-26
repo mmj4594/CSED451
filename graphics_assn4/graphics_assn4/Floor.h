@@ -4,7 +4,19 @@
 
 #include "matrixStack.h"
 
+/*
+	\class	Floor
 
+	\brief
+	This class defines floor object on the world.
+
+	\detail
+	float floorSize: Overall size of floor size
+	float gridSize: Size of each grid on floor
+	vector<vec3> floor_vertices: Vertices that make up the floor
+	vector<uvec2> floor_indices: Indices of vertices
+	vector<vec3> floor_color: Color(RGB) of vertices
+*/
 class Floor {
 public:		
 	Floor (GLfloat floorSize, GLfloat gridSize) {

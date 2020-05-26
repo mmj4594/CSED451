@@ -8,9 +8,6 @@
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
-#include <math.h>
-#include <iostream>
-#include <stdlib.h>
 
 //Variables for player to move right when passes
 static float movingFrame = 50.0;

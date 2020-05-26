@@ -2,11 +2,22 @@
 #include "object.h"
 #include "Cylinder.h"
 #include <GL/glew.h>
-#include <GL/freeglut.h>
 
 const float wallGridSize = 25;
 const float wallFloorSize = 500;
 
+/*
+	\class	Wall
+
+	\brief
+	This class defines wall object on the world.
+
+	\detail
+	float width: Width of the wall(Length in x-axis)
+	float height: Height of the walll(Length in y-axis)
+	float depth: Depth of the walll(Length in z-axis)
+	int shape: Current shape of the wall
+*/
 class Wall : public object {
 public:
 	Wall(float a, float b, float c, float w, float h, float d) {

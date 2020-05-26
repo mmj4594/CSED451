@@ -7,14 +7,11 @@ using namespace std;
 const int MIN_SECTOR_COUNT = 3;
 const int MIN_STACK_COUNT = 1;
 
-Cylinder::Cylinder(float baseRadius, float topRadius, float height, int sectors,
-    int stacks)
-{
+Cylinder::Cylinder(float baseRadius, float topRadius, float height, int sectors, int stacks) {
     set(baseRadius, topRadius, height, sectors, stacks);
 }
 
-void Cylinder::set(float baseRadius, float topRadius, float height, int sectors, int stacks)
-{
+void Cylinder::set(float baseRadius, float topRadius, float height, int sectors, int stacks) {
     this->baseRadius = baseRadius;
     this->topRadius = topRadius;
     this->height = height;
@@ -31,15 +28,13 @@ void Cylinder::set(float baseRadius, float topRadius, float height, int sectors,
 }
 
 
-void Cylinder::buildUnitCircleVertices()
-{
+void Cylinder::buildUnitCircleVertices() {
     const float PI = acos(-1);
     float sectorStep = 2 * PI / sectorCount;
     float sectorAngle;  // radian
 
     std::vector<float>().swap(unitCircleVertices);
-    for (int i = 0; i <= sectorCount; ++i)
-    {
+    for (int i = 0; i <= sectorCount; ++i) {
         sectorAngle = i * sectorStep;
         unitCircleVertices.push_back(cos(sectorAngle)); // x
         unitCircleVertices.push_back(sin(sectorAngle)); // y
@@ -47,11 +42,9 @@ void Cylinder::buildUnitCircleVertices()
     }
 }
 
-void Cylinder::buildVertices()
-{
+void Cylinder::buildVertices() {
     // tmp vertex definition (x,y,z,s,t)
-    struct Vertex
-    {
+    struct Vertex {
         float x, y, z, s, t;
     };
     std::vector<Vertex> tmpVertices;
@@ -62,14 +55,12 @@ void Cylinder::buildVertices()
     // put tmp vertices of cylinder side to array by scaling unit circle
     //NOTE: start and end vertex positions are same, but texcoords are different
     //      so, add additional vertex at the end point
-    for (i = 0; i <= stackCount; ++i)
-    {
+    for (i = 0; i <= stackCount; ++i) {
         z = -(height * 0.5f) + (float)i / stackCount * height;      // vertex position z
         radius = baseRadius + (float)i / stackCount * (topRadius - baseRadius);     // lerp
         t = 1.0f - (float)i / stackCount;   // top-to-bottom
 
-        for (j = 0, k = 0; j <= sectorCount; ++j, k += 3)
-        {
+        for (j = 0, k = 0; j <= sectorCount; ++j, k += 3) {
             x = unitCircleVertices[k];
             y = unitCircleVertices[k + 1];
             s = (float)j / sectorCount;
@@ -95,13 +86,11 @@ void Cylinder::buildVertices()
     // v2-v4 <== stack at i+1
     // | \ |
     // v1-v3 <== stack at i
-    for (i = 0; i < stackCount; ++i)
-    {
+    for (i = 0; i < stackCount; ++i) {
         vi1 = i * (sectorCount + 1);            // index of tmpVertices
         vi2 = (i + 1) * (sectorCount + 1);
 
-        for (j = 0; j < sectorCount; ++j, ++vi1, ++vi2)
-        {
+        for (j = 0; j < sectorCount; ++j, ++vi1, ++vi2) {
             v1 = tmpVertices[vi1];
             v2 = tmpVertices[vi2];
             v3 = tmpVertices[vi1 + 1];
@@ -129,16 +118,14 @@ void Cylinder::buildVertices()
     z = -height * 0.5f;
     addVertex(0, 0, z);
 
-    for (i = 0, j = 0; i < sectorCount; ++i, j += 3)
-    {
+    for (i = 0, j = 0; i < sectorCount; ++i, j += 3) {
         x = unitCircleVertices[j];
         y = unitCircleVertices[j + 1];
         addVertex(x * baseRadius, y * baseRadius, z);
     }
 
     // put indices for base
-    for (i = 0, k = baseVertexIndex + 1; i < sectorCount; ++i, ++k)
-    {
+    for (i = 0, k = baseVertexIndex + 1; i < sectorCount; ++i, ++k) {
         if (i < sectorCount - 1)
             addIndices(baseVertexIndex, k + 1, k);
         else
@@ -152,15 +139,13 @@ void Cylinder::buildVertices()
     // put vertices of top of cylinder
     z = height * 0.5f;
     addVertex(0, 0, z);
-    for (i = 0, j = 0; i < sectorCount; ++i, j += 3)
-    {
+    for (i = 0, j = 0; i < sectorCount; ++i, j += 3) {
         x = unitCircleVertices[j];
         y = unitCircleVertices[j + 1];
         addVertex(x * topRadius, y * topRadius, z);
     }
 
-    for (i = 0, k = topVertexIndex + 1; i < sectorCount; ++i, ++k)
-    {
+    for (i = 0, k = topVertexIndex + 1; i < sectorCount; ++i, ++k) {
         if (i < sectorCount - 1)
             addIndices(topVertexIndex, k, k + 1);
         else
@@ -241,11 +226,9 @@ void Cylinder::draw() {
         indices.size(),          // # of indices
         GL_UNSIGNED_INT,                 // data type
         0);                       // offset to indices
-        
 }
 
-void Cylinder::clearArrays()
-{
+void Cylinder::clearArrays() {
     std::vector<float>().swap(vertices);
     std::vector<unsigned int>().swap(indices);
 }

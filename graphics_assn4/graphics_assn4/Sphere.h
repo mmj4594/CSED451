@@ -1,16 +1,26 @@
 #pragma once
 
 #include <GL/glew.h>
-#include <GL/freeglut.h>
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <stack>
-#include <algorithm>
 #include <vector>
 
 #include "matrixStack.h"
 
+/*
+    \class	Sphere
+
+    \brief
+    This class defines sphere object that is used
+    to implement head and joint of character.
+
+    \detail
+    float radius: Radius of the sphere
+    int sectorCount: # of slices
+    int stackCount: # of stacks
+    int color: current color of sphere
+    vector<float> vertices: Vertices that make up the sphere
+    vector<unsigned int> indices: Indices of vertices
+    vector<float> vertices_gray/red/green/yellow/blue: Color of vertices
+*/
 class Sphere
 {
 public:

@@ -1,15 +1,9 @@
 #include <GL/glew.h>
-#include <GL/freeglut.h>
 #include <iostream>
 #include <fstream>
-#include <string>
-#include <stack>
-#include <algorithm>
-#include <vector>
 
 #include "main.h"
 #include "colors.h"
-#include "matrixStack.h"
 
 //Key value for space
 #define SPACE 32
@@ -33,7 +27,6 @@ int main(int argc, char** argv) {
 	glutTimerFunc(0, frameAction, 1);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialkeyboard);
-
 
 	init();
 	glutMainLoop();
@@ -118,7 +111,7 @@ bool CheckProgram(GLuint program) {
 			int charsWritten = 0;
 			char* infoLog = new char[infologLength];
 			glGetProgramInfoLog(program, infologLength, &charsWritten, infoLog);
-			std::cout << infoLog << std::endl;
+			cout << infoLog << "\n";
 			delete[] infoLog;
 		}
 		return false;
@@ -145,10 +138,11 @@ void display3D() {
 	mtxProj = glm::perspective(glm::radians(fovy), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 1.0f, 2000.0f);
 	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(mtxProj));
 	//modelView
-	mtxView = glm::lookAt(glm::vec3(eye[0], eye[1], eye[2]),
-						glm::vec3(reference[0], reference[1], reference[2]),
-						glm::vec3(upVector[0], upVector[1], upVector[2])
-		);
+	mtxView = glm::lookAt(
+		glm::vec3(eye[0], eye[1], eye[2]),
+		glm::vec3(reference[0], reference[1], reference[2]),
+		glm::vec3(upVector[0], upVector[1], upVector[2])
+	);
 	
 	worldFloor.draw();
 	player.draw();
@@ -183,23 +177,11 @@ void frameAction(int value) {
 	//move wall and get current status.
 	gameStatus = moveWall();
 	switch (gameStatus) {
-	case LOSE:
-		cout << "Lose\n";
-		finishGame();
-		return;
-	case WIN:
-		cout << "Win\n";
-		finishGame();
-		return;
-	case PASS:
-		isPassed = true;
-		break;
-	case JUMP:
-		isJumped = true;
-		break;
-	case FAIL:
-		isFailed = true;
-		break;
+	case LOSE: cout << "Lose\n"; finishGame(); return;
+	case WIN: cout << "Win\n"; finishGame(); return;
+	case PASS: isPassed = true; break;
+	case JUMP: isJumped = true; break;
+	case FAIL: isFailed = true; break;
 	}
 
 	/*
@@ -308,9 +290,8 @@ int moveWall() {
 		}
 	}
 	//Collision between player and thief
-	else if (player.collisionCheck(&thief)) {
+	else if (player.collisionCheck(&thief))
 		status = WIN;
-	}
 
 	//Repositioning of wall when it goes out of the screen
 	if (wall.getX() + wall.getWidth() + wallSpeed * 20 < 0) {
@@ -364,18 +345,10 @@ void keyboard(unsigned char key, int x, int y) {
 //Determine color of player according to user keyboard input.
 void specialkeyboard(int key, int x, int y) {
 	switch (key) {
-	case GLUT_KEY_UP:
-		player.changePose(poseA);
-		break;
-	case GLUT_KEY_DOWN:
-		player.changePose(poseB);
-		break;
-	case GLUT_KEY_LEFT:
-		player.changePose(poseC);
-		break;
-	case GLUT_KEY_RIGHT:
-		player.changePose(poseD);
-		break;
+	case GLUT_KEY_UP: player.changePose(poseA); break;
+	case GLUT_KEY_DOWN: player.changePose(poseB); break;
+	case GLUT_KEY_LEFT: player.changePose(poseC); break;
+	case GLUT_KEY_RIGHT: player.changePose(poseD); break;
 	}
 }
 
@@ -396,8 +369,6 @@ void finishGame() {
 }
 
 void writeLife() {
-
 	string s = lifeText + to_string(life);
 	cout << s << endl;
-
 }

@@ -1,6 +1,6 @@
+#include <iostream>
 #include "character.h"
 #include "matrixStack.h"
-#include <iostream>
 
 using namespace glm;
 using namespace std;
