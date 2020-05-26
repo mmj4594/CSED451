@@ -18,7 +18,7 @@ using namespace std;
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	glutInitWindowPosition(500, 100);
 	glutCreateWindow("assn3_2");
@@ -82,6 +82,12 @@ void init() {
 	
 	//Initial Camera Setting
 	setCamera(TPV);
+
+	//Backface culling
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	//Hidden surface removal
+	glEnable(GL_DEPTH_TEST);
 }
 
 //Read shader file from 'vShaderFile', 'fShaderFile' and compile them.
@@ -120,12 +126,11 @@ bool CheckProgram(GLuint program) {
 }
 
 void display3D() {
-	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	/*	Wireframe mode or Filling mode	*/
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	
 	glUseProgram(shaderProgram);
 	glBindVertexArray(VAO);
@@ -145,9 +150,9 @@ void display3D() {
 	);
 	
 	worldFloor.draw();
+	wall.draw();
 	player.draw();
 	thief.draw();
-	wall.draw();
 	glutSwapBuffers();
 }
 
