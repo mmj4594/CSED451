@@ -95,17 +95,10 @@ camera XYPlane(80, 45, 150, 80, 45, 0, 0, 1, 0);
 float fovy = 45;
 float newFovy = fovy;
 float fovyPerFrame = 0;
-
-//Vertex and fragment shader
-GLuint vertexShader;
-GLuint fragmentShader;
-GLuint shaderProgram;
-unsigned int positionVBO, colorVBO, VAO, EBO;
 					
 //Function definition
 void init();
 void readShaderSource(const char* vShaderFile, const char* fShaderFile);
-bool CheckProgram(GLuint program);
 void display3D();
 void reshape3D(int w, int h);
 void frameAction(int value);

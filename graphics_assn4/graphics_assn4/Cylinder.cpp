@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Cylinder.h"
-#include "main.h"
+#include "shaderinfo.h"
 
 using namespace std;
 
@@ -173,8 +173,8 @@ void Cylinder::draw() {
         (unsigned int)vertices.size() * sizeof(float), // data size, # of bytes
         &vertices[0],   // ptr to vertex data
         GL_STATIC_DRAW);                   // usage
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(aPosLocation);
+    glVertexAttribPointer(aPosLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     //color VBO
     glBindBuffer(GL_ARRAY_BUFFER, colorVBO);           // for vertex data
@@ -211,8 +211,8 @@ void Cylinder::draw() {
         break;
     }
                       // usage
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(aColorLocation);
+    glVertexAttribPointer(aColorLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     //EBO
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,           // target
@@ -221,7 +221,7 @@ void Cylinder::draw() {
         GL_STATIC_DRAW);                   // usage
 
     // draw a sphere with VBO
-    glUniformMatrix4fv(2, 1, GL_FALSE, glm::value_ptr(mtxView));
+    glUniformMatrix4fv(modelViewLocation, 1, GL_FALSE, glm::value_ptr(mtxView));
     glDrawElements(GL_TRIANGLES,                    // primitive type
         indices.size(),          // # of indices
         GL_UNSIGNED_INT,                 // data type

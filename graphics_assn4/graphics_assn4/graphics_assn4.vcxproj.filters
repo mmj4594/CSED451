@@ -36,6 +36,9 @@
     <ClCompile Include="Cylinder.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="shaderinfo.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -72,6 +75,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="colors.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="shaderinfo.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

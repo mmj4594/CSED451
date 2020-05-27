@@ -153,6 +153,7 @@
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="object.cpp" />
+    <ClCompile Include="shaderinfo.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Wall.cpp" />
   </ItemGroup>
@@ -164,6 +165,7 @@
     <ClInclude Include="Floor.h" />
     <ClInclude Include="matrixStack.h" />
     <ClInclude Include="pose.h" />
+    <ClInclude Include="shaderinfo.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="treeNode.h" />
     <ClInclude Include="main.h" />
