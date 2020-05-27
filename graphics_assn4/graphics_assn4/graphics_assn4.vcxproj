@@ -173,8 +173,10 @@
     <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="fShader.glfs" />
-    <None Include="vShader.glvs" />
+    <None Include="gouraudFshader.glfs" />
+    <None Include="gouraudVshader.glvs" />
+    <None Include="phongFshader.glfs" />
+    <None Include="phongVshader.glvs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

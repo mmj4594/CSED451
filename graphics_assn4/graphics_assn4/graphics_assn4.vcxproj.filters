@@ -82,10 +82,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="fShader.glfs">
+    <None Include="gouraudFshader.glfs">
       <Filter>리소스 파일</Filter>
     </None>
-    <None Include="vShader.glvs">
+    <None Include="gouraudVshader.glvs">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="phongFshader.glfs">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="phongVshader.glvs">
       <Filter>리소스 파일</Filter>
     </None>
   </ItemGroup>

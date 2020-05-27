@@ -9,23 +9,29 @@ void initShader() {
 	//Adding vertex, fragment shader
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	GLchar vShaderFile[] = "vShader.glvs";
-	GLchar fShaderFile[] = "fShader.glfs";
+	GLchar vShaderFile[] = "gouraudVshader.glvs";
+	GLchar fShaderFile[] = "gouraudFshader.glfs";
 	readShaderSource(vShaderFile, fShaderFile);
 
 	//Link shader program
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-	if (!CheckProgram(shaderProgram)) { cout << "Link Fail!\n"; }
+	shaderProgram[0] = glCreateProgram();
+	glAttachShader(shaderProgram[0], vertexShader);
+	glAttachShader(shaderProgram[0], fragmentShader);
+	glLinkProgram(shaderProgram[0]);
+	if (!CheckProgram(shaderProgram[0])) { cout << "Link Fail!\n"; }
 	//Get location of variables
-	aPosLocation = glGetAttribLocation(shaderProgram, "aPos");
-	aColorLocation = glGetAttribLocation(shaderProgram, "aColor");
-	lightColorLocation = glGetAttribLocation(shaderProgram, "lightColor");
-	modelViewLocation = glGetUniformLocation(shaderProgram, "modelView");
-	projectionLocation = glGetUniformLocation(shaderProgram, "projection");
-	glDeleteShader(vertexShader);		//shader는 program 객체와 연결되면 필요x
+	aPosLocation = glGetAttribLocation(shaderProgram[0], "aPos");
+	aNormalLocation = glGetAttribLocation(shaderProgram[0], "aNormal");
+	aColorLocation = glGetAttribLocation(shaderProgram[0], "aColor");
+	ambientProductLocation = glGetUniformLocation(shaderProgram[0], "ambientProduct");
+	diffuseProductLocation = glGetUniformLocation(shaderProgram[0], "diffuseProduct");
+	specularProductLocation = glGetUniformLocation(shaderProgram[0], "specularProduct");
+	modelViewLocation = glGetUniformLocation(shaderProgram[0], "modelView");
+	projectionLocation = glGetUniformLocation(shaderProgram[0], "projection");
+	lightPositionLocation = glGetUniformLocation(shaderProgram[0], "lightPosition");
+	shininessLocation = glGetUniformLocation(shaderProgram[0], "shininess");
+	//shader는 program 객체와 연결되면 필요x
+	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
 	/*
@@ -34,16 +40,16 @@ void initShader() {
 		해당 VAO에 저장된 VBO 및 EBO가 함께 불러와진다.
 	*/
 	//VAO
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
+	glGenVertexArrays(1, &VAO[0]);
+	glBindVertexArray(VAO[0]);
 	//VBO
-	glGenBuffers(1, &positionVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, positionVBO);
-	glGenBuffers(1, &colorVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
+	glGenBuffers(1, &positionVBO[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, positionVBO[0]);
+	glGenBuffers(1, &colorVBO[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, colorVBO[0]);
 	//EBO
-	glGenBuffers(1, &EBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glGenBuffers(1, &EBO[0]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0]);
 }
 
 //Read shader file from 'vShaderFile', 'fShaderFile' and compile them.

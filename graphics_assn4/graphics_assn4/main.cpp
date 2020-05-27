@@ -16,6 +16,7 @@ static bool allFail = false;
 int gameStatus = IDLE;
 
 using namespace std;
+using namespace glm;
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
@@ -38,10 +39,11 @@ int main(int argc, char** argv) {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);	//EBO
 
 	//deallocate all resources when program ends
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &positionVBO);
-	glDeleteBuffers(1, &EBO);
-	glDeleteProgram(shaderProgram);
+	glDeleteVertexArrays(1, &VAO[0]);
+	glDeleteBuffers(1, &positionVBO[0]);
+	glDeleteBuffers(1, &EBO[0]);
+	glDeleteProgram(shaderProgram[0]);
+	glDeleteProgram(shaderProgram[1]);
 	return 0;
 }
 
@@ -72,18 +74,21 @@ void display3D() {
 	glPolygonMode(GL_FRONT, GL_FILL);
 	glPolygonMode(GL_BACK, GL_LINE);
 	
-	glUseProgram(shaderProgram);
-	glBindVertexArray(VAO);
+	glUseProgram(shaderProgram[0]);
+	glBindVertexArray(VAO[0]);
 
 	//projection
-	mtxProj = glm::perspective(glm::radians(fovy), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 1.0f, 2000.0f);
-	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(mtxProj));
+	mtxProj = perspective(radians(fovy), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 1.0f, 2000.0f);
+	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, value_ptr(mtxProj));
 	//modelView
-	mtxView = glm::lookAt(
-		glm::vec3(eye[0], eye[1], eye[2]),
-		glm::vec3(reference[0], reference[1], reference[2]),
-		glm::vec3(upVector[0], upVector[1], upVector[2])
+	mtxView = lookAt(
+		vec3(eye[0], eye[1], eye[2]),
+		vec3(reference[0], reference[1], reference[2]),
+		vec3(upVector[0], upVector[1], upVector[2])
 	);
+	//Ambient
+	vec4 asdf = vec4(1, 1, 1, 1.0);
+	glUniform4fv(ambientProductLocation, 1, value_ptr(asdf));
 	
 	worldFloor.draw();
 	wall.draw();
