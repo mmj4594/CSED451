@@ -47,6 +47,9 @@ void initShader() {
 	glBindBuffer(GL_ARRAY_BUFFER, positionVBO[0]);
 	glGenBuffers(1, &colorVBO[0]);
 	glBindBuffer(GL_ARRAY_BUFFER, colorVBO[0]);
+	glGenBuffers(1, &normalVBO[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, normalVBO[0]);
+
 	//EBO
 	glGenBuffers(1, &EBO[0]);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0]);

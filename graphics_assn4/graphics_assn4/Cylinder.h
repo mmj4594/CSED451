@@ -41,7 +41,7 @@ public:
     void buildVertices();
 
     void addVertex(float x, float y, float z);
-
+    void addNormal(float x, float y, float z);
     void addIndices(unsigned int i1, unsigned int i2, unsigned int i3);
     void setColor(int color) { this->color = color; };
     void draw();
@@ -63,6 +63,7 @@ private:
     std::vector<float> unitCircleVertices;
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
+    std::vector<float> normals;
 
     //vertices color
     std::vector<float> vertices_gray;

@@ -87,8 +87,8 @@ void display3D() {
 		vec3(upVector[0], upVector[1], upVector[2])
 	);
 	//Ambient
-	vec4 asdf = vec4(1, 1, 1, 1.0);
-	glUniform4fv(ambientProductLocation, 1, value_ptr(asdf));
+	vec4 ambient = vec4(0.5, 0.5, 0.5, 0.0);
+	glUniform4fv(ambientProductLocation, 1, value_ptr(ambient));
 	
 	worldFloor.draw();
 	wall.draw();

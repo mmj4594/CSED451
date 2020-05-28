@@ -1,8 +1,8 @@
 #version 460
 
 layout(location = 0) in vec3 aPos;
-layout(location = 1) in vec3 aNormal;
-layout(location = 2) in vec3 aColor;
+layout(location = 1) in vec3 aColor;
+layout(location = 2) in vec3 aNormal;
 
 out vec4 vertexColor;
 
@@ -24,10 +24,12 @@ void main() {
 	//vec3 N = normalize(modelView * vec4(vNormal, 0.0)).xyz;
 
 	vec4 ambient = ambientProduct;
-	//float Kd = max(dot(L,N), 0.0);
-	//vec4 diffuse = Kd * diffuseProduct;
-	//float Ks = pow(max(dot(N,H), 0.0), shininess);
-	//vec4 specular = Ks * specularProduct;
+
+	//float LN = max(dot(L,N), 0.0);
+	//vec4 diffuse = LN * diffuseProduct;
+
+	//float HN = pow(max(dot(N,H), 0.0), shininess);
+	//vec4 specular = HN * specularProduct;
 	//if(dot(L,N) < 0.0) specular = vec4(0.0, 0.0, 0.0, 1.0);
 
 	//vertexColor = (ambient + diffuse + specular) * vec4(aColor, 1.0);
