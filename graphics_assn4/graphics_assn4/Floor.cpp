@@ -14,6 +14,12 @@ void Floor::draw() {
 	glEnableVertexAttribArray(aColorLocation);
 	glVertexAttribPointer(aColorLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
+	//Normal VBO
+	glBindBuffer(GL_ARRAY_BUFFER, normalVBO[0]);
+	glBufferData(GL_ARRAY_BUFFER, floor_normals.size() * sizeof(glm::vec3), glm::value_ptr(floor_normals[0]), GL_STATIC_DRAW);
+	glEnableVertexAttribArray(aNormalLocation);
+	glVertexAttribPointer(aNormalLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, floor_indices.size() * sizeof(glm::uvec2), glm::value_ptr(floor_indices[0]), GL_STATIC_DRAW);
 
 	glUniformMatrix4fv(modelViewLocation, 1, GL_FALSE, glm::value_ptr(mtxView));

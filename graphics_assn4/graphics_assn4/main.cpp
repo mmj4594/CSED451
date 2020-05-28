@@ -6,8 +6,6 @@
 #include "colors.h"
 #include "shaderinfo.h"
 
-//Key value for space
-#define SPACE 32
 //All pass/fail cheat activation status
 static bool allPass = false;
 static bool allFail = false;
@@ -23,7 +21,7 @@ int main(int argc, char** argv) {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	glutInitWindowPosition(500, 100);
-	glutCreateWindow("assn3_2");
+	glutCreateWindow("assn4");
 	glutDisplayFunc(display3D);
 	glutReshapeFunc(reshape3D);
 	glutTimerFunc(0, frameAction, 1);
@@ -98,10 +96,8 @@ void display3D() {
 	glUniform4fv(specularProductLocation, 1, value_ptr(specular));
 
 	//Light position
-	vec4 lightPosition = vec4(0, 0, 100, 1.0);
 	glUniform4fv(lightPositionLocation, 1, value_ptr(lightPosition));
 	//Shininess
-	float shininess = 0.5;
 	glUniform1f(shininessLocation, shininess);
 	
 	worldFloor.draw();
@@ -178,6 +174,15 @@ void frameAction(int value) {
 	}
 	if (abs(newFovy - fovy) > 0.01) { fovy += fovyPerFrame; }
 
+	//Light position manipulation
+	lightPosition = rotate(mat4(1.0f), radians(45.0f), vec3(0, 0, 1)) *
+					vec4(100 * cos(radians(-90.0f + lightFrame)),
+						 0,
+						 100 * sin(radians(-90.0f + lightFrame)), 1.0);
+	if (lightFrame >= SEC * 3) {
+		lightFrame = 0;
+	}
+
 	//Ask if thief will jump
 	if ((wall.getX() - thief.getX() < 35) && !askJump) {
 		askJump = true;
@@ -203,13 +208,13 @@ void frameAction(int value) {
 	thief.checkNewPosition();
 
 	//Animation loop for player and thief
-	if (animationFrame >= lowerBodyPeriod) { animationFrame = 0; }
-	player.lowerBodyAnimation(animationFrame, lowerBodyPeriod);
-	thief.lowerBodyAnimation(animationFrame, lowerBodyPeriod);
+	thiefFrame++; animationFrame++; lightFrame++;
+	if (animationFrame >= SEC) { animationFrame = 0; }
+	player.lowerBodyAnimation(animationFrame, SEC);
+	thief.lowerBodyAnimation(animationFrame, SEC);
 	player.upperBodyAnimation();
 	thief.upperBodyAnimation();
 
-	thiefFrame++; animationFrame++;
 	glutPostRedisplay();
 	glutTimerFunc(17, frameAction, 1);		//call timer function recursively until game ends
 }
@@ -267,6 +272,9 @@ int moveWall() {
 		player.resetCollided();
 		askJump = false;
 		thiefJumped = false;
+		isPassed = false;
+		isJumped = false;
+		isFailed = false;
 		wall.setShape(5);
 	}
 	return status;

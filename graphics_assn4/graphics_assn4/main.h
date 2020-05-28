@@ -8,6 +8,9 @@
 
 using namespace std;
 
+//Key value for space
+#define SPACE 32
+
 //Game Status
 const int IDLE = 0;
 const int LOSE = 1;
@@ -53,7 +56,7 @@ bool isJumped = false;
 
 //Lower body animation loop period frame for characters
 int animationFrame = 0;
-int lowerBodyPeriod = 60;
+const int SEC = 60;
 
 //Camera zoom in/out size
 const float LEFT_INCREMENT = 2;
@@ -95,6 +98,11 @@ camera XYPlane(80, 45, 150, 80, 45, 0, 0, 1, 0);
 float fovy = 45;
 float newFovy = fovy;
 float fovyPerFrame = 0;
+
+//Light configuration
+int lightFrame = 0;
+glm::vec4 lightPosition = glm::vec4(0, 0, -100.0, 1.0);
+float shininess = 1.0f;
 					
 //Function definition
 void init();

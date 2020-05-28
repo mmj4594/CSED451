@@ -146,7 +146,7 @@ void Cylinder::buildVertices() {
     z = -height * 0.5f;
     nz = 0;
     addVertex(0, 0, z);
-    addNormal(0, 0, nz);
+    addNormal(0, 0, -nz);
     for (i = 0, j = 0; i < sectorCount; ++i, j += 3) {
         //position vector
         x = unitCircleVertices[j];
@@ -171,7 +171,7 @@ void Cylinder::buildVertices() {
     unsigned int topVertexIndex = (unsigned int)vertices.size() / 3;
     // put vertices and normals of top of cylinder
     z = height * 0.5f;
-    nz = -2;
+    nz = 2;
     addVertex(0, 0, z);
     addNormal(0, 0, nz);
     for (i = 0, j = 0; i < sectorCount; ++i, j += 3) {

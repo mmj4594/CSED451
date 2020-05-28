@@ -29,6 +29,7 @@ public:
 			floor_vertices.push_back(glm::vec3(floorSize, 20, i));
 			floor_vertices.push_back(glm::vec3(-floorSize, 20, i));
 			for (int j = 0; j < 4; j++) {
+				floor_normals.push_back(glm::vec3(0, 0, 1));
 				floor_color.push_back(glm::vec3(0, 0, 0));
 			}
 		}
@@ -43,6 +44,7 @@ private:
 	float floorSize, gridSize;
 	
 	std::vector<glm::vec3> floor_vertices;
+	std::vector<glm::vec3> floor_normals;
 	std::vector<glm::uvec2> floor_indices;
 	std::vector<glm::vec3> floor_color;
 };
