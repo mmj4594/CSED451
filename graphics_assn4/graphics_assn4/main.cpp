@@ -85,20 +85,11 @@ void display3D() {
 		vec3(upVector[0], upVector[1], upVector[2])
 	);
 
-	//Ambient
-	vec4 ambient = vec4(0.0, 0.0, 0.0, 0.0);
-	glUniform4fv(ambientProductLocation, 1, value_ptr(ambient));
-	//Diffuse
-	vec4 diffuse = vec4(1.0, 1.0, 1.0, 0.0);
-	glUniform4fv(diffuseProductLocation, 1, value_ptr(diffuse));
-	//Specular
-	vec4 specular = vec4(1.0, 1.0, 1.0, 0.0);
-	glUniform4fv(specularProductLocation, 1, value_ptr(specular));
-
-	//Light position
-	glUniform4fv(lightPositionLocation, 1, value_ptr(lightPosition));
-	//Shininess
-	glUniform1f(shininessLocation, shininess);
+	glUniform4fv(ambientProductLocation, 1, value_ptr(ambient));		//Ambient
+	glUniform4fv(diffuseProductLocation, 1, value_ptr(diffuse));		//Diffuse
+	glUniform4fv(specularProductLocation, 1, value_ptr(specular));		//Specular
+	glUniform4fv(lightPositionLocation, 1, value_ptr(lightPosition));	//Light position
+	glUniform1f(shininessLocation, shininess);							//Shininess
 	
 	worldFloor.draw();
 	wall.draw();
@@ -180,6 +171,8 @@ void frameAction(int value) {
 						 0,
 						 100 * sin(radians(-90.0f + lightFrame)), 1.0);
 	if (lightFrame >= SEC * 3) {
+		if (diffuse == DARK) { diffuse = BRIGHT; specular = BRIGHT; }
+		else { diffuse = DARK; specular = DARK; }
 		lightFrame = 0;
 	}
 
