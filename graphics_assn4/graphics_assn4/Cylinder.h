@@ -22,6 +22,7 @@
 
     vector<float> unitCircleVertices: Vertices that make up unit circle
     vector<float> vertices: Vertices that make up the cylinder
+    vector<float> normals: Normal vectors of each vertices
     vector<unsigned int> indices: Indices of vertices
     vector<float> vertices_gray/red/green/yellow/blue: Color of vertices
 */
@@ -62,8 +63,8 @@ private:
 
     std::vector<float> unitCircleVertices;
     std::vector<float> vertices;
-    std::vector<unsigned int> indices;
     std::vector<float> normals;
+    std::vector<unsigned int> indices;
 
     //vertices color
     std::vector<float> vertices_gray;

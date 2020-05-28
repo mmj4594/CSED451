@@ -121,15 +121,15 @@ void Cylinder::buildVertices() {
             addVertex(v3.x, v3.y, v3.z);
             addVertex(v4.x, v4.y, v4.z);
 
-            // put indices of a quad
-            addIndices(index, index + 2, index + 1);    // v1-v3-v2
-            addIndices(index + 1, index + 2, index + 3);    // v2-v3-v4
-
             // put quad normals: n1-n2-n3-n4
             addNormal(n1.x, n1.y, n1.z);
             addNormal(n2.x, n2.y, n2.z);
             addNormal(n3.x, n3.y, n3.z);
             addNormal(n4.x, n4.y, n4.z);
+
+            // put indices of a quad
+            addIndices(index, index + 2, index + 1);    // v1-v3-v2
+            addIndices(index + 1, index + 2, index + 3);    // v2-v3-v4
 
             index += 4;     // for next
         }

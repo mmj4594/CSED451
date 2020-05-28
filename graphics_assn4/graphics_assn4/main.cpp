@@ -86,9 +86,23 @@ void display3D() {
 		vec3(reference[0], reference[1], reference[2]),
 		vec3(upVector[0], upVector[1], upVector[2])
 	);
+
 	//Ambient
-	vec4 ambient = vec4(0.5, 0.5, 0.5, 0.0);
+	vec4 ambient = vec4(0.0, 0.0, 0.0, 0.0);
 	glUniform4fv(ambientProductLocation, 1, value_ptr(ambient));
+	//Diffuse
+	vec4 diffuse = vec4(1.0, 1.0, 1.0, 0.0);
+	glUniform4fv(diffuseProductLocation, 1, value_ptr(diffuse));
+	//Specular
+	vec4 specular = vec4(1.0, 1.0, 1.0, 0.0);
+	glUniform4fv(specularProductLocation, 1, value_ptr(specular));
+
+	//Light position
+	vec4 lightPosition = vec4(0, 0, 100, 1.0);
+	glUniform4fv(lightPositionLocation, 1, value_ptr(lightPosition));
+	//Shininess
+	float shininess = 0.5;
+	glUniform1f(shininessLocation, shininess);
 	
 	worldFloor.draw();
 	wall.draw();

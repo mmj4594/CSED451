@@ -18,6 +18,7 @@
     int stackCount: # of stacks
     int color: current color of sphere
     vector<float> vertices: Vertices that make up the sphere
+    vector<float> normals: Normal vectors of each vertices
     vector<unsigned int> indices: Indices of vertices
     vector<float> vertices_gray/red/green/yellow/blue: Color of vertices
 */
@@ -35,7 +36,7 @@ public:
     void buildVertices();
 
     void addVertex(float x, float y, float z);
-
+    void addNormal(float x, float y, float z);
     void addIndices(unsigned int i1, unsigned int i2, unsigned int i3);
 
     void draw();
@@ -47,6 +48,7 @@ public:
     int sectorCount, stackCount;
     int color;
     std::vector<float> vertices;
+    std::vector<float> normals;
     std::vector<unsigned int> indices;
 
     //vertices color

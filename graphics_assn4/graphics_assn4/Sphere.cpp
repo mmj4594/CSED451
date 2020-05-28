@@ -29,6 +29,7 @@ void Sphere::buildVertices() {
         float x, y, z, s, t;
     };
     std::vector<Vertex> tmpVertices;
+    std::vector<Vertex> tmpNormals;
 
     float sectorStep = 2 * PI / sectorCount;
     float stackStep = PI / stackCount;
@@ -52,6 +53,14 @@ void Sphere::buildVertices() {
             vertex.s = (float)j / sectorCount;        // s
             vertex.t = (float)i / stackCount;         // t
             tmpVertices.push_back(vertex);
+
+            Vertex normal;
+            normal.x = xy * cosf(sectorAngle) * (1.0 / radius);
+            normal.y = xy * sinf(sectorAngle) * (1.0 / radius);
+            normal.z = z * (1.0 / radius);
+            normal.s = 0;
+            normal.t = 0;
+            tmpNormals.push_back(normal);
         }
     }
 
@@ -59,7 +68,7 @@ void Sphere::buildVertices() {
     clearArrays();
 
     Vertex v1, v2, v3, v4;                          // 4 vertex positions and tex coords
-    std::vector<float> n;                           // 1 face normal
+    Vertex n1, n2, n3, n4;                          // 4 vertex normals
 
     int i, j, k, vi1, vi2;
     int index = 0;                                  // index for vertex
@@ -68,14 +77,21 @@ void Sphere::buildVertices() {
         vi2 = (i + 1) * (sectorCount + 1);
 
         for (j = 0; j < sectorCount; ++j, ++vi1, ++vi2) {
-            // get 4 vertices per sector
-            //  v1--v3
-            //  |    |
-            //  v2--v4
+            /*
+                get 4 vertices per sector
+                v1--v3
+                |    |
+                v2--v4
+            */
             v1 = tmpVertices[vi1];
             v2 = tmpVertices[vi2];
             v3 = tmpVertices[vi1 + 1];
             v4 = tmpVertices[vi2 + 1];
+
+            n1 = tmpNormals[vi1];
+            n2 = tmpNormals[vi2];
+            n3 = tmpNormals[vi1 + 1];
+            n4 = tmpNormals[vi2 + 1];
 
             // if 1st stack and last stack, store only 1 triangle per sector
             // otherwise, store 2 triangles (quad) per sector
@@ -85,6 +101,11 @@ void Sphere::buildVertices() {
                 addVertex(v1.x, v1.y, v1.z);
                 addVertex(v2.x, v2.y, v2.z);
                 addVertex(v4.x, v4.y, v4.z);
+
+                // put normals
+                addNormal(n1.x, n1.y, n1.z);
+                addNormal(n2.x, n2.y, n2.z);
+                addNormal(n4.x, n4.y, n4.z);
 
                 // put indices of 1 triangle
                 addIndices(index, index + 1, index + 2);
@@ -98,6 +119,11 @@ void Sphere::buildVertices() {
                 addVertex(v2.x, v2.y, v2.z);
                 addVertex(v3.x, v3.y, v3.z);
 
+                // put normals
+                addNormal(n1.x, n1.y, n1.z);
+                addNormal(n2.x, n2.y, n2.z);
+                addNormal(n3.x, n3.y, n3.z);
+
                 // put indices of 1 triangle
                 addIndices(index, index + 1, index + 2);
 
@@ -110,6 +136,12 @@ void Sphere::buildVertices() {
                 addVertex(v2.x, v2.y, v2.z);
                 addVertex(v3.x, v3.y, v3.z);
                 addVertex(v4.x, v4.y, v4.z);
+
+                // put normals
+                addNormal(n1.x, n1.y, n1.z);
+                addNormal(n2.x, n2.y, n2.z);
+                addNormal(n3.x, n3.y, n3.z);
+                addNormal(n4.x, n4.y, n4.z);
 
                 // put indices of quad (2 triangles)
                 addIndices(index, index + 1, index + 2);
@@ -127,7 +159,11 @@ void Sphere::addVertex(float x, float y, float z) {
     vertices.push_back(y);
     vertices.push_back(z);    
 }
-
+void Sphere::addNormal(float x, float y, float z) {
+    normals.push_back(x);
+    normals.push_back(y);
+    normals.push_back(z);
+}
 void Sphere::addIndices(unsigned int i1, unsigned int i2, unsigned int i3) {
     indices.push_back(i1);
     indices.push_back(i2);
@@ -180,6 +216,15 @@ void Sphere::draw() {
     }
     glEnableVertexAttribArray(aColorLocation);
     glVertexAttribPointer(aColorLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    //Normal VBO
+    glBindBuffer(GL_ARRAY_BUFFER, normalVBO[0]);           // for vertex data
+    glBufferData(GL_ARRAY_BUFFER,                   // target
+        (unsigned int)normals.size() * sizeof(float), // data size, # of bytes
+        &normals[0],   // ptr to vertex data
+        GL_STATIC_DRAW);                   // usage
+    glEnableVertexAttribArray(aNormalLocation);
+    glVertexAttribPointer(aNormalLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     //EBO
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,           // target
