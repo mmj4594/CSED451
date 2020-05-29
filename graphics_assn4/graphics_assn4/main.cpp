@@ -37,9 +37,9 @@ int main(int argc, char** argv) {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);	//EBO
 
 	//deallocate all resources when program ends
-	glDeleteVertexArrays(1, &VAO[0]);
-	glDeleteBuffers(1, &positionVBO[0]);
-	glDeleteBuffers(1, &EBO[0]);
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &positionVBO);
+	glDeleteBuffers(1, &EBO);
 	glDeleteProgram(shaderProgram[0]);
 	glDeleteProgram(shaderProgram[1]);
 	return 0;
@@ -166,9 +166,9 @@ void frameAction(int value) {
 
 	//Light position manipulation
 	lightPosition = rotate(mat4(1.0f), radians(45.0f), vec3(0, 0, 1)) *
-					vec4(100 * cos(radians(-90.0f + lightFrame)),
-						 0,
-						 100 * sin(radians(-90.0f + lightFrame)), 1.0);
+					vec4(lightCenter.x + 100 * cos(radians(-90.0f + lightFrame)),
+						 lightCenter.y + 0,
+						 lightCenter.z + 100 * sin(radians(-90.0f + lightFrame)), 1.0);
 	if (lightFrame >= SEC * 3) {
 		if (diffuse == DARK) { diffuse = BRIGHT; specular = BRIGHT; }
 		else { diffuse = DARK; specular = DARK; }

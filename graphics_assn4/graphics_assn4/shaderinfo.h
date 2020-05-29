@@ -8,8 +8,8 @@ int currentShaderType = 0;
 //Vertex and fragment shader
 GLuint vertexShader, fragmentShader;
 GLuint shaderProgram[2];
-unsigned int positionVBO[2], colorVBO[2], normalVBO[2];
-unsigned int VAO[2], EBO[2];
+unsigned int positionVBO, colorVBO, normalVBO;
+unsigned int VAO, EBO;
 int aPosLocation, aColorLocation, aNormalLocation;
 int ambientProductLocation, diffuseProductLocation, specularProductLocation;
 int modelViewLocation, projectionLocation;

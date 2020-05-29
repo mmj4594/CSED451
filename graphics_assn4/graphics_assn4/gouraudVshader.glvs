@@ -32,6 +32,6 @@ void main() {
 	vec4 specular = HN * specularProduct;
 	if(dot(L,N) < 0.0) specular = vec4(0.0, 0.0, 0.0, 1.0);
 
-	vertexColor = (ambient + diffuse + specular) * vec4(aColor, 1.0);
+	vertexColor = vec4(aColor, 1.0) * (ambient + diffuse + specular);
 	vertexColor.a = 1.0;
 }

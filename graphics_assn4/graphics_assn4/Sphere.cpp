@@ -95,10 +95,10 @@ void Sphere::set(float radius, int sectors, int stacks) {
 
                  // put normal
                  n = computeFaceNormal(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v4.x, v4.y, v4.z);
-                 //for (k = 0; k < 3; ++k)  // same normals for 3 vertices
-                 //{
-                 //    addNormal(n[0], n[1], n[2]);
-                 //}
+                 for (k = 0; k < 3; ++k)  // same normals for 3 vertices
+                 {
+                     addNormal(n[0], n[1], n[2]);
+                 }
 
                  // put indices of 1 triangle
                  addIndices(index, index + 1, index + 2);
@@ -114,10 +114,10 @@ void Sphere::set(float radius, int sectors, int stacks) {
 
                  // put normal
                  n = computeFaceNormal(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v3.x, v3.y, v3.z);
-                 //for (k = 0; k < 3; ++k)  // same normals for 3 vertices
-                 //{
-                 //    addNormal(n[0], n[1], n[2]);
-                 //}
+                 for (k = 0; k < 3; ++k)  // same normals for 3 vertices
+                 {
+                     addNormal(n[0], n[1], n[2]);
+                 }
 
                  // put indices of 1 triangle
                  addIndices(index, index + 1, index + 2);
@@ -168,7 +168,7 @@ void Sphere::addIndices(unsigned int i1, unsigned int i2, unsigned int i3) {
 
 void Sphere::draw() {
     //position VBO
-    glBindBuffer(GL_ARRAY_BUFFER, positionVBO[currentShaderType]);           // for vertex data
+    glBindBuffer(GL_ARRAY_BUFFER, positionVBO);           // for vertex data
     glBufferData(GL_ARRAY_BUFFER,                   // target
         (unsigned int)vertices.size() * sizeof(float), // data size, # of bytes
         &vertices[0],   // ptr to vertex data
@@ -177,7 +177,7 @@ void Sphere::draw() {
     glVertexAttribPointer(aPosLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     //color VBO
-    glBindBuffer(GL_ARRAY_BUFFER, colorVBO[currentShaderType]);           // for vertex data
+    glBindBuffer(GL_ARRAY_BUFFER, colorVBO);           // for vertex data
     switch (color) {
     case 0:
         glBufferData(GL_ARRAY_BUFFER,                   // target
@@ -214,7 +214,7 @@ void Sphere::draw() {
     glVertexAttribPointer(aColorLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     //Normal VBO
-    glBindBuffer(GL_ARRAY_BUFFER, normalVBO[currentShaderType]);           // for vertex data
+    glBindBuffer(GL_ARRAY_BUFFER, normalVBO);           // for vertex data
     glBufferData(GL_ARRAY_BUFFER,                   // target
         (unsigned int)normals.size() * sizeof(float), // data size, # of bytes
         &normals[0],   // ptr to vertex data

@@ -27,7 +27,8 @@ void initShader(const int shaderCode) {
 	glAttachShader(shaderProgram[shaderCode], vertexShader);
 	glAttachShader(shaderProgram[shaderCode], fragmentShader);
 	glLinkProgram(shaderProgram[shaderCode]);
-	if (!CheckProgram(shaderProgram[shaderCode])) { cout << "Link Fail!\n"; }
+	if (!CheckProgram(shaderProgram[shaderCode]))
+		{ cout << "Shader type "<< shaderCode << " Link Fail!\n"; }
 	//Get location of variables
 	aPosLocation = glGetAttribLocation(shaderProgram[shaderCode], "aPos");
 	aNormalLocation = glGetAttribLocation(shaderProgram[shaderCode], "aNormal");
@@ -49,19 +50,19 @@ void initShader(const int shaderCode) {
 		해당 VAO에 저장된 VBO 및 EBO가 함께 불러와진다.
 	*/
 	//VAO
-	glGenVertexArrays(1, &VAO[shaderCode]);
-	glBindVertexArray(VAO[shaderCode]);
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
 	//VBO
-	glGenBuffers(1, &positionVBO[shaderCode]);
-	glBindBuffer(GL_ARRAY_BUFFER, positionVBO[shaderCode]);
-	glGenBuffers(1, &colorVBO[shaderCode]);
-	glBindBuffer(GL_ARRAY_BUFFER, colorVBO[shaderCode]);
-	glGenBuffers(1, &normalVBO[shaderCode]);
-	glBindBuffer(GL_ARRAY_BUFFER, normalVBO[shaderCode]);
+	glGenBuffers(1, &positionVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, positionVBO);
+	glGenBuffers(1, &colorVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
+	glGenBuffers(1, &normalVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, normalVBO);
 
 	//EBO
-	glGenBuffers(1, &EBO[shaderCode]);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[shaderCode]);
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 }
 
 //Read shader file from 'vShaderFile', 'fShaderFile' and compile them.
@@ -102,7 +103,7 @@ bool CheckProgram(GLuint program) {
 void switchShader(const int shaderCode) {
 	currentShaderType = shaderCode;
 	glUseProgram(shaderProgram[shaderCode]);
-	glBindVertexArray(VAO[shaderCode]);
+	glBindVertexArray(VAO);
 
 	aPosLocation = glGetAttribLocation(shaderProgram[shaderCode], "aPos");
 	aNormalLocation = glGetAttribLocation(shaderProgram[shaderCode], "aNormal");

@@ -48,6 +48,9 @@ public:
     void draw();
     void clearArrays();
     void initializeColor();
+    std::vector<float> computeFaceNormal(float x1, float y1, float z1,  // v1
+        float x2, float y2, float z2,  // v2
+        float x3, float y3, float z3);
 
 private:
     void buildUnitCircleVertices();
