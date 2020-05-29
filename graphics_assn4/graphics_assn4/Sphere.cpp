@@ -1,5 +1,6 @@
 #include "Sphere.h"
 #include "shaderinfo.h"
+#include <math.h>
 
 
 const int MIN_SECTOR_COUNT = 3;
@@ -21,137 +22,132 @@ void Sphere::set(float radius, int sectors, int stacks) {
     buildVertices();
 }
 
-void Sphere::buildVertices() {
-    const float PI = acos(-1);
+ void Sphere::buildVertices()
+ {
+     const float PI = acos(-1);
 
-    // tmp vertex definition (x,y,z,s,t)
-    struct Vertex {
-        float x, y, z, s, t;
-    };
-    std::vector<Vertex> tmpVertices;
-    std::vector<Vertex> tmpNormals;
+     // tmp vertex definition (x,y,z,s,t)
+     struct Vertex
+     {
+         float x, y, z, s, t;
+     };
+     std::vector<Vertex> tmpVertices;
 
-    float sectorStep = 2 * PI / sectorCount;
-    float stackStep = PI / stackCount;
-    float sectorAngle, stackAngle;
+     float sectorStep = 2 * PI / sectorCount;
+     float stackStep = PI / stackCount;
+     float sectorAngle, stackAngle;
 
-    // compute all vertices first, each vertex contains (x,y,z,s,t) except normal
-    for (int i = 0; i <= stackCount; ++i) {
-        stackAngle = PI / 2 - i * stackStep;        // starting from pi/2 to -pi/2
-        float xy = radius * cosf(stackAngle);       // r * cos(u)
-        float z = radius * sinf(stackAngle);        // r * sin(u)
+     // compute all vertices first, each vertex contains (x,y,z,s,t) except normal
+     for (int i = 0; i <= stackCount; ++i)
+     {
+         stackAngle = PI / 2 - i * stackStep;        // starting from pi/2 to -pi/2
+         float xy = radius * cosf(stackAngle);       // r * cos(u)
+         float z = radius * sinf(stackAngle);        // r * sin(u)
 
-        // add (sectorCount+1) vertices per stack
-        // the first and last vertices have same position and normal, but different tex coords
-        for (int j = 0; j <= sectorCount; ++j) {
-            sectorAngle = j * sectorStep;           // starting from 0 to 2pi
+         // add (sectorCount+1) vertices per stack
+         // the first and last vertices have same position and normal, but different tex coords
+         for (int j = 0; j <= sectorCount; ++j)
+         {
+             sectorAngle = j * sectorStep;           // starting from 0 to 2pi
 
-            Vertex vertex;
-            vertex.x = xy * cosf(sectorAngle);      // x = r * cos(u) * cos(v)
-            vertex.y = xy * sinf(sectorAngle);      // y = r * cos(u) * sin(v)
-            vertex.z = z;                           // z = r * sin(u)
-            vertex.s = (float)j / sectorCount;        // s
-            vertex.t = (float)i / stackCount;         // t
-            tmpVertices.push_back(vertex);
+             Vertex vertex;
+             vertex.x = xy * cosf(sectorAngle);      // x = r * cos(u) * cos(v)
+             vertex.y = xy * sinf(sectorAngle);      // y = r * cos(u) * sin(v)
+             vertex.z = z;                           // z = r * sin(u)
+             vertex.s = (float)j / sectorCount;        // s
+             vertex.t = (float)i / stackCount;         // t
+             tmpVertices.push_back(vertex);
+         }
+     }
 
-            Vertex normal;
-            normal.x = xy * cosf(sectorAngle) * (1.0 / radius);
-            normal.y = xy * sinf(sectorAngle) * (1.0 / radius);
-            normal.z = z * (1.0 / radius);
-            normal.s = 0;
-            normal.t = 0;
-            tmpNormals.push_back(normal);
-        }
-    }
+     // clear memory of prev arrays
+     clearArrays();
 
-    // clear memory of prev arrays
-    clearArrays();
+     Vertex v1, v2, v3, v4;                          // 4 vertex positions and tex coords
+     std::vector<float> n;                           // 1 face normal
 
-    Vertex v1, v2, v3, v4;                          // 4 vertex positions and tex coords
-    Vertex n1, n2, n3, n4;                          // 4 vertex normals
+     int i, j, k, vi1, vi2;
+     int index = 0;                                  // index for vertex
+     for (i = 0; i < stackCount; ++i)
+     {
+         vi1 = i * (sectorCount + 1);                // index of tmpVertices
+         vi2 = (i + 1) * (sectorCount + 1);
 
-    int i, j, k, vi1, vi2;
-    int index = 0;                                  // index for vertex
-    for (i = 0; i < stackCount; ++i) {
-        vi1 = i * (sectorCount + 1);                // index of tmpVertices
-        vi2 = (i + 1) * (sectorCount + 1);
+         for (j = 0; j < sectorCount; ++j, ++vi1, ++vi2)
+         {
+             // get 4 vertices per sector
+             //  v1--v3
+             //  |    |
+             //  v2--v4
+             v1 = tmpVertices[vi1];
+             v2 = tmpVertices[vi2];
+             v3 = tmpVertices[vi1 + 1];
+             v4 = tmpVertices[vi2 + 1];
 
-        for (j = 0; j < sectorCount; ++j, ++vi1, ++vi2) {
-            /*
-                get 4 vertices per sector
-                v1--v3
-                |    |
-                v2--v4
-            */
-            v1 = tmpVertices[vi1];
-            v2 = tmpVertices[vi2];
-            v3 = tmpVertices[vi1 + 1];
-            v4 = tmpVertices[vi2 + 1];
+             // if 1st stack and last stack, store only 1 triangle per sector
+             // otherwise, store 2 triangles (quad) per sector
+             if (i == 0) // a triangle for first stack ==========================
+             {
+                 // put a triangle
+                 addVertex(v1.x, v1.y, v1.z);
+                 addVertex(v2.x, v2.y, v2.z);
+                 addVertex(v4.x, v4.y, v4.z);
 
-            n1 = tmpNormals[vi1];
-            n2 = tmpNormals[vi2];
-            n3 = tmpNormals[vi1 + 1];
-            n4 = tmpNormals[vi2 + 1];
+                 // put normal
+                 n = computeFaceNormal(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v4.x, v4.y, v4.z);
+                 //for (k = 0; k < 3; ++k)  // same normals for 3 vertices
+                 //{
+                 //    addNormal(n[0], n[1], n[2]);
+                 //}
 
-            // if 1st stack and last stack, store only 1 triangle per sector
-            // otherwise, store 2 triangles (quad) per sector
-            // a triangle for first stack ==========================
-            if (i == 0) {
-                // put a triangle
-                addVertex(v1.x, v1.y, v1.z);
-                addVertex(v2.x, v2.y, v2.z);
-                addVertex(v4.x, v4.y, v4.z);
+                 // put indices of 1 triangle
+                 addIndices(index, index + 1, index + 2);
 
-                // put normals
-                addNormal(n1.x, n1.y, n1.z);
-                addNormal(n2.x, n2.y, n2.z);
-                addNormal(n4.x, n4.y, n4.z);
+                 index += 3;     // for next
+             }
+             else if (i == (stackCount - 1)) // a triangle for last stack =========
+             {
+                 // put a triangle
+                 addVertex(v1.x, v1.y, v1.z);
+                 addVertex(v2.x, v2.y, v2.z);
+                 addVertex(v3.x, v3.y, v3.z);
 
-                // put indices of 1 triangle
-                addIndices(index, index + 1, index + 2);
+                 // put normal
+                 n = computeFaceNormal(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v3.x, v3.y, v3.z);
+                 //for (k = 0; k < 3; ++k)  // same normals for 3 vertices
+                 //{
+                 //    addNormal(n[0], n[1], n[2]);
+                 //}
 
-                index += 3;     // for next
-            }
-            // a triangle for last stack =========
-            else if (i == (stackCount - 1)) {
-                // put a triangle
-                addVertex(v1.x, v1.y, v1.z);
-                addVertex(v2.x, v2.y, v2.z);
-                addVertex(v3.x, v3.y, v3.z);
+                 // put indices of 1 triangle
+                 addIndices(index, index + 1, index + 2);
 
-                // put normals
-                addNormal(n1.x, n1.y, n1.z);
-                addNormal(n2.x, n2.y, n2.z);
-                addNormal(n3.x, n3.y, n3.z);
+                 index += 3;     // for next
+             }
+             else // 2 triangles for others ====================================
+             {
+                 // put quad vertices: v1-v2-v3-v4
+                 addVertex(v1.x, v1.y, v1.z);
+                 addVertex(v2.x, v2.y, v2.z);
+                 addVertex(v3.x, v3.y, v3.z);
+                 addVertex(v4.x, v4.y, v4.z);
 
-                // put indices of 1 triangle
-                addIndices(index, index + 1, index + 2);
+                 // put normal
+                 n = computeFaceNormal(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v3.x, v3.y, v3.z);
+                 for (k = 0; k < 4; ++k)  // same normals for 4 vertices
+                 {
+                     addNormal(n[0], n[1], n[2]);
+                 }
 
-                index += 3;     // for next
-            }
-            // 2 triangles for others ====================================
-            else {
-                // put quad vertices: v1-v2-v3-v4
-                addVertex(v1.x, v1.y, v1.z);
-                addVertex(v2.x, v2.y, v2.z);
-                addVertex(v3.x, v3.y, v3.z);
-                addVertex(v4.x, v4.y, v4.z);
+                 // put indices of quad (2 triangles)
+                 addIndices(index, index + 1, index + 2);
+                 addIndices(index + 2, index + 1, index + 3);
 
-                // put normals
-                addNormal(n1.x, n1.y, n1.z);
-                addNormal(n2.x, n2.y, n2.z);
-                addNormal(n3.x, n3.y, n3.z);
-                addNormal(n4.x, n4.y, n4.z);
-
-                // put indices of quad (2 triangles)
-                addIndices(index, index + 1, index + 2);
-                addIndices(index + 2, index + 1, index + 3);
-
-                index += 4;     // for next
-            }
-        }
-    }
-    initializeColor();
+                 index += 4;     // for next
+             }
+         }
+     }
+     initializeColor();
  }
 
 void Sphere::addVertex(float x, float y, float z) {
@@ -172,7 +168,7 @@ void Sphere::addIndices(unsigned int i1, unsigned int i2, unsigned int i3) {
 
 void Sphere::draw() {
     //position VBO
-    glBindBuffer(GL_ARRAY_BUFFER, positionVBO[0]);           // for vertex data
+    glBindBuffer(GL_ARRAY_BUFFER, positionVBO[currentShaderType]);           // for vertex data
     glBufferData(GL_ARRAY_BUFFER,                   // target
         (unsigned int)vertices.size() * sizeof(float), // data size, # of bytes
         &vertices[0],   // ptr to vertex data
@@ -181,7 +177,7 @@ void Sphere::draw() {
     glVertexAttribPointer(aPosLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     //color VBO
-    glBindBuffer(GL_ARRAY_BUFFER, colorVBO[0]);           // for vertex data
+    glBindBuffer(GL_ARRAY_BUFFER, colorVBO[currentShaderType]);           // for vertex data
     switch (color) {
     case 0:
         glBufferData(GL_ARRAY_BUFFER,                   // target
@@ -218,7 +214,7 @@ void Sphere::draw() {
     glVertexAttribPointer(aColorLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     //Normal VBO
-    glBindBuffer(GL_ARRAY_BUFFER, normalVBO[0]);           // for vertex data
+    glBindBuffer(GL_ARRAY_BUFFER, normalVBO[currentShaderType]);           // for vertex data
     glBufferData(GL_ARRAY_BUFFER,                   // target
         (unsigned int)normals.size() * sizeof(float), // data size, # of bytes
         &normals[0],   // ptr to vertex data
@@ -238,7 +234,6 @@ void Sphere::draw() {
         indices.size(),          // # of indices
         GL_UNSIGNED_INT,                 // data type
         0);                       // offset to indices
-
 }
 
 void Sphere::clearArrays() {
@@ -273,4 +268,37 @@ void Sphere::initializeColor() {
         vertices_blue.push_back(0);
         vertices_blue.push_back(0.8f);
     }
+}
+
+std::vector<float> Sphere::computeFaceNormal(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3) {
+    const float EPSILON = 0.000001f;
+
+    std::vector<float> normal(3, 0.0f);     // default return value (0,0,0)
+    float nx, ny, nz;
+
+    // find 2 edge vectors: v1-v2, v1-v3
+    float ex1 = x2 - x1;
+    float ey1 = y2 - y1;
+    float ez1 = z2 - z1;
+    float ex2 = x3 - x1;
+    float ey2 = y3 - y1;
+    float ez2 = z3 - z1;
+
+    // cross product: e1 x e2
+    nx = ey1 * ez2 - ez1 * ey2;
+    ny = ez1 * ex2 - ex1 * ez2;
+    nz = ex1 * ey2 - ey1 * ex2;
+
+    // normalize only if the length is > 0
+    float length = sqrtf(nx * nx + ny * ny + nz * nz);
+    if (length > EPSILON)
+    {
+        // normalize
+        float lengthInv = 1.0f / length;
+        normal[0] = nx * lengthInv;
+        normal[1] = ny * lengthInv;
+        normal[2] = nz * lengthInv;
+    }
+
+    return normal;
 }

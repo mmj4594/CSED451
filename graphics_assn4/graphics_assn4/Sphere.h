@@ -34,6 +34,7 @@ public:
     void setColor(int color) { this->color = color; };
     
     void buildVertices();
+    void buildVerticesSmooth();
 
     void addVertex(float x, float y, float z);
     void addNormal(float x, float y, float z);
@@ -42,6 +43,9 @@ public:
     void draw();
     void clearArrays();
     void initializeColor();
+    std::vector<float> computeFaceNormal(float x1, float y1, float z1,
+                                        float x2, float y2, float z2,
+                                        float x3, float y3, float z3);
 
  private:
     float radius;

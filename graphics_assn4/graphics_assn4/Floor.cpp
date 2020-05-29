@@ -4,18 +4,18 @@
 #include "shaderinfo.h"
 
 void Floor::draw() {	
-	glBindBuffer(GL_ARRAY_BUFFER, positionVBO[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, positionVBO[currentShaderType]);
 	glBufferData(GL_ARRAY_BUFFER, floor_vertices.size() * sizeof(glm::vec3), glm::value_ptr(floor_vertices[0]), GL_STATIC_DRAW);
 	glEnableVertexAttribArray(aPosLocation);
 	glVertexAttribPointer(aPosLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-	glBindBuffer(GL_ARRAY_BUFFER, colorVBO[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, colorVBO[currentShaderType]);
 	glBufferData(GL_ARRAY_BUFFER, floor_color.size() * sizeof(glm::vec3), glm::value_ptr(floor_color[0]), GL_STATIC_DRAW);
 	glEnableVertexAttribArray(aColorLocation);
 	glVertexAttribPointer(aColorLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
 	//Normal VBO
-	glBindBuffer(GL_ARRAY_BUFFER, normalVBO[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, normalVBO[currentShaderType]);
 	glBufferData(GL_ARRAY_BUFFER, floor_normals.size() * sizeof(glm::vec3), glm::value_ptr(floor_normals[0]), GL_STATIC_DRAW);
 	glEnableVertexAttribArray(aNormalLocation);
 	glVertexAttribPointer(aNormalLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);

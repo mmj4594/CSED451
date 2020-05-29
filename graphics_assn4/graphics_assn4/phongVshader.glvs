@@ -1,0 +1,26 @@
+#version 460
+
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aColor;
+layout(location = 2) in vec3 aNormal;
+
+out vec3 fN;
+out vec3 fE;
+out vec3 fL;
+out vec4 vertexColor;
+
+layout(location = 6) uniform mat4 modelView;
+layout(location = 7) uniform mat4 projection;
+layout(location = 8) uniform vec4 lightPosition;
+
+void main() {
+	gl_Position = projection * modelView * vec4(aPos, 1.0);
+
+	fN = aNormal;
+	fE = aPos;
+	fL = lightPosition.xyz;
+	if(lightPosition.w != 0.0) {
+		fL = lightPosition.xyz - aPos;
+	}
+	vertexColor = vec4(aColor, 1.0);
+}

@@ -107,7 +107,7 @@ glm::vec4 ambient = glm::vec4(0.0, 0.0, 0.0, 0.0);
 glm::vec4 diffuse = glm::vec4(1.0, 1.0, 1.0, 0.0);
 glm::vec4 specular = glm::vec4(1.0, 1.0, 1.0, 0.0);
 glm::vec4 lightPosition = glm::vec4(0, 0, -100.0, 1.0);
-float shininess = 1.0f;
+float shininess = 0.0f;
 					
 //Function definition
 void init();

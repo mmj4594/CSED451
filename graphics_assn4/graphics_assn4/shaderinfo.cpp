@@ -5,54 +5,63 @@
 using namespace std;
 
 //Initiate shader program
-void initShader() {
+void initShader(const int shaderCode) {
 	//Adding vertex, fragment shader
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	GLchar vShaderFile[] = "gouraudVshader.glvs";
-	GLchar fShaderFile[] = "gouraudFshader.glfs";
-	readShaderSource(vShaderFile, fShaderFile);
+	//Gouraud
+	if (shaderCode == 0) {
+		GLchar vShaderFile[] = "gouraudVshader.glvs";
+		GLchar fShaderFile[] = "gouraudFshader.glfs";
+		readShaderSource(vShaderFile, fShaderFile);
+	}
+	//Phong
+	else {
+		GLchar vShaderFile[] = "phongVshader.glvs";
+		GLchar fShaderFile[] = "phongFshader.glfs";
+		readShaderSource(vShaderFile, fShaderFile);
+	}
 
 	//Link shader program
-	shaderProgram[0] = glCreateProgram();
-	glAttachShader(shaderProgram[0], vertexShader);
-	glAttachShader(shaderProgram[0], fragmentShader);
-	glLinkProgram(shaderProgram[0]);
-	if (!CheckProgram(shaderProgram[0])) { cout << "Link Fail!\n"; }
+	shaderProgram[shaderCode] = glCreateProgram();
+	glAttachShader(shaderProgram[shaderCode], vertexShader);
+	glAttachShader(shaderProgram[shaderCode], fragmentShader);
+	glLinkProgram(shaderProgram[shaderCode]);
+	if (!CheckProgram(shaderProgram[shaderCode])) { cout << "Link Fail!\n"; }
 	//Get location of variables
-	aPosLocation = glGetAttribLocation(shaderProgram[0], "aPos");
-	aNormalLocation = glGetAttribLocation(shaderProgram[0], "aNormal");
-	aColorLocation = glGetAttribLocation(shaderProgram[0], "aColor");
-	ambientProductLocation = glGetUniformLocation(shaderProgram[0], "ambientProduct");
-	diffuseProductLocation = glGetUniformLocation(shaderProgram[0], "diffuseProduct");
-	specularProductLocation = glGetUniformLocation(shaderProgram[0], "specularProduct");
-	modelViewLocation = glGetUniformLocation(shaderProgram[0], "modelView");
-	projectionLocation = glGetUniformLocation(shaderProgram[0], "projection");
-	lightPositionLocation = glGetUniformLocation(shaderProgram[0], "lightPosition");
-	shininessLocation = glGetUniformLocation(shaderProgram[0], "shininess");
+	aPosLocation = glGetAttribLocation(shaderProgram[shaderCode], "aPos");
+	aNormalLocation = glGetAttribLocation(shaderProgram[shaderCode], "aNormal");
+	aColorLocation = glGetAttribLocation(shaderProgram[shaderCode], "aColor");
+	ambientProductLocation = glGetUniformLocation(shaderProgram[shaderCode], "ambientProduct");
+	diffuseProductLocation = glGetUniformLocation(shaderProgram[shaderCode], "diffuseProduct");
+	specularProductLocation = glGetUniformLocation(shaderProgram[shaderCode], "specularProduct");
+	modelViewLocation = glGetUniformLocation(shaderProgram[shaderCode], "modelView");
+	projectionLocation = glGetUniformLocation(shaderProgram[shaderCode], "projection");
+	lightPositionLocation = glGetUniformLocation(shaderProgram[shaderCode], "lightPosition");
+	shininessLocation = glGetUniformLocation(shaderProgram[shaderCode], "shininess");
 	//shader는 program 객체와 연결되면 필요x
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
 	/*
 		VAO를 바인드 한 이후에 바인드되는 VBO, EBO들은 VAO에 저장된다.
-		그리고 display 함수 내에서 glBindVertexArray(VAO) 만 수행하면
+		그리고 glBindVertexArray(VAO) 만 수행하면
 		해당 VAO에 저장된 VBO 및 EBO가 함께 불러와진다.
 	*/
 	//VAO
-	glGenVertexArrays(1, &VAO[0]);
-	glBindVertexArray(VAO[0]);
+	glGenVertexArrays(1, &VAO[shaderCode]);
+	glBindVertexArray(VAO[shaderCode]);
 	//VBO
-	glGenBuffers(1, &positionVBO[0]);
-	glBindBuffer(GL_ARRAY_BUFFER, positionVBO[0]);
-	glGenBuffers(1, &colorVBO[0]);
-	glBindBuffer(GL_ARRAY_BUFFER, colorVBO[0]);
-	glGenBuffers(1, &normalVBO[0]);
-	glBindBuffer(GL_ARRAY_BUFFER, normalVBO[0]);
+	glGenBuffers(1, &positionVBO[shaderCode]);
+	glBindBuffer(GL_ARRAY_BUFFER, positionVBO[shaderCode]);
+	glGenBuffers(1, &colorVBO[shaderCode]);
+	glBindBuffer(GL_ARRAY_BUFFER, colorVBO[shaderCode]);
+	glGenBuffers(1, &normalVBO[shaderCode]);
+	glBindBuffer(GL_ARRAY_BUFFER, normalVBO[shaderCode]);
 
 	//EBO
-	glGenBuffers(1, &EBO[0]);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0]);
+	glGenBuffers(1, &EBO[shaderCode]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[shaderCode]);
 }
 
 //Read shader file from 'vShaderFile', 'fShaderFile' and compile them.
@@ -88,4 +97,21 @@ bool CheckProgram(GLuint program) {
 		return false;
 	}
 	return true;
+}
+
+void switchShader(const int shaderCode) {
+	currentShaderType = shaderCode;
+	glUseProgram(shaderProgram[shaderCode]);
+	glBindVertexArray(VAO[shaderCode]);
+
+	aPosLocation = glGetAttribLocation(shaderProgram[shaderCode], "aPos");
+	aNormalLocation = glGetAttribLocation(shaderProgram[shaderCode], "aNormal");
+	aColorLocation = glGetAttribLocation(shaderProgram[shaderCode], "aColor");
+	ambientProductLocation = glGetUniformLocation(shaderProgram[shaderCode], "ambientProduct");
+	diffuseProductLocation = glGetUniformLocation(shaderProgram[shaderCode], "diffuseProduct");
+	specularProductLocation = glGetUniformLocation(shaderProgram[shaderCode], "specularProduct");
+	modelViewLocation = glGetUniformLocation(shaderProgram[shaderCode], "modelView");
+	projectionLocation = glGetUniformLocation(shaderProgram[shaderCode], "projection");
+	lightPositionLocation = glGetUniformLocation(shaderProgram[shaderCode], "lightPosition");
+	shininessLocation = glGetUniformLocation(shaderProgram[shaderCode], "shininess");
 }

@@ -51,7 +51,9 @@ void init() {
 	writeLife();
 	
 	//Init shaders
-	initShader();
+	initShader(GOURAUD);
+	initShader(PHONG);
+	switchShader(GOURAUD);
 
 	//Initial Camera Setting
 	setCamera(TPV);
@@ -71,9 +73,6 @@ void display3D() {
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glPolygonMode(GL_FRONT, GL_FILL);
 	glPolygonMode(GL_BACK, GL_LINE);
-	
-	glUseProgram(shaderProgram[0]);
-	glBindVertexArray(VAO[0]);
 
 	//projection
 	mtxProj = perspective(radians(fovy), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 1.0f, 2000.0f);
@@ -286,6 +285,10 @@ void keyboard(unsigned char key, int x, int y) {
 		allPass = false;
 		allFail = true;
 		cout << "All fail\n";
+		break;
+	case 'q':
+		if (currentShaderType == GOURAUD) switchShader(PHONG);
+		else if (currentShaderType == PHONG) switchShader(GOURAUD);
 		break;
 	case SPACE:
 		player.jump();

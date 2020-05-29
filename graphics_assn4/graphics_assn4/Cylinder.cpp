@@ -209,7 +209,7 @@ void Cylinder::addIndices(unsigned int i1, unsigned int i2, unsigned int i3) {
 
 void Cylinder::draw() {
     //position VBO    
-    glBindBuffer(GL_ARRAY_BUFFER, positionVBO[0]);           // for vertex data
+    glBindBuffer(GL_ARRAY_BUFFER, positionVBO[currentShaderType]);           // for vertex data
     glBufferData(GL_ARRAY_BUFFER,                   // target
         (unsigned int)vertices.size() * sizeof(float), // data size, # of bytes
         &vertices[0],   // ptr to vertex data
@@ -218,7 +218,7 @@ void Cylinder::draw() {
     glVertexAttribPointer(aPosLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     //color VBO
-    glBindBuffer(GL_ARRAY_BUFFER, colorVBO[0]);           // for vertex data
+    glBindBuffer(GL_ARRAY_BUFFER, colorVBO[currentShaderType]);           // for vertex data
     switch (color) {
     case 0:
         glBufferData(GL_ARRAY_BUFFER,                   // target
@@ -255,7 +255,7 @@ void Cylinder::draw() {
     glVertexAttribPointer(aColorLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     //Normal VBO
-    glBindBuffer(GL_ARRAY_BUFFER, normalVBO[0]);           // for vertex data
+    glBindBuffer(GL_ARRAY_BUFFER, normalVBO[currentShaderType]);           // for vertex data
     glBufferData(GL_ARRAY_BUFFER,                   // target
         (unsigned int)normals.size() * sizeof(float), // data size, # of bytes
         &normals[0],   // ptr to vertex data
