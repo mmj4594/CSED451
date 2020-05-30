@@ -34,7 +34,8 @@ void Wall::draw() {
 		mtxView = translate(mtxView, vec3(x, y + 27.5 / 2, z));
 		mtxView = rotate(mtxView, radians(-90.0f), vec3(1, 0, 0));
 		glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
-		cylinder1.draw();
+		//cylinder1.draw();
+		sphere.draw();
 		popMatrix(GL_MODELVIEW);
 		break;
 	case 3:		//cylinder2
@@ -43,7 +44,8 @@ void Wall::draw() {
 		mtxView = translate(mtxView, vec3(x, y + 27.5 / 2, z));
 		mtxView = rotate(mtxView, radians(-90.0f), vec3(1, 0, 0));
 		glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
-		cylinder2.draw();
+		//cylinder2.draw();
+		sphere.draw();
 		popMatrix(GL_MODELVIEW);
 		break;
 	case 5:		//Default cylinder
@@ -52,7 +54,8 @@ void Wall::draw() {
 			mtxView = translate(mtxView, vec3(x, y+27.5/2, z));
 			mtxView = rotate(mtxView, radians(-90.0f), vec3(1, 0, 0));
 			glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
-			cylinder.draw();
+			//cylinder.draw();
+			sphere.draw();
 		popMatrix(GL_MODELVIEW);
 		break;
 	}

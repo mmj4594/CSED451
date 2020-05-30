@@ -1,14 +1,16 @@
 #include "Sphere.h"
 #include "shaderinfo.h"
 #include <math.h>
+#include <iostream>
 
+using namespace std;
 
 const int MIN_SECTOR_COUNT = 3;
 const int MIN_STACK_COUNT = 2;
 int i = 0;
 
 Sphere::Sphere(float radius, int sectors, int stacks) {
-    set(radius, sectors, stacks);
+
 }
 
 void Sphere::set(float radius, int sectors, int stacks) {
@@ -167,6 +169,8 @@ void Sphere::addIndices(unsigned int i1, unsigned int i2, unsigned int i3) {
 }
 
 void Sphere::draw() {
+
+
     //position VBO
     glBindBuffer(GL_ARRAY_BUFFER, positionVBO);           // for vertex data
     glBufferData(GL_ARRAY_BUFFER,                   // target
@@ -242,7 +246,7 @@ void Sphere::clearArrays() {
 }
 
 void Sphere::initializeColor() {
-    for (int i = 0; i < vertices.size(); i++) {
+    for (int i = 0; i < vertices.size()/3; i++) {
         //gray
         vertices_gray.push_back(0.3f);
         vertices_gray.push_back(0.3f);
@@ -268,6 +272,9 @@ void Sphere::initializeColor() {
         vertices_blue.push_back(0);
         vertices_blue.push_back(0.8f);
     }
+    cout << "Vertices : " << vertices.size() << endl;
+    cout << "Color : " << vertices_gray.size() << endl;
+    cout << "Normal : " << normals.size() << endl << endl;
 }
 
 std::vector<float> Sphere::computeFaceNormal(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3) {

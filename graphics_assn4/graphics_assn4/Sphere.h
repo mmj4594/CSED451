@@ -48,9 +48,9 @@ public:
                                         float x3, float y3, float z3);
 
  private:
-    float radius;
-    int sectorCount, stackCount;
-    int color;
+    float radius = 3;
+    int sectorCount = 16, stackCount = 16;
+    int color = 5;
     std::vector<float> vertices;
     std::vector<float> normals;
     std::vector<unsigned int> indices;

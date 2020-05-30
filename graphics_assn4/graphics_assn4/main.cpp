@@ -74,6 +74,8 @@ void display3D() {
 	glPolygonMode(GL_FRONT, GL_FILL);
 	glPolygonMode(GL_BACK, GL_LINE);
 
+	
+
 	//projection
 	mtxProj = perspective(radians(fovy), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 1.0f, 2000.0f);
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, value_ptr(mtxProj));

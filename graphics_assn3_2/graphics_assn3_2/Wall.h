@@ -1,6 +1,7 @@
 #pragma once
 #include "object.h"
 #include "Cylinder.h"
+#include "Sphere.h"
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
@@ -38,5 +39,6 @@ Cylinder reverseCone(27.5 / 2, (float) 0, 27.5, 16, 16);
 Cylinder cylinder(27.5 / 2, 27.5 / 2, 27.5, 16, 16);
 Cylinder cylinder1(27.5 / 4, 27.5 / 2, 27.5, 16, 16);
 Cylinder cylinder2(27.5 / 2, 27.5 / 4, 27.5, 16, 16);
+Sphere sphere(27.5 / 4, 16, 16);
 void DrawCuboid(GLfloat centerPosX, GLfloat centerPosY, GLfloat centerPosZ, GLfloat widthLength, GLfloat depthLength, GLfloat heightLength);
 
