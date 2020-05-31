@@ -20,13 +20,7 @@ void main() {
 
 	fN = aNormal;
 	fE = aPos;
-	fL_point = lightPosition_point.xyz;
-	if(lightPosition_point.w != 0.0) {
-		fL_point = lightPosition_point.xyz - aPos;
-	}
+	fL_point = lightPosition_point.xyz - aPos;
 	fL_directional = lightPosition_directional.xyz;
-	if(lightPosition_directional.w != 0.0) {
-		fL_directional = lightPosition_directional.xyz - aPos;
-	}
 	vertexColor = vec4(aColor, 1.0);
 }

@@ -31,8 +31,8 @@ void initShader(const int shaderCode) {
 		{ cout << "Shader type "<< shaderCode << " Link Fail!\n"; }
 	//Get location of variables
 	aPosLocation = glGetAttribLocation(shaderProgram[shaderCode], "aPos");
-	aNormalLocation = glGetAttribLocation(shaderProgram[shaderCode], "aNormal");
 	aColorLocation = glGetAttribLocation(shaderProgram[shaderCode], "aColor");
+	aNormalLocation = glGetAttribLocation(shaderProgram[shaderCode], "aNormal");
 	ambientProductLocation = glGetUniformLocation(shaderProgram[shaderCode], "ambientProduct");
 	diffuseProductLocation_point = glGetUniformLocation(shaderProgram[shaderCode], "diffuseProduct_point");
 	diffuseProductLocation_directional = glGetUniformLocation(shaderProgram[shaderCode], "diffuseProduct_directional");

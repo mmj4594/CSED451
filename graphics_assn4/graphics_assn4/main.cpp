@@ -175,11 +175,11 @@ void frameAction(int value) {
 	if (abs(newFovy - fovy) > 0.01) { fovy += fovyPerFrame; }
 
 	//Light position manipulation
-	lightPosition_point = glm::vec4(wall.getX(), wall.getY() + wall.getHeight() + 20, wall.getZ(), 1.0);
+	lightPosition_point = glm::vec4(wall.getX(), wall.getY() + wall.getHeight() + 5, wall.getZ(), 1.0);
 	lightPosition_directional = rotate(mat4(1.0f), radians(lightAngle), vec3(0, 0, 1)) *
 					vec4(lightCenter.x + 100 * cos(radians(-90.0f + lightFrame)),
 						 lightCenter.y + 0,
-						 lightCenter.z + 100 * sin(radians(-90.0f + lightFrame)), 1.0);
+						 lightCenter.z + 100 * sin(radians(-90.0f + lightFrame)), 0.0);
 	if (lightFrame >= SEC * 3) {
 		if (diffuse_directional == DARK) { diffuse_directional = BRIGHT; specular_directional = BRIGHT; }
 		else { diffuse_directional = DARK; specular_directional = DARK; }
