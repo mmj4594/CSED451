@@ -34,11 +34,14 @@ void initShader(const int shaderCode) {
 	aNormalLocation = glGetAttribLocation(shaderProgram[shaderCode], "aNormal");
 	aColorLocation = glGetAttribLocation(shaderProgram[shaderCode], "aColor");
 	ambientProductLocation = glGetUniformLocation(shaderProgram[shaderCode], "ambientProduct");
-	diffuseProductLocation = glGetUniformLocation(shaderProgram[shaderCode], "diffuseProduct");
-	specularProductLocation = glGetUniformLocation(shaderProgram[shaderCode], "specularProduct");
+	diffuseProductLocation_point = glGetUniformLocation(shaderProgram[shaderCode], "diffuseProduct_point");
+	diffuseProductLocation_directional = glGetUniformLocation(shaderProgram[shaderCode], "diffuseProduct_directional");
+	specularProductLocation_point = glGetUniformLocation(shaderProgram[shaderCode], "specularProduct_point");
+	specularProductLocation_directional = glGetUniformLocation(shaderProgram[shaderCode], "specularProduct_directional");
 	modelViewLocation = glGetUniformLocation(shaderProgram[shaderCode], "modelView");
 	projectionLocation = glGetUniformLocation(shaderProgram[shaderCode], "projection");
-	lightPositionLocation = glGetUniformLocation(shaderProgram[shaderCode], "lightPosition");
+	lightPositionLocation_point = glGetUniformLocation(shaderProgram[shaderCode], "lightPosition_point");
+	lightPositionLocation_directional = glGetUniformLocation(shaderProgram[shaderCode], "lightPosition_directional");
 	shininessLocation = glGetUniformLocation(shaderProgram[shaderCode], "shininess");
 	//shader는 program 객체와 연결되면 필요x
 	glDeleteShader(vertexShader);
@@ -109,10 +112,13 @@ void switchShader(const int shaderCode) {
 	aNormalLocation = glGetAttribLocation(shaderProgram[shaderCode], "aNormal");
 	aColorLocation = glGetAttribLocation(shaderProgram[shaderCode], "aColor");
 	ambientProductLocation = glGetUniformLocation(shaderProgram[shaderCode], "ambientProduct");
-	diffuseProductLocation = glGetUniformLocation(shaderProgram[shaderCode], "diffuseProduct");
-	specularProductLocation = glGetUniformLocation(shaderProgram[shaderCode], "specularProduct");
+	diffuseProductLocation_point = glGetUniformLocation(shaderProgram[shaderCode], "diffuseProduct_point");
+	diffuseProductLocation_directional = glGetUniformLocation(shaderProgram[shaderCode], "diffuseProduct_directional");
+	specularProductLocation_point = glGetUniformLocation(shaderProgram[shaderCode], "specularProduct_point");
+	specularProductLocation_directional = glGetUniformLocation(shaderProgram[shaderCode], "specularProduct_directional");
 	modelViewLocation = glGetUniformLocation(shaderProgram[shaderCode], "modelView");
 	projectionLocation = glGetUniformLocation(shaderProgram[shaderCode], "projection");
-	lightPositionLocation = glGetUniformLocation(shaderProgram[shaderCode], "lightPosition");
+	lightPositionLocation_point = glGetUniformLocation(shaderProgram[shaderCode], "lightPosition_point");
+	lightPositionLocation_directional = glGetUniformLocation(shaderProgram[shaderCode], "lightPosition_directional");
 	shininessLocation = glGetUniformLocation(shaderProgram[shaderCode], "shininess");
 }

@@ -151,6 +151,7 @@
     <ClCompile Include="character.cpp" />
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="Floor.cpp" />
+    <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="shaderinfo.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="colors.h" />
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="Floor.h" />
+    <ClInclude Include="light.h" />
     <ClInclude Include="matrixStack.h" />
     <ClInclude Include="pose.h" />
     <ClInclude Include="shaderinfo.h" />

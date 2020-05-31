@@ -26,7 +26,7 @@ class Sphere
 {
 public:
     // ctor/dtor
-    Sphere(float radius = 1.0f, int sectorCount = 36, int stackCount = 18);
+    Sphere(float radius = 1.0f, int sectorCount = 36, int stackCount = 18) {};
     float getRadius() const { return radius; }
     int getSectorCount() const { return sectorCount; }
     int getStackCount() const { return stackCount; }
@@ -34,7 +34,6 @@ public:
     void setColor(int color) { this->color = color; };
     
     void buildVertices();
-    void buildVerticesSmooth();
 
     void addVertex(float x, float y, float z);
     void addNormal(float x, float y, float z);

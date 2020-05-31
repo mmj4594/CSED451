@@ -9,10 +9,6 @@ const int MIN_SECTOR_COUNT = 3;
 const int MIN_STACK_COUNT = 2;
 int i = 0;
 
-Sphere::Sphere(float radius, int sectors, int stacks) {
-
-}
-
 void Sphere::set(float radius, int sectors, int stacks) {
     this->radius = radius;
     this->sectorCount = sectors;

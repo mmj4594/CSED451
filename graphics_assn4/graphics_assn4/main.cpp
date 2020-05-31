@@ -5,6 +5,7 @@
 #include "main.h"
 #include "colors.h"
 #include "shaderinfo.h"
+#include "light.h"
 
 //All pass/fail cheat activation status
 static bool allPass = false;
@@ -73,7 +74,6 @@ void display3D() {
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glPolygonMode(GL_FRONT, GL_FILL);
 	glPolygonMode(GL_BACK, GL_LINE);
-
 	
 
 	//projection
@@ -86,11 +86,19 @@ void display3D() {
 		vec3(upVector[0], upVector[1], upVector[2])
 	);
 
-	glUniform4fv(ambientProductLocation, 1, value_ptr(ambient));		//Ambient
-	glUniform4fv(diffuseProductLocation, 1, value_ptr(diffuse));		//Diffuse
-	glUniform4fv(specularProductLocation, 1, value_ptr(specular));		//Specular
-	glUniform4fv(lightPositionLocation, 1, value_ptr(lightPosition));	//Light position
-	glUniform1f(shininessLocation, shininess);							//Shininess
+	//Ambient
+	glUniform4fv(ambientProductLocation, 1, value_ptr(ambient));
+	//Diffuse
+	glUniform4fv(diffuseProductLocation_point, 1, value_ptr(diffuse_point));
+	glUniform4fv(diffuseProductLocation_directional, 1, value_ptr(diffuse_directional));
+	//Specular
+	glUniform4fv(specularProductLocation_point, 1, value_ptr(specular_point));
+	glUniform4fv(specularProductLocation_directional, 1, value_ptr(specular_directional));
+	//Light poisition
+	glUniform4fv(lightPositionLocation_point, 1, value_ptr(lightPosition_point));
+	glUniform4fv(lightPositionLocation_directional, 1, value_ptr(lightPosition_directional)); 
+	//Shininess
+	glUniform1f(shininessLocation, shininess);
 	
 	worldFloor.draw();
 	wall.draw();
@@ -167,13 +175,14 @@ void frameAction(int value) {
 	if (abs(newFovy - fovy) > 0.01) { fovy += fovyPerFrame; }
 
 	//Light position manipulation
-	lightPosition = rotate(mat4(1.0f), radians(45.0f), vec3(0, 0, 1)) *
+	lightPosition_point = glm::vec4(wall.getX(), wall.getY() + wall.getHeight() + 20, wall.getZ(), 1.0);
+	lightPosition_directional = rotate(mat4(1.0f), radians(lightAngle), vec3(0, 0, 1)) *
 					vec4(lightCenter.x + 100 * cos(radians(-90.0f + lightFrame)),
 						 lightCenter.y + 0,
 						 lightCenter.z + 100 * sin(radians(-90.0f + lightFrame)), 1.0);
 	if (lightFrame >= SEC * 3) {
-		if (diffuse == DARK) { diffuse = BRIGHT; specular = BRIGHT; }
-		else { diffuse = DARK; specular = DARK; }
+		if (diffuse_directional == DARK) { diffuse_directional = BRIGHT; specular_directional = BRIGHT; }
+		else { diffuse_directional = DARK; specular_directional = DARK; }
 		lightFrame = 0;
 	}
 

@@ -2,30 +2,47 @@
 
 in vec3 fN;
 in vec3 fE;
-in vec3 fL;
+in vec3 fL_point;
+in vec3 fL_directional;
 in vec4 vertexColor;
 
 layout(location = 3) uniform vec4 ambientProduct;
-layout(location = 4) uniform vec4 diffuseProduct;
-layout(location = 5) uniform vec4 specularProduct;
-layout(location = 6) uniform mat4 modelView;
-layout(location = 8) uniform vec4 lightPosition;
-layout(location = 9) uniform float shininess;
+layout(location = 4) uniform vec4 diffuseProduct_point;
+layout(location = 5) uniform vec4 diffuseProduct_directional;
+layout(location = 6) uniform vec4 specularProduct_point;
+layout(location = 7) uniform vec4 specularProduct_directional;
+layout(location = 8) uniform mat4 modelView;
+layout(location = 9) uniform mat4 projection;
+layout(location = 10) uniform vec4 lightPosition_point;
+layout(location = 11) uniform vec4 lightPosition_directional;
+layout(location = 12) uniform float shininess;
 
 void main() {
 	vec3 N = normalize(fN);
 	vec3 E = normalize(fE);
-	vec3 L = normalize(fL);
-	vec3 H = normalize(L+E);
+	vec3 L_point = normalize(fL_point);
+	vec3 L_directional = normalize(fL_directional);
+	vec3 H_point = normalize(L_point+E);
+	vec3 H_directional = normalize(L_directional+E);
+
 	vec4 ambient = ambientProduct;
 
-	float Kd= max(dot(L, N), 0.0);
-	vec4 diffuse = Kd* diffuseProduct;
+	//Point light
+	float Kd_point= max(dot(L_point, N), 0.0);
+	vec4 diffuse_point = Kd_point * diffuseProduct_point;
+	float Ks_point = pow(max(dot(N, H_point), 0.0), shininess);
+	vec4 specular_point = Ks_point * specularProduct_point;
+	if ( dot(L_point, N) < 0.0 ) specular_point = vec4(0.0, 0.0, 0.0, 1.0);
 
-	float Ks = pow(max(dot(N, H), 0.0), shininess);
-	vec4 specular = Ks * specularProduct;
-	if ( dot(L, N) < 0.0 ) specular = vec4(0.0, 0.0, 0.0, 1.0);
+	//Directional light
+	float Kd_directional= max(dot(L_directional, N), 0.0);
+	vec4 diffuse_directional = Kd_directional * diffuseProduct_directional;
+	float Ks_directional = pow(max(dot(N, H_directional), 0.0), shininess);
+	vec4 specular_directional = Ks_directional * specularProduct_directional;
+	if ( dot(L_directional, N) < 0.0 ) specular_directional = vec4(0.0, 0.0, 0.0, 1.0);
 
-	gl_FragColor= vertexColor * (ambient + diffuse + specular);
+	gl_FragColor= vertexColor * (ambient + (diffuse_point + diffuse_directional) + (specular_point + specular_directional));
+	//gl_FragColor= vertexColor * (ambient + diffuse_point + specular_point);
+	//gl_FragColor= vertexColor * (ambient + diffuse_directional + specular_directional);
 	gl_FragColor.a= 1.0;
 }

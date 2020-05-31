@@ -11,9 +11,11 @@ GLuint shaderProgram[2];
 unsigned int positionVBO, colorVBO, normalVBO;
 unsigned int VAO, EBO;
 int aPosLocation, aColorLocation, aNormalLocation;
-int ambientProductLocation, diffuseProductLocation, specularProductLocation;
+int ambientProductLocation;
+int diffuseProductLocation_point, diffuseProductLocation_directional;
+int specularProductLocation_point, specularProductLocation_directional;
 int modelViewLocation, projectionLocation;
-int lightPositionLocation;
+int lightPositionLocation_point, lightPositionLocation_directional;
 int shininessLocation;
 
 void initShader(const int shaderCode);
