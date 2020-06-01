@@ -24,10 +24,10 @@ public:
 		this->floorSize = floorSize;
 		this->gridSize = gridSize;
 		for (GLfloat i = -floorSize; i <= floorSize; i += gridSize) {
-			floor_vertices.push_back(glm::vec3(i, 20, floorSize));
-			floor_vertices.push_back(glm::vec3(i, 20, -floorSize));
-			floor_vertices.push_back(glm::vec3(floorSize, 20, i));
-			floor_vertices.push_back(glm::vec3(-floorSize, 20, i));
+			floor_vertices.push_back(glm::vec3(i, 0, floorSize));
+			floor_vertices.push_back(glm::vec3(i, 0, -floorSize));
+			floor_vertices.push_back(glm::vec3(floorSize, 0, i));
+			floor_vertices.push_back(glm::vec3(-floorSize, 0, i));
 			for (int j = 0; j < 4; j++) {
 				floor_normals.push_back(glm::vec3(0, 0, 1));
 				floor_color.push_back(glm::vec3(0, 0, 0));

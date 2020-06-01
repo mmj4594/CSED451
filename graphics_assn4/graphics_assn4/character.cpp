@@ -181,7 +181,7 @@ void character::checkNewPosition() {
 	}
 	//Finish going up
 	else {
-		newY = 37.0;
+		newY = 17.0;
 	}
 }
 

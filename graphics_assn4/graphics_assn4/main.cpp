@@ -278,7 +278,7 @@ int moveWall() {
 	//Repositioning of wall when it goes out of the screen
 	if (wall.getX() + wall.getWidth() + wallSpeed * 20 < 0) {
 		int shape = wall.getShape();
-		wall = Wall(WORLD_SIZE_X, 20, 0, 10, wallHeight, 0);
+		wall = Wall(WORLD_SIZE_X, 0, 0, 10, wallHeight, 0);
 		wall.setShape(shape);
 		thief.resetCollided();
 		player.resetCollided();
