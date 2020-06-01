@@ -169,7 +169,13 @@ void frameAction(int value) {
 		0, 1, 0);
 	switch (cameraMode) {
 	case 1:	setCamera(FPV); break;
+	case 2: setCamera(camera2); break;
 	case 3:	setCamera(TPV);	break;
+	case 4: setCamera(camera4); break;
+	case 5: setCamera(camera5); break;
+	case 6: setCamera(camera6); break;
+	case 7: setCamera(camera7); break;
+	case 8: setCamera(camera8); break;
 	case 9: setCamera(XYPlane); break;
 	}
 	if (abs(newFovy - fovy) > 0.01) { fovy += fovyPerFrame; }
@@ -180,11 +186,11 @@ void frameAction(int value) {
 					vec4(lightCenter.x + 100 * cos(radians(-90.0f + lightFrame)),
 						 lightCenter.y + 0,
 						 lightCenter.z + 100 * sin(radians(-90.0f + lightFrame)), 0.0);
-	if (lightFrame >= SEC * 3) {
-		if (diffuse_directional == DARK) { diffuse_directional = BRIGHT; specular_directional = BRIGHT; }
-		else { diffuse_directional = DARK; specular_directional = DARK; }
-		lightFrame = 0;
-	}
+	//if (lightFrame >= SEC * 3) {
+	//	if (diffuse_directional == DARK) { diffuse_directional = BRIGHT; specular_directional = BRIGHT; }
+	//	else { diffuse_directional = DARK; specular_directional = DARK; }
+	//	lightFrame = 0;
+	//}
 
 	//Ask if thief will jump
 	if ((wall.getX() - thief.getX() < 35) && !askJump) {
@@ -308,10 +314,16 @@ void keyboard(unsigned char key, int x, int y) {
 		if (cameraMode != 1) { fovy *= 2; newFovy *= 2; }
 		setCameraMode(1);
 		break;
+	case '2': if (cameraMode == 1) { fovy /= 2; newFovy /= 2; } setCameraMode(2); break;
 	case '3':
 		if (cameraMode == 1) { fovy /= 2; newFovy /= 2; }
 		setCameraMode(3);
 		break;
+	case '4': if (cameraMode == 1) { fovy /= 2; newFovy /= 2; } setCameraMode(4); break;
+	case '5': if (cameraMode == 1) { fovy /= 2; newFovy /= 2; } setCameraMode(5); break;
+	case '6': if (cameraMode == 1) { fovy /= 2; newFovy /= 2; } setCameraMode(6); break;
+	case '7': if (cameraMode == 1) { fovy /= 2; newFovy /= 2; } setCameraMode(7); break;
+	case '8': if (cameraMode == 1) { fovy /= 2; newFovy /= 2; } setCameraMode(8); break;
 	case '9':
 		if (cameraMode == 1) { fovy /= 2; newFovy /= 2; }
 		setCameraMode(9);
