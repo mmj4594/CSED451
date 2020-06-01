@@ -167,6 +167,9 @@ void frameAction(int value) {
 	FPV = camera(player.getX() + 3, player.getY() + 8, 0,
 		thief.getX(), player.getY() + 8, 0,
 		0, 1, 0);
+	camera7 = camera(lightPosition_directional.x, lightPosition_directional.y, lightPosition_directional.z,
+		0, 0, 0,
+		0, 1, 0);
 	switch (cameraMode) {
 	case 1:	setCamera(FPV); break;
 	case 2: setCamera(camera2); break;
@@ -182,15 +185,15 @@ void frameAction(int value) {
 
 	//Light position manipulation
 	lightPosition_point = glm::vec4(wall.getX(), wall.getY() + wall.getHeight() + 5, wall.getZ(), 1.0);
-	lightPosition_directional = rotate(mat4(1.0f), radians(lightAngle), vec3(0, 0, 1)) *
-					vec4(lightCenter.x + 100 * cos(radians(-90.0f + lightFrame)),
-						 lightCenter.y + 0,
-						 lightCenter.z + 100 * sin(radians(-90.0f + lightFrame)), 0.0);
-	//if (lightFrame >= SEC * 3) {
-	//	if (diffuse_directional == DARK) { diffuse_directional = BRIGHT; specular_directional = BRIGHT; }
-	//	else { diffuse_directional = DARK; specular_directional = DARK; }
-	//	lightFrame = 0;
-	//}
+	lightPosition_directional = rotate(mat4(1.0f), radians(lightAngle_directional), vec3(0, 0, 1)) *
+					vec4(lightCenter_directional.x + 100 * cos(radians(-90.0f + lightFrame)),
+						 lightCenter_directional.y + 0,
+						 lightCenter_directional.z + 100 * sin(radians(-90.0f + lightFrame)), 0.0);
+	if (lightFrame >= SEC * 3) {
+		if (diffuse_directional == DARK) { diffuse_directional = BRIGHT; specular_directional = BRIGHT; }
+		else { diffuse_directional = DARK; specular_directional = DARK; }
+		lightFrame = 0;
+	}
 
 	//Ask if thief will jump
 	if ((wall.getX() - thief.getX() < 35) && !askJump) {
@@ -310,24 +313,15 @@ void keyboard(unsigned char key, int x, int y) {
 	case SPACE:
 		player.jump();
 		break;
-	case '1':
-		if (cameraMode != 1) { fovy *= 2; newFovy *= 2; }
-		setCameraMode(1);
-		break;
+	case '1': if (cameraMode != 1) { fovy *= 2; newFovy *= 2; } setCameraMode(1); break;
 	case '2': if (cameraMode == 1) { fovy /= 2; newFovy /= 2; } setCameraMode(2); break;
-	case '3':
-		if (cameraMode == 1) { fovy /= 2; newFovy /= 2; }
-		setCameraMode(3);
-		break;
+	case '3': if (cameraMode == 1) { fovy /= 2; newFovy /= 2; }	setCameraMode(3); break;
 	case '4': if (cameraMode == 1) { fovy /= 2; newFovy /= 2; } setCameraMode(4); break;
 	case '5': if (cameraMode == 1) { fovy /= 2; newFovy /= 2; } setCameraMode(5); break;
 	case '6': if (cameraMode == 1) { fovy /= 2; newFovy /= 2; } setCameraMode(6); break;
 	case '7': if (cameraMode == 1) { fovy /= 2; newFovy /= 2; } setCameraMode(7); break;
 	case '8': if (cameraMode == 1) { fovy /= 2; newFovy /= 2; } setCameraMode(8); break;
-	case '9':
-		if (cameraMode == 1) { fovy /= 2; newFovy /= 2; }
-		setCameraMode(9);
-		break;
+	case '9': if (cameraMode == 1) { fovy /= 2; newFovy /= 2; } setCameraMode(9); break;
 	}
 
 	//Animation loop for player and thief

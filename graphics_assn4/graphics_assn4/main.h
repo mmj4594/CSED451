@@ -100,7 +100,7 @@ camera camera4(-WORLD_SIZE_X / 2, WORLD_SIZE_Y / 2 + 20, -180 / 2,
     0, 1, 0);
 camera camera5(250, 55, 0, 0, 55, 0, 0, 1, 0);
 camera camera6(0, 200, 0, 50, 0, 0, 0, 1, 0);
-camera camera7(-20, 45, 0, 0, 0, 0, 0, 1, 0);
+camera camera7(0, 0, 0, 0, 0, 0, 0, 1, 0);
 camera camera8(-20, 45, 0, 0, 0, 0, 0, 1, 0);
 camera XYPlane(80, 45, 150, 80, 45, 0, 0, 1, 0);
 float fovy = 45;
