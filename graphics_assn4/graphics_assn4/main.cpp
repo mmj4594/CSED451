@@ -131,7 +131,7 @@ void frameAction(int value) {
 	}
 
 	//move wall and get current status.
-	gameStatus = moveWall();
+	//gameStatus = moveWall();
 	switch (gameStatus) {
 	case LOSE: cout << "Lose\n"; finishGame(); return;
 	case WIN: cout << "Win\n"; finishGame(); return;
@@ -182,16 +182,15 @@ void frameAction(int value) {
 	case 9: setCamera(XYPlane); break;
 	}
 	if (abs(newFovy - fovy) > 0.01) { fovy += fovyPerFrame; }
-
 	//Light position manipulation
 	lightPosition_point = glm::vec4(wall.getX(), wall.getY() + wall.getHeight() + 5, wall.getZ(), 1.0);
 	lightPosition_directional = rotate(mat4(1.0f), radians(lightAngle_directional), vec3(0, 0, 1)) *
-					vec4(lightCenter_directional.x + 100 * cos(radians(-90.0f + lightFrame)),
+					vec4(lightCenter_directional.x + 200 * cos(radians(-90.0f + 0.5*lightFrame)),
 						 lightCenter_directional.y + 0,
-						 lightCenter_directional.z + 100 * sin(radians(-90.0f + lightFrame)), 0.0);
-	if (lightFrame >= SEC * 3) {
-		if (diffuse_directional == DARK) { diffuse_directional = BRIGHT; specular_directional = BRIGHT; }
-		else { diffuse_directional = DARK; specular_directional = DARK; }
+						 lightCenter_directional.z + 200 * sin(radians(-90.0f + 0.5*lightFrame)), 0.0);
+	if (lightFrame >= SEC * 6) {
+		/*if (diffuse_directional == DARK) { diffuse_directional = BRIGHT; specular_directional = BRIGHT; }
+		else { diffuse_directional = DARK; specular_directional = DARK; }*/
 		lightFrame = 0;
 	}
 

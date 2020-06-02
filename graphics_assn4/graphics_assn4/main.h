@@ -60,7 +60,7 @@ const int SEC = 60;
 const float zoomFrame = 50;
 
 //Displacement of life on window
-int life = 4;
+int life = 500;
 std::string lifeText = "Life: ";
 const float LIFE_DEFAULT_X = 50;
 const float LIFE_DEFAULT_Y = 450;
@@ -68,7 +68,7 @@ float lifeX = LIFE_DEFAULT_X;
 float lifeY = LIFE_DEFAULT_Y;
 
 //Basic objects in world
-Wall wall(WORLD_SIZE_X, 00, 0, 10, wallHeight, 0);
+Wall wall((PLAYER_DEFAULT_X + THIEF_DEFAULT_X)*0.5, 0, 0, 10, wallHeight, 0);
 character player(PLAYER_DEFAULT_X, PLAYER_DEFAULT_Y, initialPose);
 character thief(THIEF_DEFAULT_X, THIEF_DEFAULT_Y, initialPose);
 GLfloat floorSize = 300;
@@ -89,9 +89,9 @@ camera camera4(-WORLD_SIZE_X / 2, WORLD_SIZE_Y / 2, -180 / 2,
     WORLD_SIZE_X / 2, WORLD_SIZE_Y / 4 + 20, 0,
     0, 1, 0);
 camera camera5(250, 35, 0, 0, 35, 0, 0, 1, 0);
-camera camera6(0, 200, 0, 50, 0, 0, 0, 1, 0);
+camera camera6(100, 200, 0, 50, 0, 0, 0, 1, 0);
 camera camera7(0, 0, 0, 0, 0, 0, 0, 1, 0);
-camera camera8(-20, 45, 0, 0, 0, 0, 0, 1, 0);
+camera camera8(80, 25, -150, 80, 25, 0, 0, 1, 0);
 camera XYPlane(80, 25, 150, 80, 25, 0, 0, 1, 0);
 float fovy = 45;
 float newFovy = fovy;

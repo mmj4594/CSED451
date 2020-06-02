@@ -208,27 +208,10 @@ void drawHead(Sphere head, Cylinder unused) {
 
 //Draw limb(arm or leg) of character
 void drawLimb(Sphere joint, Cylinder limb) {
-	//joint1
-	joint.draw();
-	//skeleton
-	pushMatrix(GL_MODELVIEW);
-	mtxView = rotate(mtxView, radians(90.0f), vec3(0, 1, 0));
-	mtxView = translate(mtxView, vec3(0, 0, limb_length/2));
-	limb.draw();
-	popMatrix(GL_MODELVIEW);
-	//joint2
-	pushMatrix(GL_MODELVIEW);
-	mtxView = translate(mtxView, vec3(limb_length, 0, 0));
-	joint.draw();
-	popMatrix(GL_MODELVIEW);
 }
 
 //Draw torso of character
 void drawTorso(Sphere unused, Cylinder torso) {
-	pushMatrix(GL_MODELVIEW);
-	mtxView = rotate(mtxView, radians(90.0f), vec3(1, 0, 0));
-	torso.draw();
-	popMatrix(GL_MODELVIEW);
 }
 
 //Compare float variables

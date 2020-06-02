@@ -165,8 +165,6 @@ void Sphere::addIndices(unsigned int i1, unsigned int i2, unsigned int i3) {
 }
 
 void Sphere::draw() {
-
-
     //position VBO
     glBindBuffer(GL_ARRAY_BUFFER, positionVBO);           // for vertex data
     glBufferData(GL_ARRAY_BUFFER,                   // target

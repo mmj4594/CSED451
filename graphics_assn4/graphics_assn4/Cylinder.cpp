@@ -270,7 +270,7 @@ void Cylinder::clearArrays() {
 }
 
 void Cylinder::initializeColor() {
-    for (int i = 0; i < vertices.size(); i++) {
+    for (int i = 0; i < vertices.size()/3; i++) {
         //gray
         vertices_gray.push_back(0.3f);
         vertices_gray.push_back(0.3f);
