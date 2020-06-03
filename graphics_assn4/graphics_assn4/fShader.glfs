@@ -32,8 +32,8 @@ void main() {
 		vec3 E = normalize(fE);
 		vec3 L_point = normalize(fL_point);
 		vec3 L_directional = normalize(fL_directional);
-		vec3 H_point = normalize(L_point+E);
-		vec3 H_directional = normalize(L_directional+E);
+		vec3 H_point = normalize(L_point + E);
+		vec3 H_directional = normalize(L_directional + E);
 
 		vec4 ambient = ambientProduct;
 
@@ -41,9 +41,9 @@ void main() {
 		float distance = length(fL_point);
 		float attenuation = 1.0 / (1.0 + 0.007 * distance + 0.0002 * (distance * distance));
 		float Kd_point= max(dot(L_point, N), 0.0);
-		vec4 diffuse_point = Kd_point * diffuseProduct_point;
+		vec4 diffuse_point = attenuation * Kd_point * diffuseProduct_point;
 		float Ks_point = pow(max(dot(H_point, N), 0.0), shininess);
-		vec4 specular_point = Ks_point * specularProduct_point;
+		vec4 specular_point = attenuation * Ks_point * specularProduct_point;
 		if ( dot(L_point, N) < 0.0 ) specular_point = vec4(0.0, 0.0, 0.0, 1.0);
 
 		//Directional light

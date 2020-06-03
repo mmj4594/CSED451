@@ -179,8 +179,8 @@ void frameAction(int value) {
 						 0.0);
 	
 	if (lightFrame >= SEC * 6) {
-		if (diffuse_directional == DARK) { diffuse_directional = BRIGHT; specular_directional = BRIGHT; }
-		else { diffuse_directional = DARK; specular_directional = DARK; }
+		/*if (diffuse_directional == DARK) { diffuse_directional = BRIGHT; specular_directional = BRIGHT; }
+		else { diffuse_directional = DARK; specular_directional = DARK; }*/
 		lightFrame = 0;
 	}
 
