@@ -68,9 +68,9 @@ void main() {
 		fragColor = vec4(aColor, 1.0);
 	}
 
-	fN = aNormal;
+	fN = mat3(transpose(inverse(model))) * aNormal;
 	fE = aPos;
-	fL_point = lightPosition_point.xyz - aPos;
+	fL_point = lightPosition_point.xyz - (model * vec4(aPos, 1.0)).xyz;
 	fL_directional = lightPosition_directional.xyz;
 	gl_Position = projection * view * model * vec4(aPos, 1.0);
 }

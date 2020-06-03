@@ -179,11 +179,30 @@ void frameAction(int value) {
 						 0.0);
 	
 	if (lightFrame >= SEC * 6) {
-		/*if (diffuse_directional == DARK) { diffuse_directional = BRIGHT; specular_directional = BRIGHT; }
-		else { diffuse_directional = DARK; specular_directional = DARK; }*/
+		if (diffuse_directional == DARK) { diffuse_directional = BRIGHT; specular_directional = BRIGHT; }
+		else { diffuse_directional = DARK; specular_directional = DARK; }
 		lightFrame = 0;
 	}
 
+	//Ask if thief will jump
+	if ((wall.getX() - thief.getX() < 35) && !askJump) {
+		askJump = true;
+		//thief jump with probability
+		if (rand() % 100 < thiefJumpProbability * 100) {
+			thief.jump();
+			thiefJumped = true;
+		}
+	}
+	//Change pose of the thief in every set period
+	if (thiefFrame >= posePeriod) {
+		switch (rand() % 4) {
+		case 0: thief.changePose(poseA); break;
+		case 1: thief.changePose(poseB); break;
+		case 2: thief.changePose(poseC); break;
+		case 3: thief.changePose(poseD); break;
+		}
+		thiefFrame = 0;
+	}
 
 	//Check new position of characters
 	player.checkNewPosition();

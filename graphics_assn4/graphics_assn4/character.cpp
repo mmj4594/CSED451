@@ -214,7 +214,7 @@ void drawLimb(Sphere joint, Cylinder limb) {
 	pushMatrix(GL_MODELVIEW);
 	mtxModel = rotate(mtxModel, radians(90.0f), vec3(0, 1, 0));
 	mtxModel = translate(mtxModel, vec3(0, 0, limb_length/2));
-	//limb.draw();
+	limb.draw();
 	popMatrix(GL_MODELVIEW);
 	//joint2
 	pushMatrix(GL_MODELVIEW);
@@ -227,7 +227,7 @@ void drawLimb(Sphere joint, Cylinder limb) {
 void drawTorso(Sphere unused, Cylinder torso) {
 	pushMatrix(GL_MODELVIEW);
 	mtxModel = rotate(mtxModel, radians(90.0f), vec3(1, 0, 0));
-	//torso.draw();
+	torso.draw();
 	popMatrix(GL_MODELVIEW);
 }
 

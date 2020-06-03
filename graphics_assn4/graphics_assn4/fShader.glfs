@@ -38,7 +38,7 @@ void main() {
 		vec4 ambient = ambientProduct;
 
 		//Point light
-		float distance = length(lightPosition_point.xyz - fE);
+		float distance = length(fL_point);
 		float attenuation = 1.0 / (1.0 + 0.007 * distance + 0.0002 * (distance * distance));
 		float Kd_point= max(dot(L_point, N), 0.0);
 		vec4 diffuse_point = Kd_point * diffuseProduct_point;
