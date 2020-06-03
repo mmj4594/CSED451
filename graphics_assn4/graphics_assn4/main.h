@@ -68,7 +68,7 @@ float lifeX = LIFE_DEFAULT_X;
 float lifeY = LIFE_DEFAULT_Y;
 
 //Basic objects in world
-Wall wall((PLAYER_DEFAULT_X + THIEF_DEFAULT_X)*0.5, 0, 0, 10, wallHeight, 0);
+Wall wall(WORLD_SIZE_X, 0, 0, 10, wallHeight, 0);
 character player(PLAYER_DEFAULT_X, PLAYER_DEFAULT_Y, initialPose);
 character thief(THIEF_DEFAULT_X, THIEF_DEFAULT_Y, initialPose);
 GLfloat floorSize = 300;
