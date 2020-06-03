@@ -15,7 +15,7 @@ int lightTypeLocation;
 int ambientProductLocation;
 int diffuseProductLocation_point, diffuseProductLocation_directional;
 int specularProductLocation_point, specularProductLocation_directional;
-int modelViewLocation, projectionLocation;
+int modelLocation, viewLocation, projectionLocation;
 int lightPositionLocation_point, lightPositionLocation_directional;
 int shininessLocation;
 int shaderCodeLocation;

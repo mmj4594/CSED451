@@ -30,7 +30,8 @@ void initShader() {
 	diffuseProductLocation_directional = glGetUniformLocation(shaderProgram, "diffuseProduct_directional");
 	specularProductLocation_point = glGetUniformLocation(shaderProgram, "specularProduct_point");
 	specularProductLocation_directional = glGetUniformLocation(shaderProgram, "specularProduct_directional");
-	modelViewLocation = glGetUniformLocation(shaderProgram, "modelView");
+	modelLocation = glGetUniformLocation(shaderProgram, "model");
+	viewLocation = glGetUniformLocation(shaderProgram, "view");
 	projectionLocation = glGetUniformLocation(shaderProgram, "projection");
 	lightPositionLocation_point = glGetUniformLocation(shaderProgram, "lightPosition_point");
 	lightPositionLocation_directional = glGetUniformLocation(shaderProgram, "lightPosition_directional");

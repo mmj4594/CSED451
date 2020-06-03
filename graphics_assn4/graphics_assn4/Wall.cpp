@@ -2,6 +2,7 @@
 #include "colors.h"
 #include <iostream>
 #include "matrixStack.h"
+#include "shaderinfo.h"
 
 using namespace std;
 using namespace glm;
@@ -13,45 +14,45 @@ void Wall::draw() {
 	case 0:		//cone
 		cone.setColor(color);
 		pushMatrix(GL_MODELVIEW);
-			mtxView = translate(mtxView, vec3(x, y + 27.5 / 2, z));
-			mtxView = rotate(mtxView, radians(-90.0f), vec3(1, 0, 0));
-			glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
+			mtxModel = translate(mtxModel, vec3(x, y + 27.5 / 2, z));
+			mtxModel = rotate(mtxModel, radians(-90.0f), vec3(1, 0, 0));
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, value_ptr(mtxModel));
 			cone.draw();
 		popMatrix(GL_MODELVIEW);
 		break;
 	case 1:		//reverseCone
 		reverseCone.setColor(color);
 		pushMatrix(GL_MODELVIEW);
-			mtxView = translate(mtxView, vec3(x, y + 27.5 / 2, z));
-			mtxView = rotate(mtxView, radians(-90.0f), vec3(1, 0, 0));
-			glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
+			mtxModel = translate(mtxModel, vec3(x, y + 27.5 / 2, z));
+			mtxModel = rotate(mtxModel, radians(-90.0f), vec3(1, 0, 0));
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, value_ptr(mtxModel));
 			reverseCone.draw();
 		popMatrix(GL_MODELVIEW);
 		break;
 	case 2:		//cylinder1
 		cylinder1.setColor(color);
 		pushMatrix(GL_MODELVIEW);
-		mtxView = translate(mtxView, vec3(x, y + 27.5 / 2, z));
-		mtxView = rotate(mtxView, radians(-90.0f), vec3(1, 0, 0));
-		glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
-		cylinder1.draw();
+			mtxModel = translate(mtxModel, vec3(x, y + 27.5 / 2, z));
+			mtxModel = rotate(mtxModel, radians(-90.0f), vec3(1, 0, 0));
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, value_ptr(mtxModel));
+			cylinder1.draw();
 		popMatrix(GL_MODELVIEW);
 		break;
 	case 3:		//cylinder2
 		cylinder2.setColor(color);
 		pushMatrix(GL_MODELVIEW);
-		mtxView = translate(mtxView, vec3(x, y + 27.5 / 2, z));
-		mtxView = rotate(mtxView, radians(-90.0f), vec3(1, 0, 0));
-		glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
-		cylinder2.draw();
+			mtxModel = translate(mtxModel, vec3(x, y + 27.5 / 2, z));
+			mtxModel = rotate(mtxModel, radians(-90.0f), vec3(1, 0, 0));
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, value_ptr(mtxModel));
+			cylinder2.draw();
 		popMatrix(GL_MODELVIEW);
 		break;
 	case 5:		//Default cylinder
 		cylinder.setColor(color);
 		pushMatrix(GL_MODELVIEW);
-			mtxView = translate(mtxView, vec3(x, y+27.5/2, z));
-			mtxView = rotate(mtxView, radians(-90.0f), vec3(1, 0, 0));
-			glUniformMatrix4fv(2, 1, GL_FALSE, value_ptr(mtxView));
+			mtxModel = translate(mtxModel, vec3(x, y+27.5/2, z));
+			mtxModel = rotate(mtxModel, radians(-90.0f), vec3(1, 0, 0));
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, value_ptr(mtxModel));
 			cylinder.draw();
 		popMatrix(GL_MODELVIEW);
 		break;

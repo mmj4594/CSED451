@@ -227,7 +227,7 @@ void Sphere::draw() {
         GL_STATIC_DRAW);                   // usage
   
     // draw a sphere with VBO
-    glUniformMatrix4fv(modelViewLocation, 1, GL_FALSE, glm::value_ptr(mtxView));
+    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(mtxModel));
     glDrawElements(GL_TRIANGLES,                    // primitive type
         indices.size(),          // # of indices
         GL_UNSIGNED_INT,                 // data type

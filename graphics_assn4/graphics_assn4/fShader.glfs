@@ -4,7 +4,7 @@ in vec3 fN;
 in vec3 fE;
 in vec3 fL_point;
 in vec3 fL_directional;
-in vec4 vertexColor;
+in vec4 fragColor;
 
 uniform int lightType;
 uniform vec4 ambientProduct;
@@ -12,7 +12,8 @@ uniform vec4 diffuseProduct_point;
 uniform vec4 diffuseProduct_directional;
 uniform vec4 specularProduct_point;
 uniform vec4 specularProduct_directional;
-uniform mat4 modelView;
+uniform mat4 model;
+uniform mat4 view;
 uniform mat4 projection;
 uniform vec4 lightPosition_point;
 uniform vec4 lightPosition_directional;
@@ -22,13 +23,13 @@ uniform int shaderCode;
 void main() {
 	//Gouraud shading
 	if(shaderCode == 0) {
-		gl_FragColor = vertexColor;
+		gl_FragColor = fragColor;
 	}
 
 	//Phong shading
 	else if(shaderCode == 1){
 		vec3 N = normalize(fN);
-		vec3 E = normalize(modelView * vec4(fE, 1.0)).xyz;
+		vec3 E = normalize(fE);
 		vec3 L_point = normalize(fL_point);
 		vec3 L_directional = normalize(fL_directional);
 		vec3 H_point = normalize(L_point+E);
@@ -37,29 +38,27 @@ void main() {
 		vec4 ambient = ambientProduct;
 
 		//Point light
-		float distance = length(fL_point);
+		float distance = length(lightPosition_point.xyz - fE);
 		float attenuation = 1.0 / (1.0 + 0.007 * distance + 0.0002 * (distance * distance));
 		float Kd_point= max(dot(L_point, N), 0.0);
 		vec4 diffuse_point = Kd_point * diffuseProduct_point;
-		diffuse_point *= attenuation;
-		float Ks_point = pow(max(dot(N, H_point), 0.0), shininess);
+		float Ks_point = pow(max(dot(H_point, N), 0.0), shininess);
 		vec4 specular_point = Ks_point * specularProduct_point;
 		if ( dot(L_point, N) < 0.0 ) specular_point = vec4(0.0, 0.0, 0.0, 1.0);
-		specular_point *= attenuation;
 
 		//Directional light
 		float Kd_directional= max(dot(L_directional, N), 0.0);
 		vec4 diffuse_directional = Kd_directional * diffuseProduct_directional;
-		float Ks_directional = pow(max(dot(N, H_directional), 0.0), shininess);
+		float Ks_directional = pow(max(dot(H_directional, N), 0.0), shininess);
 		vec4 specular_directional = Ks_directional * specularProduct_directional;
 		if (dot(L_directional, N) < 0.0) specular_directional = vec4(0.0, 0.0, 0.0, 1.0);
 
 		if(lightType == 0)
-			gl_FragColor= vertexColor * (ambient + (diffuse_point + diffuse_directional) + (specular_point + specular_directional));
+			gl_FragColor= fragColor * (ambient + (diffuse_point + diffuse_directional) + (specular_point + specular_directional));
 		else if(lightType == 1)
-			gl_FragColor= vertexColor * (ambient + diffuse_point + specular_point);
+			gl_FragColor= fragColor * (ambient + diffuse_point + specular_point);
 		else if(lightType == 2)
-			gl_FragColor= vertexColor * (ambient + diffuse_directional + specular_directional);
+			gl_FragColor= fragColor * (ambient + diffuse_directional + specular_directional);
 		gl_FragColor.a= 1.0;
 	}
 }

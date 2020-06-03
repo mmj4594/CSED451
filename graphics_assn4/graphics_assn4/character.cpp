@@ -82,7 +82,7 @@ void character::traverse(treeNode* current) {
 	if (current == NULL) return;
 
 	pushMatrix(GL_MODELVIEW);
-		mtxView *= (current->mtx * current->additionalTransform);
+		mtxModel *= (current->mtx * current->additionalTransform);
 		switch (current->nodeType) {
 			case 0:
 			case 1: {current->draw(head, torso); break; }		//head, torso
@@ -106,7 +106,7 @@ void character::draw() {
 
 	//tree traversal
 	pushMatrix(GL_MODELVIEW);
-		mtxView = translate(mtxView, vec3(x, y, 0));	
+		mtxModel = translate(mtxModel, vec3(x, y, 0));	
 		traverse(&torso_node);
 	popMatrix(GL_MODELVIEW);
 }
@@ -212,13 +212,13 @@ void drawLimb(Sphere joint, Cylinder limb) {
 	joint.draw();
 	//skeleton
 	pushMatrix(GL_MODELVIEW);
-	mtxView = rotate(mtxView, radians(90.0f), vec3(0, 1, 0));
-	mtxView = translate(mtxView, vec3(0, 0, limb_length/2));
+	mtxModel = rotate(mtxModel, radians(90.0f), vec3(0, 1, 0));
+	mtxModel = translate(mtxModel, vec3(0, 0, limb_length/2));
 	//limb.draw();
 	popMatrix(GL_MODELVIEW);
 	//joint2
 	pushMatrix(GL_MODELVIEW);
-	mtxView = translate(mtxView, vec3(limb_length, 0, 0));
+	mtxModel = translate(mtxModel, vec3(limb_length, 0, 0));
 	joint.draw();
 	popMatrix(GL_MODELVIEW);
 }
@@ -226,7 +226,7 @@ void drawLimb(Sphere joint, Cylinder limb) {
 //Draw torso of character
 void drawTorso(Sphere unused, Cylinder torso) {
 	pushMatrix(GL_MODELVIEW);
-	mtxView = rotate(mtxView, radians(90.0f), vec3(1, 0, 0));
+	mtxModel = rotate(mtxModel, radians(90.0f), vec3(1, 0, 0));
 	//torso.draw();
 	popMatrix(GL_MODELVIEW);
 }

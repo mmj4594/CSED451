@@ -83,6 +83,7 @@ void display3D() {
 		vec3(reference[0], reference[1], reference[2]),
 		vec3(upVector[0], upVector[1], upVector[2])
 	);
+	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, value_ptr(mtxView));
 
 	//Ambient
 	glUniform4fv(ambientProductLocation, 1, value_ptr(ambient));
@@ -172,9 +173,10 @@ void frameAction(int value) {
 	//Light position manipulation
 	lightPosition_point = glm::vec4(wall.getX(), wall.getY() + wall.getHeight() + 5, wall.getZ(), 1.0);
 	lightPosition_directional = rotate(mat4(1.0f), radians(lightAngle_directional), vec3(0, 0, 1)) *
-					vec4(lightCenter_directional.x + 200 * cos(radians(-90.0f + 0.5*lightFrame)),
+					vec4(lightCenter_directional.x + 200 * cos(radians(-90.0f + 0.5 * lightFrame)),
 						 lightCenter_directional.y + 0,
-						 lightCenter_directional.z + 200 * sin(radians(-90.0f + 0.5*lightFrame)), 0.0);
+						 lightCenter_directional.z + 200 * sin(radians(-90.0f + 0.5 * lightFrame)),
+						 0.0);
 	
 	if (lightFrame >= SEC * 6) {
 		/*if (diffuse_directional == DARK) { diffuse_directional = BRIGHT; specular_directional = BRIGHT; }
@@ -287,6 +289,7 @@ void keyboard(unsigned char key, int x, int y) {
 		else if (currentLightType == POINTONLY) currentLightType = DIRECTIONALONLY;
 		else if (currentLightType == DIRECTIONALONLY) currentLightType = BASICLIGHT;
 		glUniform1i(lightTypeLocation, currentLightType);
+		cout << "\nLight Mode: " << currentLightType << "\n";
 		break;
 	case SPACE:
 		player.jump();
