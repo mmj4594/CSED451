@@ -39,9 +39,6 @@
     <ClCompile Include="shaderinfo.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="light.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -88,16 +85,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="gouraudFshader.glfs">
+    <None Include="vShader.glvs">
       <Filter>리소스 파일</Filter>
     </None>
-    <None Include="gouraudVshader.glvs">
-      <Filter>리소스 파일</Filter>
-    </None>
-    <None Include="phongFshader.glfs">
-      <Filter>리소스 파일</Filter>
-    </None>
-    <None Include="phongVshader.glvs">
+    <None Include="fShader.glfs">
       <Filter>리소스 파일</Filter>
     </None>
   </ItemGroup>

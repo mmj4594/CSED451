@@ -41,8 +41,7 @@ int main(int argc, char** argv) {
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &positionVBO);
 	glDeleteBuffers(1, &EBO);
-	glDeleteProgram(shaderProgram[0]);
-	glDeleteProgram(shaderProgram[1]);
+	glDeleteProgram(shaderProgram);
 	return 0;
 }
 
@@ -52,8 +51,7 @@ void init() {
 	writeLife();
 	
 	//Init shaders
-	initShader(GOURAUD);
-	initShader(PHONG);
+	initShader();
 	switchShader(GOURAUD);
 
 	//Initial Camera Setting
@@ -119,19 +117,8 @@ void reshape3D(int w, int h) {
 
 //Action per frame(60FPS currently)
 void frameAction(int value) {
-	//Change pose of the thief in every set period
-	if (thiefFrame >= posePeriod) {
-		switch (rand() % 4) {
-		case 0: thief.changePose(poseA); break;
-		case 1: thief.changePose(poseB); break;
-		case 2: thief.changePose(poseC); break;
-		case 3: thief.changePose(poseD); break;
-		}
-		thiefFrame = 0;
-	}
-
 	//move wall and get current status.
-	//gameStatus = moveWall();
+	gameStatus = moveWall();
 	switch (gameStatus) {
 	case LOSE: cout << "Lose\n"; finishGame(); return;
 	case WIN: cout << "Win\n"; finishGame(); return;
@@ -188,31 +175,13 @@ void frameAction(int value) {
 					vec4(lightCenter_directional.x + 200 * cos(radians(-90.0f + 0.5*lightFrame)),
 						 lightCenter_directional.y + 0,
 						 lightCenter_directional.z + 200 * sin(radians(-90.0f + 0.5*lightFrame)), 0.0);
+	
 	if (lightFrame >= SEC * 6) {
 		/*if (diffuse_directional == DARK) { diffuse_directional = BRIGHT; specular_directional = BRIGHT; }
 		else { diffuse_directional = DARK; specular_directional = DARK; }*/
 		lightFrame = 0;
 	}
 
-	//Ask if thief will jump
-	if ((wall.getX() - thief.getX() < 35) && !askJump) {
-		askJump = true;
-		//thief jump with probability
-		if (rand() % 100 < thiefJumpProbability * 100) {
-			thief.jump();
-			thiefJumped = true;
-		}
-	}
-	//Change pose of the thief in every set period
-	if (thiefFrame >= posePeriod) {
-		switch (rand() % 4) {
-		case 0: thief.changePose(poseA); break;
-		case 1: thief.changePose(poseB); break;
-		case 2: thief.changePose(poseC); break;
-		case 3: thief.changePose(poseD); break;
-		}
-		thiefFrame = 0;
-	}
 
 	//Check new position of characters
 	player.checkNewPosition();
@@ -295,19 +264,29 @@ int moveWall() {
 //Define cheat according to user keyboard input.
 void keyboard(unsigned char key, int x, int y) {
 	switch (key) {
+	case 'C':
 	case 'c':
 		allFail = false;
 		allPass = true;
 		cout << "All pass\n";
 		break;
+	case 'F':
 	case 'f':
 		allPass = false;
 		allFail = true;
 		cout << "All fail\n";
 		break;
+	case 'Q':
 	case 'q':
 		if (currentShaderType == GOURAUD) switchShader(PHONG);
 		else if (currentShaderType == PHONG) switchShader(GOURAUD);
+		break;
+	case 'W':
+	case 'w':
+		if (currentLightType == BASICLIGHT) currentLightType = POINTONLY;
+		else if (currentLightType == POINTONLY) currentLightType = DIRECTIONALONLY;
+		else if (currentLightType == DIRECTIONALONLY) currentLightType = BASICLIGHT;
+		glUniform1i(lightTypeLocation, currentLightType);
 		break;
 	case SPACE:
 		player.jump();

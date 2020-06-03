@@ -20,7 +20,6 @@
 class Floor {
 public:		
 	Floor (GLfloat floorSize, GLfloat gridSize) {
-		
 		this->floorSize = floorSize;
 		this->gridSize = gridSize;
 		for (GLfloat i = -floorSize; i <= floorSize; i += gridSize) {
@@ -36,8 +35,7 @@ public:
 		for (int i = 0; i < floor_vertices.size(); i = i + 2) {
 			floor_indices.push_back(glm::uvec2(i, i + 1));
 		}
-		
-	}		
+	}
 	void draw();
 
 private:

@@ -5,44 +5,38 @@
 using namespace std;
 
 //Initiate shader program
-void initShader(const int shaderCode) {
+void initShader() {
 	//Adding vertex, fragment shader
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	//Gouraud
-	if (shaderCode == 0) {
-		GLchar vShaderFile[] = "gouraudVshader.glvs";
-		GLchar fShaderFile[] = "gouraudFshader.glfs";
-		readShaderSource(vShaderFile, fShaderFile);
-	}
-	//Phong
-	else {
-		GLchar vShaderFile[] = "phongVshader.glvs";
-		GLchar fShaderFile[] = "phongFshader.glfs";
-		readShaderSource(vShaderFile, fShaderFile);
-	}
+	GLchar vShaderFile[] = "vShader.glvs";
+	GLchar fShaderFile[] = "fShader.glfs";
+	readShaderSource(vShaderFile, fShaderFile);
 
 	//Link shader program
-	shaderProgram[shaderCode] = glCreateProgram();
-	glAttachShader(shaderProgram[shaderCode], vertexShader);
-	glAttachShader(shaderProgram[shaderCode], fragmentShader);
-	glLinkProgram(shaderProgram[shaderCode]);
-	if (!CheckProgram(shaderProgram[shaderCode]))
-		{ cout << "Shader type "<< shaderCode << " Link Fail!\n"; }
+	shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+	if (!CheckProgram(shaderProgram))
+		{ cout << " Link Fail!\n"; }
 	//Get location of variables
-	aPosLocation = glGetAttribLocation(shaderProgram[shaderCode], "aPos");
-	aColorLocation = glGetAttribLocation(shaderProgram[shaderCode], "aColor");
-	aNormalLocation = glGetAttribLocation(shaderProgram[shaderCode], "aNormal");
-	ambientProductLocation = glGetUniformLocation(shaderProgram[shaderCode], "ambientProduct");
-	diffuseProductLocation_point = glGetUniformLocation(shaderProgram[shaderCode], "diffuseProduct_point");
-	diffuseProductLocation_directional = glGetUniformLocation(shaderProgram[shaderCode], "diffuseProduct_directional");
-	specularProductLocation_point = glGetUniformLocation(shaderProgram[shaderCode], "specularProduct_point");
-	specularProductLocation_directional = glGetUniformLocation(shaderProgram[shaderCode], "specularProduct_directional");
-	modelViewLocation = glGetUniformLocation(shaderProgram[shaderCode], "modelView");
-	projectionLocation = glGetUniformLocation(shaderProgram[shaderCode], "projection");
-	lightPositionLocation_point = glGetUniformLocation(shaderProgram[shaderCode], "lightPosition_point");
-	lightPositionLocation_directional = glGetUniformLocation(shaderProgram[shaderCode], "lightPosition_directional");
-	shininessLocation = glGetUniformLocation(shaderProgram[shaderCode], "shininess");
+	aPosLocation = glGetAttribLocation(shaderProgram, "aPos");
+	aColorLocation = glGetAttribLocation(shaderProgram, "aColor");
+	aNormalLocation = glGetAttribLocation(shaderProgram, "aNormal");
+	lightTypeLocation = glGetUniformLocation(shaderProgram, "lightType");
+	ambientProductLocation = glGetUniformLocation(shaderProgram, "ambientProduct");
+	diffuseProductLocation_point = glGetUniformLocation(shaderProgram, "diffuseProduct_point");
+	diffuseProductLocation_directional = glGetUniformLocation(shaderProgram, "diffuseProduct_directional");
+	specularProductLocation_point = glGetUniformLocation(shaderProgram, "specularProduct_point");
+	specularProductLocation_directional = glGetUniformLocation(shaderProgram, "specularProduct_directional");
+	modelViewLocation = glGetUniformLocation(shaderProgram, "modelView");
+	projectionLocation = glGetUniformLocation(shaderProgram, "projection");
+	lightPositionLocation_point = glGetUniformLocation(shaderProgram, "lightPosition_point");
+	lightPositionLocation_directional = glGetUniformLocation(shaderProgram, "lightPosition_directional");
+	shininessLocation = glGetUniformLocation(shaderProgram, "shininess");
+	shaderCodeLocation = glGetUniformLocation(shaderProgram, "shaderCode");
+	glUseProgram(shaderProgram);
 	//shader는 program 객체와 연결되면 필요x
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
@@ -105,20 +99,9 @@ bool CheckProgram(GLuint program) {
 
 void switchShader(const int shaderCode) {
 	currentShaderType = shaderCode;
-	glUseProgram(shaderProgram[shaderCode]);
-	glBindVertexArray(VAO);
-
-	aPosLocation = glGetAttribLocation(shaderProgram[shaderCode], "aPos");
-	aNormalLocation = glGetAttribLocation(shaderProgram[shaderCode], "aNormal");
-	aColorLocation = glGetAttribLocation(shaderProgram[shaderCode], "aColor");
-	ambientProductLocation = glGetUniformLocation(shaderProgram[shaderCode], "ambientProduct");
-	diffuseProductLocation_point = glGetUniformLocation(shaderProgram[shaderCode], "diffuseProduct_point");
-	diffuseProductLocation_directional = glGetUniformLocation(shaderProgram[shaderCode], "diffuseProduct_directional");
-	specularProductLocation_point = glGetUniformLocation(shaderProgram[shaderCode], "specularProduct_point");
-	specularProductLocation_directional = glGetUniformLocation(shaderProgram[shaderCode], "specularProduct_directional");
-	modelViewLocation = glGetUniformLocation(shaderProgram[shaderCode], "modelView");
-	projectionLocation = glGetUniformLocation(shaderProgram[shaderCode], "projection");
-	lightPositionLocation_point = glGetUniformLocation(shaderProgram[shaderCode], "lightPosition_point");
-	lightPositionLocation_directional = glGetUniformLocation(shaderProgram[shaderCode], "lightPosition_directional");
-	shininessLocation = glGetUniformLocation(shaderProgram[shaderCode], "shininess");
+	glUniform1i(shaderCodeLocation, shaderCode);
+	if (shaderCode == GOURAUD)
+		cout << "\nGOURAUD Shading mode\n\n";
+	else if (shaderCode == PHONG) 
+		cout << "\nPhong Shading mode\n\n";
 }

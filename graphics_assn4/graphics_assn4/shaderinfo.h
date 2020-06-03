@@ -7,18 +7,20 @@ int currentShaderType = 0;
 
 //Vertex and fragment shader
 GLuint vertexShader, fragmentShader;
-GLuint shaderProgram[2];
+GLuint shaderProgram;
 unsigned int positionVBO, colorVBO, normalVBO;
 unsigned int VAO, EBO;
 int aPosLocation, aColorLocation, aNormalLocation;
+int lightTypeLocation;
 int ambientProductLocation;
 int diffuseProductLocation_point, diffuseProductLocation_directional;
 int specularProductLocation_point, specularProductLocation_directional;
 int modelViewLocation, projectionLocation;
 int lightPositionLocation_point, lightPositionLocation_directional;
 int shininessLocation;
+int shaderCodeLocation;
 
-void initShader(const int shaderCode);
+void initShader();
 void readShaderSource(const char* vShaderFile, const char* fShaderFile);
 bool CheckProgram(GLuint program);
 void switchShader(const int shaderCode);
