@@ -66,6 +66,7 @@ void Cylinder::buildVertices() {
             y = unitCircleVertices[k + 1];
             addVertex(x * radius, y * radius, z);   // position
             addNormal(sideNormals[k], sideNormals[k + 1], sideNormals[k + 2]); // normal
+            addTexCoord((float)j / sectorCount, t); // tex coord
         }
     }
 
@@ -76,12 +77,14 @@ void Cylinder::buildVertices() {
     z = -height * 0.5f;
     addVertex(0, 0, z);
     addNormal(0, 0, -1);
+    addTexCoord(0.5f, 0.5f);
     for (int i = 0, j = 0; i < sectorCount; ++i, j += 3)
     {
         x = unitCircleVertices[j];
         y = unitCircleVertices[j + 1];
         addVertex(x * baseRadius, y * baseRadius, z);
         addNormal(0, 0, -1);
+        addTexCoord(-x * 0.5f + 0.5f, -y * 0.5f + 0.5f);    // flip horizontal
     }
 
     // remember where the base vertices start
@@ -91,12 +94,14 @@ void Cylinder::buildVertices() {
     z = height * 0.5f;
     addVertex(0, 0, z);
     addNormal(0, 0, 1);
+    addTexCoord(0.5f, 0.5f);
     for (int i = 0, j = 0; i < sectorCount; ++i, j += 3)
     {
         x = unitCircleVertices[j];
         y = unitCircleVertices[j + 1];
         addVertex(x * topRadius, y * topRadius, z);
         addNormal(0, 0, 1);
+        addTexCoord(x * 0.5f + 0.5f, -y * 0.5f + 0.5f);
     }
 
     // put indices for sides
@@ -157,6 +162,12 @@ void Cylinder::addIndices(unsigned int i1, unsigned int i2, unsigned int i3) {
     indices.push_back(i3);
 }
 
+void Cylinder::addTexCoord(float s, float t)
+{
+    texCoords.push_back(s);
+    texCoords.push_back(t);
+}
+
 void Cylinder::draw() {
     //position VBO    
     glBindBuffer(GL_ARRAY_BUFFER, positionVBO);           // for vertex data
@@ -212,6 +223,17 @@ void Cylinder::draw() {
         GL_STATIC_DRAW);                   // usage
     glEnableVertexAttribArray(aNormalLocation);
     glVertexAttribPointer(aNormalLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    //TexCoord VBO
+
+    glBindBuffer(GL_ARRAY_BUFFER, texCoordVBO);           // for vertex data
+    glBufferData(GL_ARRAY_BUFFER,                   // target
+        (unsigned int)texCoords.size() * sizeof(float), // data size, # of bytes
+        &texCoords[0],   // ptr to vertex data
+        GL_STATIC_DRAW);                   // usage
+    glEnableVertexAttribArray(aTexCoordLocation);
+    glVertexAttribPointer(aTexCoordLocation, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
 
     //EBO
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,           // target

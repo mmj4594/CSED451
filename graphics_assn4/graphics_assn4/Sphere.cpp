@@ -57,6 +57,11 @@ void Sphere::set(float radius, int sectors, int stacks) {
              ny = y * lengthInv;
              nz = z * lengthInv;
              addNormal(nx, ny, nz);
+
+			 // vertex tex coord between [0, 1]
+			 s = (float)j / sectorCount;
+			 t = (float)i / stackCount;
+			 addTexCoord(s, t);
          }
      }
 
@@ -102,6 +107,13 @@ void Sphere::addIndices(unsigned int i1, unsigned int i2, unsigned int i3) {
     indices.push_back(i1);
     indices.push_back(i2);
     indices.push_back(i3);
+}
+
+
+void Sphere::addTexCoord(float s, float t)
+{
+	texCoords.push_back(s);
+	texCoords.push_back(t);
 }
 
 void Sphere::draw() {
@@ -159,6 +171,16 @@ void Sphere::draw() {
         GL_STATIC_DRAW);                   // usage
     glEnableVertexAttribArray(aNormalLocation);
     glVertexAttribPointer(aNormalLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    //TexCoord VBO
+    
+    glBindBuffer(GL_ARRAY_BUFFER, texCoordVBO);           // for vertex data
+    glBufferData(GL_ARRAY_BUFFER,                   // target
+        (unsigned int)texCoords.size() * sizeof(float), // data size, # of bytes
+        &texCoords[0],   // ptr to vertex data
+        GL_STATIC_DRAW);                   // usage
+    glEnableVertexAttribArray(aTexCoordLocation);
+    glVertexAttribPointer(aTexCoordLocation, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     //EBO
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,           // target

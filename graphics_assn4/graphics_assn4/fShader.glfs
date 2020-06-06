@@ -5,6 +5,7 @@ in vec3 fE;
 in vec3 fL_point;
 in vec3 fL_directional;
 in vec4 fragColor;
+in vec2 texCoord;
 
 uniform int lightType;
 uniform vec4 ambientProduct;
@@ -19,11 +20,20 @@ uniform vec4 lightPosition_point;
 uniform vec4 lightPosition_directional;
 uniform float shininess;
 uniform int shaderCode;
+uniform bool enableTexture;
+uniform int mappingCode;
+uniform sampler2D texture;
+
 
 void main() {
 	//Gouraud shading
 	if(shaderCode == 0) {
-		gl_FragColor = fragColor;
+		if(enableTexture){
+			gl_FragColor = fragColor * texture2D(texture,texCoord);
+		}
+		else{
+			gl_FragColor = fragColor;
+		}
 	}
 
 	//Phong shading
@@ -53,6 +63,16 @@ void main() {
 		vec4 specular_directional = Ks_directional * specularProduct_directional;
 		if (dot(L_directional, N) < 0.0) specular_directional = vec4(0.0, 0.0, 0.0, 1.0);
 
+		if(enableTexture){
+		if(lightType == 0)		
+			gl_FragColor= fragColor * (ambient + (diffuse_point + diffuse_directional) + (specular_point + specular_directional))* texture2D(texture,texCoord);			
+		else if(lightType == 1)
+			gl_FragColor= fragColor * (ambient + diffuse_point + specular_point)* texture2D(texture,texCoord);
+		else if(lightType == 2)
+			gl_FragColor= fragColor * (ambient + diffuse_directional + specular_directional)* texture2D(texture,texCoord);
+		gl_FragColor.a= 1.0;
+		}
+		else{
 		if(lightType == 0)
 			gl_FragColor= fragColor * (ambient + (diffuse_point + diffuse_directional) + (specular_point + specular_directional));
 		else if(lightType == 1)
@@ -60,5 +80,6 @@ void main() {
 		else if(lightType == 2)
 			gl_FragColor= fragColor * (ambient + diffuse_directional + specular_directional);
 		gl_FragColor.a= 1.0;
+		}
 	}
 }

@@ -38,6 +38,7 @@ public:
     void addVertex(float x, float y, float z);
     void addNormal(float x, float y, float z);
     void addIndices(unsigned int i1, unsigned int i2, unsigned int i3);
+	void addTexCoord(float s, float t);
 
     void draw();
     void clearArrays();
@@ -52,6 +53,7 @@ public:
     int color = 5;
     std::vector<float> vertices;
     std::vector<float> normals;
+	std::vector<float> texCoords;
     std::vector<unsigned int> indices;
 
     //vertices color

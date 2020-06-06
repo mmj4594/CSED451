@@ -2,6 +2,9 @@
 #include <iostream>
 #include "shaderinfo.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 using namespace std;
 
 //Initiate shader program
@@ -20,10 +23,12 @@ void initShader() {
 	glLinkProgram(shaderProgram);
 	if (!CheckProgram(shaderProgram))
 		{ cout << " Link Fail!\n"; }
+
 	//Get location of variables
 	aPosLocation = glGetAttribLocation(shaderProgram, "aPos");
 	aColorLocation = glGetAttribLocation(shaderProgram, "aColor");
 	aNormalLocation = glGetAttribLocation(shaderProgram, "aNormal");
+	aTexCoordLocation = glGetAttribLocation(shaderProgram, "aTexCoord");
 	lightTypeLocation = glGetUniformLocation(shaderProgram, "lightType");
 	ambientProductLocation = glGetUniformLocation(shaderProgram, "ambientProduct");
 	diffuseProductLocation_point = glGetUniformLocation(shaderProgram, "diffuseProduct_point");
@@ -37,7 +42,11 @@ void initShader() {
 	lightPositionLocation_directional = glGetUniformLocation(shaderProgram, "lightPosition_directional");
 	shininessLocation = glGetUniformLocation(shaderProgram, "shininess");
 	shaderCodeLocation = glGetUniformLocation(shaderProgram, "shaderCode");
+	enableTextureLocation = glGetUniformLocation(shaderProgram, "enableTexture");
+	mappingCodeLocation = glGetUniformLocation(shaderProgram, "mappingCode");
+	//textureLocation = glGetUniformLocation(shaderProgram, "texture");
 	glUseProgram(shaderProgram);
+
 	//shader는 program 객체와 연결되면 필요x
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
@@ -57,10 +66,74 @@ void initShader() {
 	glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
 	glGenBuffers(1, &normalVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, normalVBO);
+	glGenBuffers(1, &texCoordVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, texCoordVBO);
+
+	wall_data = stbi_load("texture/wall_base.jpg", &wall_width, &wall_height, &wall_nrChannels, 0);
+	character_data = stbi_load("texture/character.jpg", &character_width, &character_height, &character_nrChannels, 0);
+	floor_data = stbi_load("texture/floor.jpg", &floor_width, &floor_height, &floor_nrChannels, 0);
+
+	//Wall Texture
+	glGenTextures(1, &wall_texture);
+	glBindTexture(GL_TEXTURE_2D, wall_texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
+	if (wall_data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wall_width, wall_height, 0, GL_RGB, GL_UNSIGNED_BYTE, wall_data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(wall_data);
+
+	//Character Texture
+	glGenTextures(1, &character_texture);
+	glBindTexture(GL_TEXTURE_2D, character_texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	if (character_data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, character_width, character_height, 0, GL_RGB, GL_UNSIGNED_BYTE, character_data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(character_data);
+	
+	//Floor Texture
+	glGenTextures(1, &floor_texture);
+	glBindTexture(GL_TEXTURE_2D, floor_texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	if (wall_data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, floor_width, floor_height, 0, GL_RGB, GL_UNSIGNED_BYTE, floor_data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(floor_data);
 
 	//EBO
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	
+
+	glUniform1i(enableTextureLocation, enableTexture);
+
 }
 
 //Read shader file from 'vShaderFile', 'fShaderFile' and compile them.
@@ -105,4 +178,37 @@ void switchShader(const int shaderCode) {
 		cout << "\nGOURAUD Shading mode\n\n";
 	else if (shaderCode == PHONG) 
 		cout << "\nPhong Shading mode\n\n";
+}
+
+void switchTexture(const int textureCode) {
+	glGenTextures(1, &wall_texture);
+	glBindTexture(GL_TEXTURE_2D, wall_texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	if (textureCode == 1) {
+		if (character_data)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, character_width, character_height, 0, GL_RGB, GL_UNSIGNED_BYTE, character_data);
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+		else
+		{
+			std::cout << "Failed to load texture" << std::endl;
+		}
+		stbi_image_free(character_data);
+	}
+	else if (textureCode == 2) {
+		if (wall_data)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wall_width, wall_height, 0, GL_RGB, GL_UNSIGNED_BYTE, wall_data);
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+		else
+		{
+			std::cout << "Failed to load texture" << std::endl;
+		}
+		stbi_image_free(wall_data);
+	}
 }

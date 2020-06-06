@@ -6,6 +6,9 @@
 #include "camera.h"
 #include "Floor.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 using namespace std;
 
 //Key value for space

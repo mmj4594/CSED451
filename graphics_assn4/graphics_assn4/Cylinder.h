@@ -44,6 +44,8 @@ public:
     void addVertex(float x, float y, float z);
     void addNormal(float x, float y, float z);
     void addIndices(unsigned int i1, unsigned int i2, unsigned int i3);
+    void addTexCoord(float s, float t);
+
     void setColor(int color) { this->color = color; };
     void draw();
     void clearArrays();
@@ -76,5 +78,6 @@ private:
     std::vector<float> vertices_green;
     std::vector<float> vertices_yellow;
     std::vector<float> vertices_blue;
+    std::vector<float> texCoords;
     int color = 5;
 };

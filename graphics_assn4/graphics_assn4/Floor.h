@@ -1,6 +1,9 @@
 #pragma once
-#include <GL/glew.h>
 #include <vector>
+#include "Cylinder.h";
+#include "object.h"
+#include "Cylinder.h"
+#include <GL/glew.h>
 
 #include "matrixStack.h"
 
@@ -46,3 +49,5 @@ private:
 	std::vector<glm::uvec2> floor_indices;
 	std::vector<glm::vec3> floor_color;
 };
+
+Cylinder floorModel(500, 500, 10, 16, 16);

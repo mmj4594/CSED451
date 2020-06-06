@@ -98,9 +98,13 @@ void display3D() {
 	glUniform4fv(lightPositionLocation_directional, 1, value_ptr(lightPosition_directional)); 
 	//Shininess
 	glUniform1f(shininessLocation, shininess);
+
 	
+	glBindTexture(GL_TEXTURE_2D, floor_texture);
 	worldFloor.draw();
+	glBindTexture(GL_TEXTURE_2D, wall_texture);
 	wall.draw();
+	glBindTexture(GL_TEXTURE_2D, character_texture);
 	player.draw();
 	thief.draw();
 	glutSwapBuffers();
@@ -309,6 +313,32 @@ void keyboard(unsigned char key, int x, int y) {
 		else if (currentLightType == DIRECTIONALONLY) currentLightType = BASICLIGHT;
 		glUniform1i(lightTypeLocation, currentLightType);
 		cout << "\nLight Mode: " << currentLightType << "\n";
+		break;
+	case 'E':
+	case 'e':
+		if (enableTexture) {
+			cout << "\nTexture Disabled" << endl;
+			enableTexture = false;			
+		}
+		else {
+			cout << "\nTexture Enabled" << endl;
+			enableTexture = true;
+		}
+		glUniform1i(enableTextureLocation, enableTexture);
+		break;
+	case 'R':
+	case 'r':
+		if (currentShaderType == PHONG) {
+			if (mappingCode == NORMAL) {
+				cout << "\nMapping Type: Diffuse\n";
+				mappingCode = DIFFUSE;
+			}
+			else if (mappingCode == DIFFUSE) {
+				cout << "\nMapping Type: Normal\n";
+				mappingCode = NORMAL;
+			}
+			glUniform1i(mappingCodeLocation, mappingCode);
+		}
 		break;
 	case SPACE:
 		player.jump();
