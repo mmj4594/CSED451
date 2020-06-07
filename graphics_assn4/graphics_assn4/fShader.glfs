@@ -52,7 +52,7 @@ void main() {
 		if(mappingCode == 0 && enableTexture){
 			vec3 normal = texture2D(normalMap, texCoord).rgb;
 			normal = normalize(normal *2.0 - 1.0);
-			N = N * normal;
+			N =  N * normal;
 		}
 
 		//Point light

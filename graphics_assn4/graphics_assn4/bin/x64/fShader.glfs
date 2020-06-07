@@ -1,8 +1,93 @@
 #version 460
 
-out vec4 fragColor;
-in vec3 ourColor;
+in vec3 fN;
+in vec3 fE;
+in vec3 fL_point;
+in vec3 fL_directional;
+in vec4 fragColor;
+in vec2 texCoord;
+
+uniform int lightType;
+uniform vec4 ambientProduct;
+uniform vec4 diffuseProduct_point;
+uniform vec4 diffuseProduct_directional;
+uniform vec4 specularProduct_point;
+uniform vec4 specularProduct_directional;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+uniform vec4 lightPosition_point;
+uniform vec4 lightPosition_directional;
+uniform float shininess;
+uniform int shaderCode;
+
+uniform bool enableTexture;
+uniform int mappingCode;
+
+uniform sampler2D texture;
+uniform sampler2D normalMap;
+
 
 void main() {
-	fragColor = vec4(ourColor, 1.0);
+	//Gouraud shading
+	if(shaderCode == 0) {
+		if(enableTexture){
+			gl_FragColor = fragColor * texture2D(texture,texCoord);
+		}
+		else{
+			gl_FragColor = fragColor;
+		}
+	}
+
+	//Phong shading
+	else if(shaderCode == 1){
+		vec3 N = normalize(fN);
+		vec3 E = normalize(fE);
+		vec3 L_point = normalize(fL_point);
+		vec3 L_directional = normalize(fL_directional);
+		vec3 H_point = normalize(L_point + E);
+		vec3 H_directional = normalize(L_directional + E);
+
+		vec4 ambient = ambientProduct;
+		if(mappingCode == 0 && enableTexture){
+			vec3 normal = texture2D(normalMap, texCoord).rgb;
+			normal = normalize(normal *2.0 - 1.0);
+			N =  N * normal;
+		}
+
+		//Point light
+		float distance = length(fL_point);
+		float attenuation = 1.0 / (1.0 + 0.007 * distance + 0.0002 * (distance * distance));
+		float Kd_point= max(dot(L_point, N), 0.0);
+		vec4 diffuse_point = attenuation * Kd_point * diffuseProduct_point;
+		float Ks_point = pow(max(dot(H_point, N), 0.0), shininess);
+		vec4 specular_point = attenuation * Ks_point * specularProduct_point;
+		if ( dot(L_point, N) < 0.0 ) specular_point = vec4(0.0, 0.0, 0.0, 1.0);
+
+		//Directional light
+		float Kd_directional= max(dot(L_directional, N), 0.0);
+		vec4 diffuse_directional = Kd_directional * diffuseProduct_directional;
+		float Ks_directional = pow(max(dot(H_directional, N), 0.0), shininess);
+		vec4 specular_directional = Ks_directional * specularProduct_directional;
+		if (dot(L_directional, N) < 0.0) specular_directional = vec4(0.0, 0.0, 0.0, 1.0);
+
+		if(enableTexture){
+		if(lightType == 0)		
+			gl_FragColor= fragColor * (ambient + (diffuse_point + diffuse_directional) + (specular_point + specular_directional))* texture2D(texture,texCoord);			
+		else if(lightType == 1)
+			gl_FragColor= fragColor * (ambient + diffuse_point + specular_point)* texture2D(texture,texCoord);
+		else if(lightType == 2)
+			gl_FragColor= fragColor * (ambient + diffuse_directional + specular_directional)* texture2D(texture,texCoord);
+		gl_FragColor.a= 1.0;
+		}
+		else{
+		if(lightType == 0)
+			gl_FragColor= fragColor * (ambient + (diffuse_point + diffuse_directional) + (specular_point + specular_directional));
+		else if(lightType == 1)
+			gl_FragColor= fragColor * (ambient + diffuse_point + specular_point);
+		else if(lightType == 2)
+			gl_FragColor= fragColor * (ambient + diffuse_directional + specular_directional);
+		gl_FragColor.a= 1.0;
+		}
+	}
 }

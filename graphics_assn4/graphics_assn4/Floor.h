@@ -50,4 +50,4 @@ private:
 	std::vector<glm::vec3> floor_color;
 };
 
-Cylinder floorModel(500, 500, 10, 16, 16);
+Cylinder floorModel(1000, 1000, 10, 16, 16);

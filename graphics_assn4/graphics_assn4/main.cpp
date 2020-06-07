@@ -84,21 +84,7 @@ void display3D() {
 		vec3(upVector[0], upVector[1], upVector[2])
 	);
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, value_ptr(mtxView));
-
-	//Ambient
-	glUniform4fv(ambientProductLocation, 1, value_ptr(ambient));
-	//Diffuse
-	glUniform4fv(diffuseProductLocation_point, 1, value_ptr(diffuse_point));
-	glUniform4fv(diffuseProductLocation_directional, 1, value_ptr(diffuse_directional));
-	//Specular
-	glUniform4fv(specularProductLocation_point, 1, value_ptr(specular_point));
-	glUniform4fv(specularProductLocation_directional, 1, value_ptr(specular_directional));
-	//Light poisition
-	glUniform4fv(lightPositionLocation_point, 1, value_ptr(lightPosition_point));
-	glUniform4fv(lightPositionLocation_directional, 1, value_ptr(lightPosition_directional)); 
-	//Shininess
-	glUniform1f(shininessLocation, shininess);
-
+		
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, floor_texture);
 	glActiveTexture(GL_TEXTURE1);
