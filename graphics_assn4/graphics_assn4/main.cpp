@@ -312,7 +312,13 @@ void keyboard(unsigned char key, int x, int y) {
 	case 'Q':
 	case 'q':
 		if (currentShaderType == GOURAUD) switchShader(PHONG);
-		else if (currentShaderType == PHONG) switchShader(GOURAUD);
+		else if (currentShaderType == PHONG) {
+			switchShader(GOURAUD);
+			if (mappingCode == NORMAL) {
+				mappingCode = DIFFUSE;
+				cout << "\nMapping Type: Diffuse\n";
+			}
+		}
 		break;
 	case 'W':
 	case 'w':

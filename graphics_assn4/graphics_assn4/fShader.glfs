@@ -49,7 +49,7 @@ void main() {
 		vec3 H_directional = normalize(L_directional + E);
 
 		vec4 ambient = ambientProduct;
-		if(mappingCode == 0){
+		if(mappingCode == 0 && enableTexture){
 			vec3 normal = texture2D(normalMap, texCoord).rgb;
 			normal = normalize(normal *2.0 - 1.0);
 			N = N * normal;

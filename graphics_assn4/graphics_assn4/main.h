@@ -63,7 +63,7 @@ const int SEC = 60;
 const float zoomFrame = 50;
 
 //Displacement of life on window
-int life = 500;
+int life = 3;
 std::string lifeText = "Life: ";
 const float LIFE_DEFAULT_X = 50;
 const float LIFE_DEFAULT_Y = 450;

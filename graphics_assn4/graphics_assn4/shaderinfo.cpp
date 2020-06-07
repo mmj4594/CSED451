@@ -23,7 +23,7 @@ void initShader() {
 	glLinkProgram(shaderProgram);
 	if (!CheckProgram(shaderProgram))
 		{ cout << " Link Fail!\n"; }
-
+	glUseProgram(shaderProgram);
 	//Get location of variables
 	aPosLocation = glGetAttribLocation(shaderProgram, "aPos");
 	aColorLocation = glGetAttribLocation(shaderProgram, "aColor");
@@ -31,21 +31,31 @@ void initShader() {
 	aTexCoordLocation = glGetAttribLocation(shaderProgram, "aTexCoord");
 
 	lightTypeLocation = glGetUniformLocation(shaderProgram, "lightType");
+	
 	ambientProductLocation = glGetUniformLocation(shaderProgram, "ambientProduct");
+	glUniform4fv(ambientProductLocation, 1, glm::value_ptr(ambient));
 	diffuseProductLocation_point = glGetUniformLocation(shaderProgram, "diffuseProduct_point");
+	glUniform4fv(diffuseProductLocation_point, 1, glm::value_ptr(diffuse_point));
 	diffuseProductLocation_directional = glGetUniformLocation(shaderProgram, "diffuseProduct_directional");
+	glUniform4fv(diffuseProductLocation_directional, 1, glm::value_ptr(diffuse_directional));
 	specularProductLocation_point = glGetUniformLocation(shaderProgram, "specularProduct_point");
+	glUniform4fv(specularProductLocation_point, 1, glm::value_ptr(specular_point));
 	specularProductLocation_directional = glGetUniformLocation(shaderProgram, "specularProduct_directional");
+	glUniform4fv(specularProductLocation_directional, 1, glm::value_ptr(specular_directional));
 
 	modelLocation = glGetUniformLocation(shaderProgram, "model");
 	viewLocation = glGetUniformLocation(shaderProgram, "view");
 	projectionLocation = glGetUniformLocation(shaderProgram, "projection");
 
 	lightPositionLocation_point = glGetUniformLocation(shaderProgram, "lightPosition_point");
+	glUniform4fv(lightPositionLocation_point, 1, glm::value_ptr(lightPosition_point));
 	lightPositionLocation_directional = glGetUniformLocation(shaderProgram, "lightPosition_directional");
+	glUniform4fv(lightPositionLocation_directional, 1, glm::value_ptr(lightPosition_directional));
 	shininessLocation = glGetUniformLocation(shaderProgram, "shininess");
+	glUniform1f(glGetUniformLocation(shaderProgram, "shininess"), shininess);
 	shaderCodeLocation = glGetUniformLocation(shaderProgram, "shaderCode");
-
+	
+	
 	enableTextureLocation = glGetUniformLocation(shaderProgram, "enableTexture");
 	mappingCodeLocation = glGetUniformLocation(shaderProgram, "mappingCode");
 	textureLocation = glGetUniformLocation(shaderProgram, "texture");
@@ -55,8 +65,9 @@ void initShader() {
 	
 	//textureLocation = glGetUniformLocation(shaderProgram, "texture");
 
-	glUseProgram(shaderProgram);
+	
 	glUniform1i(enableTextureLocation, enableTexture);
+	glUniform1i(mappingCodeLocation, mappingCode);
 	
 
 	//shader는 program 객체와 연결되면 필요x

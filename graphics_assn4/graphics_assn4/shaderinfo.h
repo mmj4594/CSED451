@@ -1,5 +1,10 @@
 #pragma once
 #include <GL/glew.h>
+#include "light.h"
+#include <gl/gl.h>
+#include <gl/glut.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 //Shader type code
 const int GOURAUD = 0, PHONG = 1;

@@ -1,4 +1,7 @@
 #pragma once
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/vec3.hpp>
 
 //Light configuration
 int lightFrame = 0;
@@ -13,7 +16,7 @@ glm::vec4 lightPosition_point = glm::vec4(0, 0, 0, 1.0);
 glm::vec4 lightPosition_directional = glm::vec4(0, 0, -100.0, 0.0);
 glm::vec3 lightCenter_directional = glm::vec3(0.0, 0.0, 0.0);
 float lightAngle_directional = 45.0f;
-float shininess = 0.0f;
+float shininess = 0.9f;
 int currentLightType = 0;
 const int BASICLIGHT = 0;
 const int POINTONLY = 1;
