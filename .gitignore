@@ -1,0 +1,9 @@
+# Ignore useless files or folders in git
+*.exe
+*.out
+*.app
+*.ilk
+*.pdb
+
+Debug/
+.vs/
